@@ -346,6 +346,7 @@
                         ¡Revisar mis respuestas!
                     </button>
                     <p id="msg-juego3" class="mt-4 text-xl font-bold min-h-[30px]"></p>
+                    <button id="btn-reinicio-j3" onclick="reiniciarJuego3()" class="hidden mt-2 text-gray-500 underline font-bold hover:text-gray-700 transition-colors cursor-pointer">Jugar de nuevo</button>
                 </div>
             </div>
 
@@ -874,11 +875,34 @@
                 msg.className = "mt-4 text-xl font-bold text-green-600";
                 reproducirSonido('win');
                 lanzarConfeti();
+                document.getElementById('btn-reinicio-j3').classList.remove('hidden');
             } else {
                 msg.innerText = "Revisa los que están en rojo. ¡Inténtalo de nuevo! 🤓";
                 msg.className = "mt-4 text-xl font-bold text-red-500";
                 reproducirSonido('error');
+                document.getElementById('btn-reinicio-j3').classList.remove('hidden');
             }
+        }
+
+        function reiniciarJuego3() {
+            reproducirSonido('click');
+            
+            // Limpiar las zonas de destino
+            const tipos = ['raiz', 'hoja', 'fruto', 'tallo'];
+            tipos.forEach(tipo => {
+                const dropArea = document.querySelector(`.dropzone[data-target="${tipo}"] .drop-area`);
+                if(dropArea) {
+                    dropArea.innerHTML = '';
+                }
+            });
+
+            // Limpiar mensajes y ocultar el botón de reinicio
+            document.getElementById('msg-juego3').innerText = "";
+            document.getElementById('btn-reinicio-j3').classList.add('hidden');
+            
+            // Volver a generar los vegetales en su caja original
+            initJuego3();
+            deseleccionarTodo(); // Asegurarnos de que no quede ninguna selección visual activa
         }
 
         // --- JUEGO 4: Clasificador de Hojas ---
