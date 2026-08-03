@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     <style>
         body {
             font-family: 'Nunito', sans-serif;
@@ -138,20 +139,20 @@
                             <rect x="0" y="380" width="400" height="120" fill="#8B4513" rx="10"/>
                             
                             <!-- Raíz -->
-                            <path class="parte-planta" id="p-raiz" data-info="Absorben el agua y los minerales de la tierra. ¡Crecen hacia abajo!" d="M190 380 Q170 420 180 480 M210 380 Q230 420 220 480 M200 380 V470 M185 410 Q160 430 150 440 M215 410 Q240 430 250 440" stroke="#D2B48C" stroke-width="6" fill="none" stroke-linecap="round"/>
+                            <path onclick="reproducirSonido('click')" class="parte-planta" id="p-raiz" data-info="Absorben el agua y los minerales de la tierra. ¡Crecen hacia abajo!" d="M190 380 Q170 420 180 480 M210 380 Q230 420 220 480 M200 380 V470 M185 410 Q160 430 150 440 M215 410 Q240 430 250 440" stroke="#D2B48C" stroke-width="6" fill="none" stroke-linecap="round"/>
                             
                             <!-- Tallo -->
-                            <path class="parte-planta" id="p-tallo" data-info="Transporta el agua a las hojas y sostiene la planta. ¡Es como una bombilla (pajita)!" d="M200 380 Q190 250 200 120" stroke="#4CAF50" stroke-width="12" fill="none" stroke-linecap="round"/>
+                            <path onclick="reproducirSonido('click')" class="parte-planta" id="p-tallo" data-info="Transporta el agua a las hojas y sostiene la planta. ¡Es como una bombilla (pajita)!" d="M200 380 Q190 250 200 120" stroke="#4CAF50" stroke-width="12" fill="none" stroke-linecap="round"/>
                             
                             <!-- Hojas -->
-                            <g class="parte-planta" id="p-hojas" data-info="Usan el aire y la luz del Sol para fabricar el alimento de la planta.">
+                            <g onclick="reproducirSonido('click')" class="parte-planta" id="p-hojas" data-info="Usan el aire y la luz del Sol para fabricar el alimento de la planta.">
                                 <path d="M200 250 Q120 220 150 280 Q180 280 200 250" fill="#81C784" stroke="#4CAF50" stroke-width="3"/>
                                 <path d="M200 180 Q280 150 250 210 Q220 210 200 180" fill="#81C784" stroke="#4CAF50" stroke-width="3"/>
                                 <path d="M195 320 Q130 300 150 350 Q180 340 195 320" fill="#81C784" stroke="#4CAF50" stroke-width="3"/>
                             </g>
                             
                             <!-- Flor -->
-                            <g class="parte-planta" id="p-flor" data-info="¡Son hermosas y coloridas! Luego se convierten en frutos.">
+                            <g onclick="reproducirSonido('click')" class="parte-planta" id="p-flor" data-info="¡Son hermosas y coloridas! Luego se convierten en frutos.">
                                 <circle cx="200" cy="120" r="15" fill="#FFEB3B"/>
                                 <path d="M200 105 Q180 70 200 90 Q220 70 200 105" fill="#FF9800"/>
                                 <path d="M200 135 Q180 170 200 150 Q220 170 200 135" fill="#FF9800"/>
@@ -160,7 +161,7 @@
                             </g>
                             
                             <!-- Fruto -->
-                            <g class="parte-planta" id="p-fruto" data-info="Contienen las semillas en su interior que darán origen a nuevas plantas.">
+                            <g onclick="reproducirSonido('click')" class="parte-planta" id="p-fruto" data-info="Contienen las semillas en su interior que darán origen a nuevas plantas.">
                                 <circle cx="160" cy="240" r="18" fill="#F44336"/>
                                 <path d="M160 222 Q165 210 170 220" stroke="#4CAF50" stroke-width="3" fill="none"/>
                             </g>
@@ -427,8 +428,80 @@
     </main>
 
     <script>
+        // --- SISTEMA DE AUDIO (Tone.js) ---
+        let audioIniciado = false;
+        const synths = {};
+
+        async function initAudio() {
+            if (audioIniciado) return;
+            await Tone.start(); // El navegador requiere una interacción para iniciar el audio
+            audioIniciado = true;
+
+            // Sonido de clic/toque (campanita corta)
+            synths.click = new Tone.Synth({ 
+                oscillator: { type: 'sine' }, 
+                envelope: { attack: 0.01, decay: 0.1, sustain: 0, release: 0.1 } 
+            }).toDestination();
+            synths.click.volume.value = -10;
+
+            // Sonido al soltar en una caja (pequeño pop)
+            synths.drop = new Tone.MembraneSynth().toDestination();
+            synths.drop.volume.value = -15;
+
+            // Sonido de error suave
+            synths.error = new Tone.Synth({ 
+                oscillator: { type: 'triangle' }, 
+                envelope: { attack: 0.05, decay: 0.3, sustain: 0, release: 0.2 } 
+            }).toDestination();
+            synths.error.volume.value = -10;
+
+            // Sonido mágico (cuando curan la planta)
+            synths.magic = new Tone.PolySynth(Tone.Synth, { 
+                oscillator: { type: 'sine' } 
+            }).toDestination();
+            synths.magic.volume.value = -10;
+
+            // Sonido de victoria
+            synths.win = new Tone.PolySynth(Tone.Synth, { 
+                oscillator: { type: 'triangle' } 
+            }).toDestination();
+            synths.win.volume.value = -10;
+        }
+
+        // Iniciar audio con el primer clic o toque en cualquier parte de la pantalla
+        document.body.addEventListener('click', initAudio, { once: true });
+        document.body.addEventListener('touchstart', initAudio, { once: true });
+
+        function reproducirSonido(tipo) {
+            if (!audioIniciado) return;
+            const now = Tone.now();
+            switch (tipo) {
+                case 'click':
+                    synths.click.triggerAttackRelease("C6", "32n", now);
+                    break;
+                case 'drop':
+                    synths.drop.triggerAttackRelease("G2", "16n", now);
+                    break;
+                case 'error':
+                    synths.error.triggerAttackRelease("D3", "8n", now);
+                    synths.error.triggerAttackRelease("C3", "4n", now + 0.15);
+                    break;
+                case 'magic':
+                    synths.magic.triggerAttackRelease(["C5", "E5", "G5"], "16n", now);
+                    synths.magic.triggerAttackRelease(["E5", "G5", "C6"], "8n", now + 0.15);
+                    break;
+                case 'win':
+                    synths.win.triggerAttackRelease(["C4", "E4", "G4"], "8n", now);
+                    synths.win.triggerAttackRelease(["F4", "A4", "C5"], "8n", now + 0.2);
+                    synths.win.triggerAttackRelease(["G4", "B4", "D5"], "8n", now + 0.4);
+                    synths.win.triggerAttackRelease(["C5", "E5", "G5", "C6"], "2n", now + 0.6);
+                    break;
+            }
+        }
+
         // --- NAVEGACIÓN ---
         function switchTab(tabId) {
+            reproducirSonido('click');
             // Ocultar todas
             document.getElementById('sec-aprender').classList.add('hidden');
             document.getElementById('sec-jugar').classList.add('hidden');
@@ -469,6 +542,7 @@
 
             // Si ya estaba seleccionado, lo deseleccionamos
             if (item === itemSeleccionadoGlobal) {
+                reproducirSonido('click');
                 deseleccionarTodo();
                 return;
             }
@@ -477,6 +551,7 @@
             deseleccionarTodo();
 
             // Seleccionar el nuevo
+            reproducirSonido('click');
             itemSeleccionadoGlobal = item;
             idJuegoActivo = juegoId;
             item.classList.add('item-seleccionado');
@@ -498,6 +573,7 @@
             // Mover el item al área correspondiente dentro de la zona
             const dropArea = zona.querySelector('.drop-area');
             if (dropArea) {
+                reproducirSonido('drop');
                 dropArea.appendChild(itemSeleccionadoGlobal);
             }
             
@@ -516,6 +592,7 @@
             if(containerId === 'hojas-container' && idJuegoActivo === 'juego4') valido = true;
 
             if (valido) {
+                reproducirSonido('drop');
                 const container = document.getElementById(containerId);
                 container.appendChild(itemSeleccionadoGlobal);
                 deseleccionarTodo();
@@ -595,10 +672,12 @@
             if (correcto) {
                 msg.innerText = "¡Excelente! Todas las frutas están en su lugar. 🌟";
                 msg.className = "mt-4 text-xl font-bold text-green-600";
+                reproducirSonido('win');
                 lanzarConfeti();
             } else {
                 msg.innerText = "Mmm... revisa las que están marcadas en rojo. ¡Tú puedes! 💪";
                 msg.className = "mt-4 text-xl font-bold text-red-500";
+                reproducirSonido('error');
             }
         }
 
@@ -612,6 +691,7 @@
             
             if (opcion === 'agua' || opcion === 'luz') {
                 cosasBuenasAplicadas++;
+                reproducirSonido('magic');
                 msg.innerText = opcion === 'agua' ? "¡Glub glub! Qué rica agua. 💧" : "¡Qué calentito! Me gusta el sol. ☀️";
                 msg.className = "mt-4 text-2xl font-bold text-green-600";
                 
@@ -626,9 +706,11 @@
                     emoji.innerText = "🌻"; // Feliz
                     msg.innerText = "¡Yupi! ¡La planta está feliz y fuerte gracias a ti! 🎉";
                     document.getElementById('btn-reinicio-j2').classList.remove('hidden');
+                    reproducirSonido('win');
                     lanzarConfeti();
                 }
             } else {
+                reproducirSonido('error');
                 msg.innerText = "No, creo que las plantas no necesitan eso... 🤔";
                 msg.className = "mt-4 text-2xl font-bold text-orange-500";
                 emoji.classList.add('animate-bounce-sm');
@@ -637,6 +719,7 @@
         }
 
         function reiniciarJuego2() {
+            reproducirSonido('click');
             cosasBuenasAplicadas = 0;
             document.getElementById('planta-triste-emoji').innerText = "🥀";
             document.getElementById('msg-juego2').innerText = "";
@@ -711,10 +794,12 @@
             if (correcto) {
                 msg.innerText = "¡Súper! Sabes muy bien qué parte de la planta comemos. 🥗";
                 msg.className = "mt-4 text-xl font-bold text-green-600";
+                reproducirSonido('win');
                 lanzarConfeti();
             } else {
                 msg.innerText = "Revisa los que están en rojo. ¡Inténtalo de nuevo! 🤓";
                 msg.className = "mt-4 text-xl font-bold text-red-500";
+                reproducirSonido('error');
             }
         }
 
@@ -778,10 +863,12 @@
             if (correcto) {
                 msg.innerText = "¡Perfecto! Eres un experto botánico. 🌳";
                 msg.className = "mt-4 text-xl font-bold text-green-600";
+                reproducirSonido('win');
                 lanzarConfeti();
             } else {
                 msg.innerText = "Ups, algunas hojas se volaron al grupo equivocado. ¡Revisa! 💨";
                 msg.className = "mt-4 text-xl font-bold text-red-500";
+                reproducirSonido('error');
             }
         }
 
@@ -836,12 +923,14 @@
             if (todoCorrecto) {
                 msg.innerText = "¡Felicitaciones! Has completado el desafío perfecto. 🏆✨";
                 msg.className = "mt-4 text-2xl font-bold text-green-600";
+                reproducirSonido('win');
                 lanzarConfeti();
                 // Animación extra
                 confetti({ particleCount: 100, spread: 100, origin: { y: 0.3 } });
             } else {
                 msg.innerText = "Casi... Vuelve a contar con cuidado. " + errores.join(" ");
                 msg.className = "mt-4 text-xl font-bold text-red-500";
+                reproducirSonido('error');
             }
         }
 
