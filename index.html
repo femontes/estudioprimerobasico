@@ -43,8 +43,8 @@
         .item-interactivo {
             cursor: pointer;
             transition: all 0.2s;
-            user-select: none; /* Evitar selección de texto accidental al tocar */
-            -webkit-tap-highlight-color: transparent; /* Quitar resalte azul en iOS */
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .item-interactivo:active {
@@ -53,7 +53,7 @@
 
         .item-seleccionado {
             transform: scale(1.15) translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.5), 0 0 0 4px #fbbf24; /* yellow-400 */
+            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.5), 0 0 0 4px #fbbf24;
             z-index: 10;
             animation: float 2s infinite ease-in-out;
         }
@@ -64,8 +64,8 @@
         }
 
         .zona-destino.activa-destino {
-            background-color: #fef08a; /* yellow-200 */
-            border-color: #eab308; /* yellow-500 */
+            background-color: #fef08a;
+            border-color: #eab308;
             transform: scale(1.02);
             animation: pulse-border 1.5s infinite;
         }
@@ -125,14 +125,14 @@
                 <span class="text-2xl md:text-4xl">🌱</span> Exploradores de Plantas
             </h1>
             
-            <nav class="flex gap-2 md:gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 justify-center">
-                <button onclick="switchTab('aprender')" id="btn-aprender" class="tab-btn active px-4 py-2 md:px-6 md:py-3 rounded-xl font-bold text-base md:text-lg whitespace-nowrap">
+            <nav class="flex flex-wrap gap-2 md:gap-4 w-full justify-center mt-2 md:mt-0">
+                <button onclick="switchTab('aprender')" id="btn-aprender" class="tab-btn active px-3 py-2 md:px-6 md:py-3 rounded-xl font-bold text-sm md:text-lg whitespace-nowrap">
                     📖 Aprender
                 </button>
-                <button onclick="switchTab('jugar')" id="btn-jugar" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-xl font-bold text-base md:text-lg whitespace-nowrap">
+                <button onclick="switchTab('jugar')" id="btn-jugar" class="tab-btn px-3 py-2 md:px-6 md:py-3 rounded-xl font-bold text-sm md:text-lg whitespace-nowrap">
                     🎮 Jugar
                 </button>
-                <button onclick="switchTab('desafio')" id="btn-desafio" class="tab-btn px-4 py-2 md:px-6 md:py-3 rounded-xl font-bold text-base md:text-lg whitespace-nowrap">
+                <button onclick="switchTab('desafio')" id="btn-desafio" class="tab-btn px-3 py-2 md:px-6 md:py-3 rounded-xl font-bold text-sm md:text-lg whitespace-nowrap">
                     🏆 Desafío
                 </button>
             </nav>
@@ -144,6 +144,7 @@
         <!-- SECCIÓN: APRENDER -->
         <section id="sec-aprender" class="space-y-8">
             
+            <!-- ¿Qué son? -->
             <div class="bg-white p-8 card-shadow text-center">
                 <h2 class="text-3xl font-bold text-amber-500 mb-6">¿Qué son las plantas? 🌿</h2>
                 <p class="text-xl mb-4">Las plantas son seres vivos, ¡igual que tú y los animalitos! Necesitan cosas especiales para crecer fuertes y sanas.</p>
@@ -167,6 +168,7 @@
                 </div>
             </div>
 
+            <!-- Partes de la Planta -->
             <div class="bg-white p-8 card-shadow">
                 <h2 class="text-3xl font-bold text-green-600 mb-6 text-center">Partes de una planta 🌸</h2>
                 
@@ -214,25 +216,71 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Tipos de Plantas (NUEVO) -->
             <div class="bg-white p-8 card-shadow">
-                <h2 class="text-3xl font-bold text-orange-500 mb-6 text-center">Plantas para comer 🍎🥕</h2>
-                <p class="text-xl mb-6 text-center">¿Sabías que comemos diferentes partes de las plantas?</p>
+                <h2 class="text-3xl font-bold text-teal-600 mb-6 text-center">¿De qué tamaño son? 🌳🪴🌱</h2>
+                <p class="text-xl mb-6 text-center text-gray-700">Las plantas pueden ser de diferentes tamaños y formas dependiendo de su <strong>tallo</strong>. ¡Vamos a conocerlas!</p>
+                
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-orange-50 p-4 rounded-xl border-2 border-orange-200 text-center">
-                        <span class="text-6xl block mb-2">🥕</span>
+                    <!-- Árbol -->
+                    <div class="bg-teal-50 p-6 rounded-2xl border-4 border-teal-200 text-center flex flex-col items-center shadow-sm hover:transform hover:scale-105 transition-transform">
+                        <span class="text-7xl mb-4 drop-shadow-md">🌳</span>
+                        <h3 class="font-black text-2xl text-teal-800 mb-2">Árboles</h3>
+                        <p class="text-lg text-teal-700">Tienen un tallo grueso y muy duro llamado <strong>tronco</strong>. ¡Sus ramas crecen muy alto! <br><span class="text-sm italic text-teal-600 mt-2 block">Ej: El manzano o el pino.</span></p>
+                    </div>
+                    
+                    <!-- Arbusto -->
+                    <div class="bg-lime-50 p-6 rounded-2xl border-4 border-lime-200 text-center flex flex-col items-center shadow-sm hover:transform hover:scale-105 transition-transform">
+                        <span class="text-7xl mb-4 drop-shadow-md">🪴</span>
+                        <h3 class="font-black text-2xl text-lime-800 mb-2">Arbustos</h3>
+                        <p class="text-lg text-lime-700">Son más bajitos. Tienen tallos duros pero sus ramas nacen desde muy cerquita del suelo. <br><span class="text-sm italic text-lime-600 mt-2 block">Ej: Las rosas o las moras.</span></p>
+                    </div>
+                    
+                    <!-- Hierba / Pasto -->
+                    <div class="bg-green-50 p-6 rounded-2xl border-4 border-green-200 text-center flex flex-col items-center shadow-sm hover:transform hover:scale-105 transition-transform">
+                        <span class="text-7xl mb-4 drop-shadow-md">🌱</span>
+                        <h3 class="font-black text-2xl text-green-800 mb-2">Hierbas y Pasto</h3>
+                        <p class="text-lg text-green-700">Tienen un tallo blandito, delgado y de color verde. Por lo general son muy pequeñitas. <br><span class="text-sm italic text-green-600 mt-2 block">Ej: El pasto, la menta o el cilantro.</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Plantas Comestibles (AMPLIADO) -->
+            <div class="bg-white p-8 card-shadow">
+                <h2 class="text-3xl font-bold text-orange-500 mb-6 text-center">¡Plantas deliciosas! 🍎🥕🥦</h2>
+                <p class="text-xl mb-6 text-center text-gray-700">¿Sabías que comemos diferentes partes de las plantas? ¡Mira todo lo que nos dan!</p>
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div class="bg-orange-50 p-4 rounded-xl border-4 border-orange-200 text-center hover:bg-orange-100 transition-colors">
+                        <span class="text-5xl block mb-2">🥕</span>
                         <h4 class="font-bold text-xl text-orange-700">Comemos su Raíz</h4>
-                        <p>Zanahoria, betarraga.</p>
+                        <p class="text-gray-600">Zanahoria, betarraga.</p>
                     </div>
-                    <div class="bg-green-50 p-4 rounded-xl border-2 border-green-200 text-center">
-                        <span class="text-6xl block mb-2">🥬</span>
+                    <div class="bg-green-50 p-4 rounded-xl border-4 border-green-200 text-center hover:bg-green-100 transition-colors">
+                        <span class="text-5xl block mb-2">🥬</span>
                         <h4 class="font-bold text-xl text-green-700">Comemos sus Hojas</h4>
-                        <p>Lechuga, espinaca.</p>
+                        <p class="text-gray-600">Lechuga, espinaca.</p>
                     </div>
-                    <div class="bg-red-50 p-4 rounded-xl border-2 border-red-200 text-center">
-                        <span class="text-6xl block mb-2">🍅</span>
+                    <div class="bg-red-50 p-4 rounded-xl border-4 border-red-200 text-center hover:bg-red-100 transition-colors">
+                        <span class="text-5xl block mb-2">🍅</span>
                         <h4 class="font-bold text-xl text-red-700">Comemos su Fruto</h4>
-                        <p>Tomate, manzana.</p>
+                        <p class="text-gray-600">Tomate, manzana, palta.</p>
+                    </div>
+                    <div class="bg-yellow-50 p-4 rounded-xl border-4 border-yellow-200 text-center hover:bg-yellow-100 transition-colors">
+                        <span class="text-5xl block mb-2">🎋</span>
+                        <h4 class="font-bold text-xl text-yellow-700">Comemos su Tallo</h4>
+                        <p class="text-gray-600">Apio, espárrago.</p>
+                    </div>
+                    <div class="bg-emerald-50 p-4 rounded-xl border-4 border-emerald-200 text-center hover:bg-emerald-100 transition-colors">
+                        <span class="text-5xl block mb-2">🥦</span>
+                        <h4 class="font-bold text-xl text-emerald-700">Comemos su Flor</h4>
+                        <p class="text-gray-600">Brócoli, coliflor.</p>
+                    </div>
+                    <div class="bg-amber-50 p-4 rounded-xl border-4 border-amber-200 text-center hover:bg-amber-100 transition-colors">
+                        <span class="text-5xl block mb-2">🫛</span>
+                        <h4 class="font-bold text-xl text-amber-700">Comemos la Semilla</h4>
+                        <p class="text-gray-600">Arvejas, lentejas, maíz.</p>
                     </div>
                 </div>
             </div>
@@ -268,10 +316,11 @@
                     </div>
                 </div>
                 <div class="mt-6 text-center">
-                    <button onclick="verificarJuego1()" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
+                    <button id="btn-verificar-j1" onclick="verificarJuego1()" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
                         ¡Revisar mis respuestas!
                     </button>
                     <p id="msg-juego1" class="mt-4 text-xl font-bold min-h-[30px]"></p>
+                    <button id="btn-reinicio-j1" onclick="reiniciarJuego1()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
                 </div>
             </div>
 
@@ -303,7 +352,7 @@
                     </div>
                     
                     <p id="msg-juego2" class="mt-4 text-2xl font-bold min-h-[35px] text-center"></p>
-                    <button id="btn-reinicio-j2" onclick="reiniciarJuego2()" class="hidden mt-2 text-gray-500 underline font-bold">Jugar de nuevo</button>
+                    <button id="btn-reinicio-j2" onclick="reiniciarJuego2()" class="hidden mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
                 </div>
             </div>
 
@@ -342,11 +391,11 @@
                     </div>
                 </div>
                 <div class="mt-6 text-center">
-                    <button onclick="verificarJuego3()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
+                    <button id="btn-verificar-j3" onclick="verificarJuego3()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
                         ¡Revisar mis respuestas!
                     </button>
                     <p id="msg-juego3" class="mt-4 text-xl font-bold min-h-[30px]"></p>
-                    <button id="btn-reinicio-j3" onclick="reiniciarJuego3()" class="hidden mt-2 text-gray-500 underline font-bold hover:text-gray-700 transition-colors cursor-pointer">Jugar de nuevo</button>
+                    <button id="btn-reinicio-j3" onclick="reiniciarJuego3()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
                 </div>
             </div>
 
@@ -381,10 +430,85 @@
                     </div>
                 </div>
                 <div class="mt-6 text-center">
-                    <button onclick="verificarJuego4()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
+                    <button id="btn-verificar-j4" onclick="verificarJuego4()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
                         ¡Revisar mis respuestas!
                     </button>
                     <p id="msg-juego4" class="mt-4 text-xl font-bold min-h-[30px]"></p>
+                    <button id="btn-reinicio-j4" onclick="reiniciarJuego4()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
+                </div>
+            </div>
+
+            <!-- Juego 5: Árbol, Arbusto o Hierba -->
+            <div class="bg-white p-8 card-shadow">
+                <h2 class="text-3xl font-bold text-teal-600 mb-2">Juego 5: ¿De qué tamaño son? 🌳🪴🌱</h2>
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-6 flex items-start gap-4">
+                    <span class="text-3xl">👆</span>
+                    <p class="text-lg text-blue-800 font-medium"><strong>Cómo jugar:</strong> Clasifica estas plantas según su tipo de tallo y tamaño.</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-8">
+                    <!-- Contenedor de plantas -->
+                    <div class="w-full md:w-1/3 bg-gray-50 p-4 rounded-xl border-2 border-dashed border-gray-300 flex flex-wrap gap-4 justify-center items-start min-h-[150px] zona-origen" id="tamaños-container" onclick="manejarToqueContenedorOrigen(event, 'tamaños-container')">
+                        <!-- Generado con JS -->
+                    </div>
+                    
+                    <!-- Zonas para soltar -->
+                    <div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="zona-destino dropzone bg-teal-50 p-4 rounded-xl border-4 border-teal-200 min-h-[150px] flex flex-col items-center" data-target="arbol" onclick="manejarToqueDestino(this, 'juego5')">
+                            <h3 class="font-bold text-lg text-teal-800 mb-2 text-center pointer-events-none">Árbol (Tronco grueso)</h3>
+                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
+                        </div>
+                        <div class="zona-destino dropzone bg-lime-50 p-4 rounded-xl border-4 border-lime-200 min-h-[150px] flex flex-col items-center" data-target="arbusto" onclick="manejarToqueDestino(this, 'juego5')">
+                            <h3 class="font-bold text-lg text-lime-800 mb-2 text-center pointer-events-none">Arbusto (Bajito)</h3>
+                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
+                        </div>
+                        <div class="zona-destino dropzone bg-green-50 p-4 rounded-xl border-4 border-green-200 min-h-[150px] flex flex-col items-center" data-target="hierba" onclick="manejarToqueDestino(this, 'juego5')">
+                            <h3 class="font-bold text-lg text-green-800 mb-2 text-center pointer-events-none">Hierba (Tallo blando)</h3>
+                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 text-center">
+                    <button id="btn-verificar-j5" onclick="verificarJuego5()" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
+                        ¡Revisar mis respuestas!
+                    </button>
+                    <p id="msg-juego5" class="mt-4 text-xl font-bold min-h-[30px]"></p>
+                    <button id="btn-reinicio-j5" onclick="reiniciarJuego5()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
+                </div>
+            </div>
+
+            <!-- Juego 6: La Cosecha Comestible -->
+            <div class="bg-white p-8 card-shadow">
+                <h2 class="text-3xl font-bold text-amber-500 mb-2">Juego 6: ¡La Cosecha! 🧺</h2>
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-6 flex items-start gap-4">
+                    <span class="text-3xl">👆</span>
+                    <p class="text-lg text-blue-800 font-medium"><strong>Cómo jugar:</strong> Separa las partes de plantas que <strong>SÍ</strong> podemos comer para nuestra ensalada de las que <strong>NO</strong>.</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-8">
+                    <!-- Contenedor de recolección -->
+                    <div class="w-full md:w-1/3 bg-gray-50 p-4 rounded-xl border-2 border-dashed border-gray-300 flex flex-wrap gap-4 justify-center items-start min-h-[150px] zona-origen" id="cosecha-container" onclick="manejarToqueContenedorOrigen(event, 'cosecha-container')">
+                        <!-- Generado con JS -->
+                    </div>
+                    
+                    <!-- Zonas para soltar -->
+                    <div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="zona-destino dropzone bg-green-50 p-4 rounded-xl border-4 border-green-300 min-h-[150px] flex flex-col items-center" data-target="comestible" onclick="manejarToqueDestino(this, 'juego6')">
+                            <h3 class="font-bold text-xl text-green-700 mb-2 text-center pointer-events-none">¡A la ensalada! 🥗</h3>
+                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
+                        </div>
+                        <div class="zona-destino dropzone bg-stone-100 p-4 rounded-xl border-4 border-stone-300 min-h-[150px] flex flex-col items-center" data-target="nocomestible" onclick="manejarToqueDestino(this, 'juego6')">
+                            <h3 class="font-bold text-xl text-stone-600 mb-2 text-center pointer-events-none">¡No se come! 🚫</h3>
+                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-6 text-center">
+                    <button id="btn-verificar-j6" onclick="verificarJuego6()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
+                        ¡Revisar mis respuestas!
+                    </button>
+                    <p id="msg-juego6" class="mt-4 text-xl font-bold min-h-[30px]"></p>
+                    <button id="btn-reinicio-j6" onclick="reiniciarJuego6()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
                 </div>
             </div>
 
@@ -402,7 +526,7 @@
                     <div class="text-5xl animate-bounce-sm">🦊</div> <!-- Mascota guía -->
                 </div>
                 
-                <!-- Imagen del desafío (Recreación con emojis/SVG simples) -->
+                <!-- Imagen del desafío -->
                 <div class="bg-sky-50 rounded-2xl p-6 border-4 border-sky-100 mb-8 relative">
                     <div class="flex flex-wrap justify-center gap-6 p-4">
                         <!-- Frutos -->
@@ -465,10 +589,11 @@
                 </div>
 
                 <div class="mt-8 text-center border-t-2 border-dashed border-gray-200 pt-6">
-                    <button onclick="verificarDesafio()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 px-10 rounded-full shadow-lg transform hover:scale-105 transition-transform text-2xl">
+                    <button id="btn-verificar-desafio" onclick="verificarDesafio()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 px-10 rounded-full shadow-lg transform hover:scale-105 transition-transform text-2xl">
                         ¡Terminé!
                     </button>
                     <p id="msg-desafio" class="mt-4 text-xl font-bold min-h-[30px]"></p>
+                    <button id="btn-reinicio-desafio" onclick="reiniciarDesafio()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
                 </div>
             </div>
             
@@ -483,41 +608,35 @@
 
         async function initAudio() {
             if (audioIniciado) return;
-            await Tone.start(); // El navegador requiere una interacción para iniciar el audio
+            await Tone.start(); 
             audioIniciado = true;
 
-            // Sonido de clic/toque (campanita corta)
             synths.click = new Tone.Synth({ 
                 oscillator: { type: 'sine' }, 
                 envelope: { attack: 0.01, decay: 0.1, sustain: 0, release: 0.1 } 
             }).toDestination();
             synths.click.volume.value = -10;
 
-            // Sonido al soltar en una caja (pequeño pop)
             synths.drop = new Tone.MembraneSynth().toDestination();
             synths.drop.volume.value = -15;
 
-            // Sonido de error suave
             synths.error = new Tone.Synth({ 
                 oscillator: { type: 'triangle' }, 
                 envelope: { attack: 0.05, decay: 0.3, sustain: 0, release: 0.2 } 
             }).toDestination();
             synths.error.volume.value = -10;
 
-            // Sonido mágico (cuando curan la planta)
             synths.magic = new Tone.PolySynth(Tone.Synth, { 
                 oscillator: { type: 'sine' } 
             }).toDestination();
             synths.magic.volume.value = -10;
 
-            // Sonido de victoria
             synths.win = new Tone.PolySynth(Tone.Synth, { 
                 oscillator: { type: 'triangle' } 
             }).toDestination();
             synths.win.volume.value = -10;
         }
 
-        // Iniciar audio con el primer clic o toque en cualquier parte de la pantalla
         document.body.addEventListener('click', initAudio, { once: true });
         document.body.addEventListener('touchstart', initAudio, { once: true });
 
@@ -551,21 +670,17 @@
         // --- NAVEGACIÓN ---
         function switchTab(tabId) {
             reproducirSonido('click');
-            // Ocultar todas
             document.getElementById('sec-aprender').classList.add('hidden');
             document.getElementById('sec-jugar').classList.add('hidden');
             document.getElementById('sec-desafio').classList.add('hidden');
             
-            // Quitar clase active a los botones
             document.getElementById('btn-aprender').classList.remove('active');
             document.getElementById('btn-jugar').classList.remove('active');
             document.getElementById('btn-desafio').classList.remove('active');
             
-            // Mostrar la seleccionada
             document.getElementById('sec-' + tabId).classList.remove('hidden');
             document.getElementById('btn-' + tabId).classList.add('active');
 
-            // Scroll al top suave
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -575,31 +690,27 @@
         function mostrarInfoPlanta(elemento, nombre) {
             reproducirSonido('click');
             
-            // Actualizar textos
             const info = elemento.getAttribute('data-info');
             document.getElementById('info-titulo').innerText = nombre;
             document.getElementById('info-texto').innerText = info;
             
-            // Efecto visual: opacar las demás partes
             partesPlanta.forEach(p => {
                 p.classList.remove('destacada');
                 p.classList.add('opaca');
             });
             
-            // Destacar la seleccionada
             elemento.classList.remove('opaca');
             elemento.classList.add('destacada');
             
-            // Pequeña animación al cuadro de info
             const cajaInfo = document.getElementById('info-texto').parentElement;
             cajaInfo.style.transform = 'scale(1.05)';
             cajaInfo.style.transition = 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
             setTimeout(() => { cajaInfo.style.transform = 'scale(1)'; }, 250);
         }
 
-        // --- LÓGICA GLOBAL: TAP TO SELECT (Reemplaza Drag & Drop) ---
+        // --- LÓGICA GLOBAL: TAP TO SELECT ---
         let itemSeleccionadoGlobal = null;
-        let idJuegoActivo = null; // Para saber en qué juego estamos seleccionando
+        let idJuegoActivo = null; 
 
         function deseleccionarTodo() {
             if (itemSeleccionadoGlobal) {
@@ -611,31 +722,29 @@
         }
 
         function manejarToqueItem(event, juegoId) {
-            event.stopPropagation(); // Evitar que el clic llegue al contenedor padre
+            event.stopPropagation(); 
             
             const item = event.currentTarget;
 
-            // Si ya estaba seleccionado, lo deseleccionamos
             if (item === itemSeleccionadoGlobal) {
                 reproducirSonido('click');
                 deseleccionarTodo();
                 return;
             }
 
-            // Deseleccionar el anterior si lo había
             deseleccionarTodo();
 
-            // Seleccionar el nuevo
             reproducirSonido('click');
             itemSeleccionadoGlobal = item;
             idJuegoActivo = juegoId;
             item.classList.add('item-seleccionado');
 
-            // Resaltar las zonas de destino de este juego específico
             let selectorDestinos = '';
             if(juegoId === 'juego1') selectorDestinos = '#sec-jugar .zona-destino[data-target="una"], #sec-jugar .zona-destino[data-target="varias"]';
             if(juegoId === 'juego3') selectorDestinos = '#sec-jugar .zona-destino[data-target="raiz"], #sec-jugar .zona-destino[data-target="hoja"], #sec-jugar .zona-destino[data-target="fruto"], #sec-jugar .zona-destino[data-target="tallo"]';
             if(juegoId === 'juego4') selectorDestinos = '#sec-jugar .zona-destino[data-target="pequena"], #sec-jugar .zona-destino[data-target="puntas"], #sec-jugar .zona-destino[data-target="alargada"]';
+            if(juegoId === 'juego5') selectorDestinos = '#sec-jugar .zona-destino[data-target="arbol"], #sec-jugar .zona-destino[data-target="arbusto"], #sec-jugar .zona-destino[data-target="hierba"]';
+            if(juegoId === 'juego6') selectorDestinos = '#sec-jugar .zona-destino[data-target="comestible"], #sec-jugar .zona-destino[data-target="nocomestible"]';
             
             if(selectorDestinos) {
                 document.querySelectorAll(selectorDestinos).forEach(z => z.classList.add('activa-destino'));
@@ -645,26 +754,24 @@
         function manejarToqueDestino(zona, juegoId) {
             if (!itemSeleccionadoGlobal || idJuegoActivo !== juegoId) return;
 
-            // Mover el item al área correspondiente dentro de la zona
             const dropArea = zona.querySelector('.drop-area');
             if (dropArea) {
                 reproducirSonido('drop');
                 dropArea.appendChild(itemSeleccionadoGlobal);
             }
             
-            // Limpiar selección visual
             deseleccionarTodo();
         }
 
         function manejarToqueContenedorOrigen(event, containerId) {
-            // Permitir devolver items al contenedor original
             if (!itemSeleccionadoGlobal) return;
             
-            // Verificar que el item seleccionado pertenece al mismo tipo de juego
             let valido = false;
             if(containerId === 'frutas-container' && idJuegoActivo === 'juego1') valido = true;
             if(containerId === 'vegetales-container' && idJuegoActivo === 'juego3') valido = true;
             if(containerId === 'hojas-container' && idJuegoActivo === 'juego4') valido = true;
+            if(containerId === 'tamaños-container' && idJuegoActivo === 'juego5') valido = true;
+            if(containerId === 'cosecha-container' && idJuegoActivo === 'juego6') valido = true;
 
             if (valido) {
                 reproducirSonido('drop');
@@ -674,7 +781,7 @@
             }
         }
 
-        // --- JUEGO 1: Clasificador (Adaptado) ---
+        // --- JUEGO 1: Clasificador ---
         const frutasData = [
             { id: 'f1', emoji: '🥑', tipo: 'una', nombre: 'Palta' },
             { id: 'f2', emoji: '🍉', tipo: 'varias', nombre: 'Sandía' },
@@ -692,32 +799,35 @@
 
             mezcladas.forEach(f => {
                 const el = document.createElement('div');
-                // Quitamos clases draggable, agregamos item-interactivo
                 el.className = 'item-interactivo text-5xl bg-white p-2 rounded-xl shadow-sm border border-gray-200';
                 el.id = f.id;
                 el.dataset.tipo = f.tipo;
                 el.innerText = f.emoji;
                 el.title = f.nombre;
                 
-                // Nuevo evento táctil/clic
                 el.onclick = (e) => manejarToqueItem(e, 'juego1');
                 
                 container.appendChild(el);
             });
+
+            document.querySelectorAll('.dropzone[data-target="una"] .drop-area, .dropzone[data-target="varias"] .drop-area').forEach(z => z.innerHTML = '');
+            document.getElementById('msg-juego1').innerText = "";
+            const btnReset = document.getElementById('btn-reinicio-j1');
+            if(btnReset) btnReset.classList.add('hidden');
+            const btnVerificar = document.getElementById('btn-verificar-j1');
+            if(btnVerificar) btnVerificar.classList.remove('hidden');
         }
         
-        // Se elimina la lógica anterior de handleDragStart, handleDragEnd y eventos drag/drop de zonas.
-
         function verificarJuego1() {
             const dropUna = document.querySelector('.dropzone[data-target="una"] .drop-area');
             const dropVarias = document.querySelector('.dropzone[data-target="varias"] .drop-area');
             const msg = document.getElementById('msg-juego1');
             
-            // Verificar si quedan frutas sin clasificar
             if (document.getElementById('frutas-container').children.length > 0) {
                 msg.innerText = "¡Faltan frutas por clasificar! 🤔";
                 msg.className = "mt-4 text-xl font-bold text-orange-500";
                 reproducirSonido('error');
+                document.getElementById('btn-reinicio-j1').classList.remove('hidden');
                 return;
             }
 
@@ -725,9 +835,8 @@
 
             const revisarZona = (dropArea, tipoCorrecto) => {
                 Array.from(dropArea.children).forEach(el => {
-                    // Remover clases de animacion previas para poder repetirlas
                     el.classList.remove('animate-shake', 'animate-bounce-sm');
-                    void el.offsetWidth; // Truco para reiniciar la animacion CSS
+                    void el.offsetWidth;
                     
                     if (el.dataset.tipo !== tipoCorrecto) {
                         correcto = false;
@@ -748,83 +857,90 @@
                 msg.className = "mt-4 text-xl font-bold text-green-600";
                 reproducirSonido('win');
                 lanzarConfeti();
+                document.getElementById('btn-reinicio-j1').classList.remove('hidden');
+                document.getElementById('btn-verificar-j1').classList.add('hidden');
             } else {
                 msg.innerText = "Mmm... revisa las que están marcadas en rojo. ¡Tú puedes! 💪";
                 msg.className = "mt-4 text-xl font-bold text-red-500";
                 reproducirSonido('error');
+                document.getElementById('btn-reinicio-j1').classList.remove('hidden');
             }
         }
 
+        function reiniciarJuego1() {
+            initJuego1();
+        }
+
         // --- JUEGO 2: Curar Planta ---
-        let cosasBuenasAplicadas = 0;
-        const necesarias = 2; // Agua y Luz
+        let cosasBuenas = 0;
+        let curadas = { agua: false, luz: false };
 
         function curarPlanta(opcion) {
             const emoji = document.getElementById('planta-triste-emoji');
             const msg = document.getElementById('msg-juego2');
+            const btnReinicio = document.getElementById('btn-reinicio-j2');
             
-            if (opcion === 'agua' || opcion === 'luz') {
-                cosasBuenasAplicadas++;
+            if (opcion === 'agua' && !curadas.agua) {
+                curadas.agua = true;
+                cosasBuenas++;
                 reproducirSonido('magic');
-                msg.innerText = opcion === 'agua' ? "¡Glub glub! Qué rica agua. 💧" : "¡Qué calentito! Me gusta el sol. ☀️";
-                msg.className = "mt-4 text-2xl font-bold text-green-600";
-                
-                // Deshabilitar botón para no repetir
-                const boton = document.querySelector(`button[onclick="curarPlanta('${opcion}')"]`);
-                boton.disabled = true;
-                boton.classList.add('opacity-50', 'cursor-not-allowed');
-                
-                if (cosasBuenasAplicadas === 1) {
-                    emoji.innerText = "🌱"; // Mejorando
-                } else if (cosasBuenasAplicadas >= necesarias) {
-                    emoji.innerText = "🌻"; // Feliz
-                    msg.innerText = "¡Yupi! ¡La planta está feliz y fuerte gracias a ti! 🎉";
-                    document.getElementById('btn-reinicio-j2').classList.remove('hidden');
-                    reproducirSonido('win');
-                    lanzarConfeti();
-                }
-            } else {
+                msg.innerText = "¡Agüita fresca! 💧 ¡Me siento un poco mejor!";
+                msg.className = "mt-4 text-2xl font-bold text-blue-500 text-center";
+            } else if (opcion === 'luz' && !curadas.luz) {
+                curadas.luz = true;
+                cosasBuenas++;
+                reproducirSonido('magic');
+                msg.innerText = "¡Qué rico Sol! ☀️ ¡Me da mucha energía!";
+                msg.className = "mt-4 text-2xl font-bold text-yellow-500 text-center";
+            } else if (opcion === 'dulces' || opcion === 'juguete') {
                 reproducirSonido('error');
-                msg.innerText = "No, creo que las plantas no necesitan eso... 🤔";
-                msg.className = "mt-4 text-2xl font-bold text-orange-500";
-                emoji.classList.add('animate-bounce-sm');
-                setTimeout(() => emoji.classList.remove('animate-bounce-sm'), 1000);
+                msg.innerText = "Hmm... las plantas no necesitan eso para crecer. 🌱";
+                msg.className = "mt-4 text-2xl font-bold text-red-500 text-center";
+                btnReinicio.classList.remove('hidden');
+            } else {
+                msg.innerText = "¡Ya me diste de eso! 🌱";
+                msg.className = "mt-4 text-2xl font-bold text-gray-500 text-center";
+            }
+
+            if (cosasBuenas === 1) {
+                emoji.innerText = "🌱";
+            } else if (cosasBuenas === 2) {
+                emoji.innerText = "🌻";
+                msg.innerText = "¡Gracias! Ahora soy una planta feliz y fuerte. ✨";
+                msg.className = "mt-4 text-2xl font-bold text-green-600 text-center animate-bounce-sm";
+                reproducirSonido('win');
+                lanzarConfeti();
+                btnReinicio.classList.remove('hidden');
+                
+                // Deshabilitar botones
+                document.querySelectorAll('.opcion-cura').forEach(btn => btn.style.pointerEvents = 'none');
             }
         }
 
         function reiniciarJuego2() {
-            reproducirSonido('click');
-            cosasBuenasAplicadas = 0;
+            cosasBuenas = 0;
+            curadas = { agua: false, luz: false };
             document.getElementById('planta-triste-emoji').innerText = "🥀";
             document.getElementById('msg-juego2').innerText = "";
             document.getElementById('btn-reinicio-j2').classList.add('hidden');
-            
-            // Habilitar botones
-            document.querySelectorAll('.opcion-cura').forEach(b => {
-                b.disabled = false;
-                b.classList.remove('opacity-50', 'cursor-not-allowed');
-            });
+            document.querySelectorAll('.opcion-cura').forEach(btn => btn.style.pointerEvents = 'auto');
         }
 
-        // --- JUEGO 3: Partes Comestibles ---
+        // --- JUEGO 3: Partes comestibles ---
         const vegetalesData = [
             { id: 'v1', emoji: '🥕', tipo: 'raiz', nombre: 'Zanahoria' },
             { id: 'v2', emoji: '🥬', tipo: 'hoja', nombre: 'Lechuga' },
             { id: 'v3', emoji: '🍅', tipo: 'fruto', nombre: 'Tomate' },
-            { id: 'v4', emoji: '🥔', tipo: 'raiz', nombre: 'Papa' },
-            { id: 'v5', emoji: '🥦', tipo: 'fruto', nombre: 'Brócoli' }, 
-            { id: 'v6', emoji: '🧅', tipo: 'raiz', nombre: 'Cebolla' }, 
-            { id: 'v7', emoji: '🍎', tipo: 'fruto', nombre: 'Manzana' },
-            { id: 'v8', emoji: '🎋', tipo: 'tallo', nombre: 'Apio (tallo)' } 
+            { id: 'v4', emoji: '🎋', tipo: 'tallo', nombre: 'Apio' }
         ];
 
         function initJuego3() {
             const container = document.getElementById('vegetales-container');
             container.innerHTML = ''; 
             
-            const mezclados = [...vegetalesData].sort(() => Math.random() - 0.5);
+            const mezcladas = [...vegetalesData].sort(() => Math.random() - 0.5);
 
-            mezclados.forEach(v => {
+            mezcladas.forEach(v => {
                 const el = document.createElement('div');
                 el.className = 'item-interactivo text-5xl bg-white p-2 rounded-xl shadow-sm border border-gray-200';
                 el.id = v.id;
@@ -836,15 +952,24 @@
                 
                 container.appendChild(el);
             });
+            
+            // Limpiar zonas al reiniciar
+            document.querySelectorAll('.dropzone[data-target="raiz"] .drop-area, .dropzone[data-target="hoja"] .drop-area, .dropzone[data-target="fruto"] .drop-area, .dropzone[data-target="tallo"] .drop-area').forEach(z => z.innerHTML = '');
+            document.getElementById('msg-juego3').innerText = "";
+            const btnReset = document.getElementById('btn-reinicio-j3');
+            if(btnReset) btnReset.classList.add('hidden');
+            const btnVerificar = document.getElementById('btn-verificar-j3');
+            if(btnVerificar) btnVerificar.classList.remove('hidden');
         }
 
         function verificarJuego3() {
             const msg = document.getElementById('msg-juego3');
             
             if (document.getElementById('vegetales-container').children.length > 0) {
-                msg.innerText = "¡Faltan alimentos por clasificar! 🍽️";
+                msg.innerText = "¡Faltan alimentos por clasificar! 🤔";
                 msg.className = "mt-4 text-xl font-bold text-orange-500";
                 reproducirSonido('error');
+                document.getElementById('btn-reinicio-j3').classList.remove('hidden');
                 return;
             }
 
@@ -871,48 +996,31 @@
             });
 
             if (correcto) {
-                msg.innerText = "¡Súper! Sabes muy bien qué parte de la planta comemos. 🥗";
+                msg.innerText = "¡Excelente! Sabes muy bien qué parte de la planta comemos. 🌟";
                 msg.className = "mt-4 text-xl font-bold text-green-600";
                 reproducirSonido('win');
                 lanzarConfeti();
                 document.getElementById('btn-reinicio-j3').classList.remove('hidden');
+                document.getElementById('btn-verificar-j3').classList.add('hidden');
             } else {
-                msg.innerText = "Revisa los que están en rojo. ¡Inténtalo de nuevo! 🤓";
+                msg.innerText = "Mmm... revisa los que están marcados en rojo. ¡Tú puedes! 💪";
                 msg.className = "mt-4 text-xl font-bold text-red-500";
                 reproducirSonido('error');
                 document.getElementById('btn-reinicio-j3').classList.remove('hidden');
             }
         }
-
+        
         function reiniciarJuego3() {
-            reproducirSonido('click');
-            
-            // Limpiar las zonas de destino
-            const tipos = ['raiz', 'hoja', 'fruto', 'tallo'];
-            tipos.forEach(tipo => {
-                const dropArea = document.querySelector(`.dropzone[data-target="${tipo}"] .drop-area`);
-                if(dropArea) {
-                    dropArea.innerHTML = '';
-                }
-            });
-
-            // Limpiar mensajes y ocultar el botón de reinicio
-            document.getElementById('msg-juego3').innerText = "";
-            document.getElementById('btn-reinicio-j3').classList.add('hidden');
-            
-            // Volver a generar los vegetales en su caja original
             initJuego3();
-            deseleccionarTodo(); // Asegurarnos de que no quede ninguna selección visual activa
         }
 
-        // --- JUEGO 4: Clasificador de Hojas ---
+        // --- JUEGO 4: Ordenar hojas ---
         const hojasData = [
-            { id: 'h1', emoji: '🍃', tipo: 'alargada', nombre: 'Hoja alargada' },
+            { id: 'h1', emoji: '🍃', tipo: 'pequena', nombre: 'Hojas pequeñas' },
             { id: 'h2', emoji: '🍁', tipo: 'puntas', nombre: 'Hoja con puntas' },
-            { id: 'h3', emoji: '🌱', tipo: 'pequena', nombre: 'Hoja pequeña' },
-            { id: 'h4', emoji: '🌿', tipo: 'alargada', nombre: 'Hoja alargada' },
-            { id: 'h5', emoji: '☘️', tipo: 'puntas', nombre: 'Hoja con puntas (trébol)' },
-            { id: 'h6', emoji: '🍂', tipo: 'alargada', nombre: 'Hoja seca alargada' }
+            { id: 'h3', emoji: '🌿', tipo: 'alargada', nombre: 'Hoja alargada' },
+            { id: 'h4', emoji: '🍀', tipo: 'pequena', nombre: 'Trébol' },
+            { id: 'h5', emoji: '🍂', tipo: 'puntas', nombre: 'Hoja seca' }
         ];
 
         function initJuego4() {
@@ -933,15 +1041,23 @@
                 
                 container.appendChild(el);
             });
+
+            document.querySelectorAll('.dropzone[data-target="pequena"] .drop-area, .dropzone[data-target="puntas"] .drop-area, .dropzone[data-target="alargada"] .drop-area').forEach(z => z.innerHTML = '');
+            document.getElementById('msg-juego4').innerText = "";
+            const btnReset = document.getElementById('btn-reinicio-j4');
+            if(btnReset) btnReset.classList.add('hidden');
+            const btnVerificar = document.getElementById('btn-verificar-j4');
+            if(btnVerificar) btnVerificar.classList.remove('hidden');
         }
 
         function verificarJuego4() {
             const msg = document.getElementById('msg-juego4');
             
             if (document.getElementById('hojas-container').children.length > 0) {
-                msg.innerText = "¡Faltan hojas por clasificar! 🌬️";
+                msg.innerText = "¡Faltan hojas por clasificar! 🤔";
                 msg.className = "mt-4 text-xl font-bold text-orange-500";
                 reproducirSonido('error');
+                document.getElementById('btn-reinicio-j4').classList.remove('hidden');
                 return;
             }
 
@@ -968,21 +1084,206 @@
             });
 
             if (correcto) {
-                msg.innerText = "¡Perfecto! Eres un experto botánico. 🌳";
-                msg.className = "mt-4 text-xl font-bold text-green-600";
+                msg.innerText = "¡Fantástico! Las hojas están ordenadas. 🍃✨";
+                msg.className = "mt-4 text-xl font-bold text-emerald-600";
                 reproducirSonido('win');
                 lanzarConfeti();
+                document.getElementById('btn-reinicio-j4').classList.remove('hidden');
+                document.getElementById('btn-verificar-j4').classList.add('hidden');
             } else {
-                msg.innerText = "Ups, algunas hojas se volaron al grupo equivocado. ¡Revisa! 💨";
+                msg.innerText = "Ups... algunas hojas se equivocaron de grupo. Revisa las rojas. 🍂";
                 msg.className = "mt-4 text-xl font-bold text-red-500";
                 reproducirSonido('error');
+                document.getElementById('btn-reinicio-j4').classList.remove('hidden');
             }
+        }
+
+        function reiniciarJuego4() {
+            initJuego4();
+        }
+
+        // --- JUEGO 5: Tipos de Plantas ---
+        const tamanosData = [
+            { id: 't1', emoji: '🌲', tipo: 'arbol', nombre: 'Pino (Árbol)' },
+            { id: 't2', emoji: '🌿', tipo: 'hierba', nombre: 'Menta (Hierba)' },
+            { id: 't3', emoji: '🪴', tipo: 'arbusto', nombre: 'Helecho (Arbusto)' },
+            { id: 't4', emoji: '🍎', tipo: 'arbol', nombre: 'Manzano (Árbol)' },
+            { id: 't5', emoji: '🌱', tipo: 'hierba', nombre: 'Pasto (Hierba)' },
+            { id: 't6', emoji: '🌹', tipo: 'arbusto', nombre: 'Rosal (Arbusto)' }
+        ];
+
+        function initJuego5() {
+            const container = document.getElementById('tamaños-container');
+            container.innerHTML = ''; 
+            
+            const mezcladas = [...tamanosData].sort(() => Math.random() - 0.5);
+
+            mezcladas.forEach(t => {
+                const el = document.createElement('div');
+                el.className = 'item-interactivo text-5xl bg-white p-2 rounded-xl shadow-sm border border-gray-200';
+                el.id = t.id;
+                el.dataset.tipo = t.tipo;
+                el.innerText = t.emoji;
+                el.title = t.nombre;
+                
+                el.onclick = (e) => manejarToqueItem(e, 'juego5');
+                
+                container.appendChild(el);
+            });
+
+            document.querySelectorAll('.dropzone[data-target="arbol"] .drop-area, .dropzone[data-target="arbusto"] .drop-area, .dropzone[data-target="hierba"] .drop-area').forEach(z => z.innerHTML = '');
+            document.getElementById('msg-juego5').innerText = "";
+            const btnReset = document.getElementById('btn-reinicio-j5');
+            if(btnReset) btnReset.classList.add('hidden');
+            const btnVerificar = document.getElementById('btn-verificar-j5');
+            if(btnVerificar) btnVerificar.classList.remove('hidden');
+        }
+
+        function verificarJuego5() {
+            const msg = document.getElementById('msg-juego5');
+            
+            if (document.getElementById('tamaños-container').children.length > 0) {
+                msg.innerText = "¡Faltan plantas por clasificar! 🔍";
+                msg.className = "mt-4 text-xl font-bold text-orange-500";
+                reproducirSonido('error');
+                document.getElementById('btn-reinicio-j5').classList.remove('hidden');
+                return;
+            }
+
+            let correcto = true;
+            const tipos = ['arbol', 'arbusto', 'hierba'];
+
+            tipos.forEach(tipo => {
+                const dropArea = document.querySelector(`.dropzone[data-target="${tipo}"] .drop-area`);
+                if(dropArea) {
+                    Array.from(dropArea.children).forEach(el => {
+                        el.classList.remove('animate-shake', 'animate-bounce-sm');
+                        void el.offsetWidth;
+                        
+                        if (el.dataset.tipo !== tipo) {
+                            correcto = false;
+                            el.classList.add('bg-red-100', 'border-red-500', 'animate-shake');
+                            el.classList.remove('bg-green-100', 'border-green-500');
+                        } else {
+                            el.classList.remove('bg-red-100', 'border-red-500');
+                            el.classList.add('bg-green-100', 'border-green-500', 'animate-bounce-sm');
+                        }
+                    });
+                }
+            });
+
+            if (correcto) {
+                msg.innerText = "¡Genial! Conoces muy bien los tamaños de las plantas. 🌟";
+                msg.className = "mt-4 text-xl font-bold text-teal-600";
+                reproducirSonido('win');
+                lanzarConfeti();
+                document.getElementById('btn-reinicio-j5').classList.remove('hidden');
+                document.getElementById('btn-verificar-j5').classList.add('hidden');
+            } else {
+                msg.innerText = "Recuerda: Los árboles son los más grandes y de tronco grueso. ¡Revisa los marcados en rojo! 🌳";
+                msg.className = "mt-4 text-xl font-bold text-red-500";
+                reproducirSonido('error');
+                document.getElementById('btn-reinicio-j5').classList.remove('hidden');
+            }
+        }
+
+        function reiniciarJuego5() {
+            initJuego5();
+        }
+
+        // --- JUEGO 6: Cosecha Comestible ---
+        const cosechaData = [
+            { id: 'c1', emoji: '🍓', tipo: 'comestible', nombre: 'Frutilla' },
+            { id: 'c2', emoji: '🍂', tipo: 'nocomestible', nombre: 'Hoja seca' },
+            { id: 'c3', emoji: '🥒', tipo: 'comestible', nombre: 'Pepino' },
+            { id: 'c4', emoji: '🪵', tipo: 'nocomestible', nombre: 'Tronco de madera' },
+            { id: 'c5', emoji: '🌽', tipo: 'comestible', nombre: 'Choclo / Maíz' },
+            { id: 'c6', emoji: '🪨', tipo: 'nocomestible', nombre: 'Piedra' }
+        ];
+
+        function initJuego6() {
+            const container = document.getElementById('cosecha-container');
+            container.innerHTML = ''; 
+            
+            const mezcladas = [...cosechaData].sort(() => Math.random() - 0.5);
+
+            mezcladas.forEach(c => {
+                const el = document.createElement('div');
+                el.className = 'item-interactivo text-5xl bg-white p-2 rounded-xl shadow-sm border border-gray-200';
+                el.id = c.id;
+                el.dataset.tipo = c.tipo;
+                el.innerText = c.emoji;
+                el.title = c.nombre;
+                
+                el.onclick = (e) => manejarToqueItem(e, 'juego6');
+                
+                container.appendChild(el);
+            });
+
+            document.querySelectorAll('.dropzone[data-target="comestible"] .drop-area, .dropzone[data-target="nocomestible"] .drop-area').forEach(z => z.innerHTML = '');
+            document.getElementById('msg-juego6').innerText = "";
+            const btnReset = document.getElementById('btn-reinicio-j6');
+            if(btnReset) btnReset.classList.add('hidden');
+            const btnVerificar = document.getElementById('btn-verificar-j6');
+            if(btnVerificar) btnVerificar.classList.remove('hidden');
+        }
+
+        function verificarJuego6() {
+            const msg = document.getElementById('msg-juego6');
+            
+            if (document.getElementById('cosecha-container').children.length > 0) {
+                msg.innerText = "¡Aún quedan cosas por recoger! 🧺";
+                msg.className = "mt-4 text-xl font-bold text-orange-500";
+                reproducirSonido('error');
+                document.getElementById('btn-reinicio-j6').classList.remove('hidden');
+                return;
+            }
+
+            let correcto = true;
+            const tipos = ['comestible', 'nocomestible'];
+
+            tipos.forEach(tipo => {
+                const dropArea = document.querySelector(`.dropzone[data-target="${tipo}"] .drop-area`);
+                if(dropArea) {
+                    Array.from(dropArea.children).forEach(el => {
+                        el.classList.remove('animate-shake', 'animate-bounce-sm');
+                        void el.offsetWidth;
+                        
+                        if (el.dataset.tipo !== tipo) {
+                            correcto = false;
+                            el.classList.add('bg-red-100', 'border-red-500', 'animate-shake');
+                            el.classList.remove('bg-green-100', 'border-green-500');
+                        } else {
+                            el.classList.remove('bg-red-100', 'border-red-500');
+                            el.classList.add('bg-green-100', 'border-green-500', 'animate-bounce-sm');
+                        }
+                    });
+                }
+            });
+
+            if (correcto) {
+                msg.innerText = "¡Qué rica ensalada vamos a preparar! 🥗✨";
+                msg.className = "mt-4 text-xl font-bold text-amber-600";
+                reproducirSonido('win');
+                lanzarConfeti();
+                document.getElementById('btn-reinicio-j6').classList.remove('hidden');
+                document.getElementById('btn-verificar-j6').classList.add('hidden');
+            } else {
+                msg.innerText = "¡Cuidado! Hay cosas ahí que nos podrían hacer doler la pancita. 🤢";
+                msg.className = "mt-4 text-xl font-bold text-red-500";
+                reproducirSonido('error');
+                document.getElementById('btn-reinicio-j6').classList.remove('hidden');
+            }
+        }
+
+        function reiniciarJuego6() {
+            initJuego6();
         }
 
         // --- DESAFÍO ---
         const respuestasDesafio = {
-            frutos: 3, // 2 manzanas, 1 pera
-            flores: 5  // 5 flores varias
+            frutos: 3, 
+            flores: 5  
         };
 
         function verificarDesafio() {
@@ -994,12 +1295,14 @@
             if (!paso1Select) {
                 msg.innerText = "Falta responder el Paso 1 🧐";
                 msg.className = "mt-4 text-xl font-bold text-orange-500";
+                document.getElementById('btn-reinicio-desafio').classList.remove('hidden');
                 return;
             }
 
             if (inpFrutos === "" || inpFlores === "") {
                 msg.innerText = "Completa los números en la tabla del Paso 2 ✍️";
                 msg.className = "mt-4 text-xl font-bold text-orange-500";
+                document.getElementById('btn-reinicio-desafio').classList.remove('hidden');
                 return;
             }
 
@@ -1032,13 +1335,32 @@
                 msg.className = "mt-4 text-2xl font-bold text-green-600";
                 reproducirSonido('win');
                 lanzarConfeti();
-                // Animación extra
+                document.getElementById('btn-reinicio-desafio').classList.remove('hidden');
+                document.getElementById('btn-verificar-desafio').classList.add('hidden');
                 confetti({ particleCount: 100, spread: 100, origin: { y: 0.3 } });
             } else {
                 msg.innerText = "Casi... Vuelve a contar con cuidado. " + errores.join(" ");
                 msg.className = "mt-4 text-xl font-bold text-red-500";
                 reproducirSonido('error');
+                document.getElementById('btn-reinicio-desafio').classList.remove('hidden');
             }
+        }
+
+        function reiniciarDesafio() {
+            const opciones = document.querySelectorAll('input[name="p1"]');
+            opciones.forEach(op => op.checked = false);
+            
+            document.getElementById('input-frutos').value = "";
+            document.getElementById('input-frutos').classList.remove('border-red-500', 'border-green-500');
+            
+            document.getElementById('input-flores').value = "";
+            document.getElementById('input-flores').classList.remove('border-red-500', 'border-green-500');
+            
+            document.getElementById('msg-desafio').innerText = "";
+            const btnReset = document.getElementById('btn-reinicio-desafio');
+            if(btnReset) btnReset.classList.add('hidden');
+            const btnVerificar = document.getElementById('btn-verificar-desafio');
+            if(btnVerificar) btnVerificar.classList.remove('hidden');
         }
 
         // Utilidad
@@ -1055,6 +1377,8 @@
             initJuego1();
             initJuego3();
             initJuego4();
+            initJuego5();
+            initJuego6();
         };
 
     </script>
