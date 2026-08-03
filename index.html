@@ -52,9 +52,10 @@
         }
 
         .item-seleccionado {
-            transform: scale(1.1);
-            box-shadow: 0 0 0 4px #fbbf24; /* yellow-400 */
+            transform: scale(1.15) translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.5), 0 0 0 4px #fbbf24; /* yellow-400 */
             z-index: 10;
+            animation: float 2s infinite ease-in-out;
         }
 
         .zona-destino {
@@ -66,9 +67,37 @@
             background-color: #fef08a; /* yellow-200 */
             border-color: #eab308; /* yellow-500 */
             transform: scale(1.02);
+            animation: pulse-border 1.5s infinite;
+        }
+
+        /* Estilos interactivos para la planta */
+        .parte-planta {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        .parte-planta:hover {
+            filter: drop-shadow(0px 0px 6px rgba(34, 197, 94, 0.8));
+        }
+        .parte-planta.destacada {
+            filter: drop-shadow(0px 0px 8px rgba(34, 197, 94, 1));
+        }
+        .parte-planta.opaca {
+            opacity: 0.3;
         }
 
         /* Animaciones */
+        @keyframes float {
+            0%, 100% { transform: scale(1.15) translateY(-4px); }
+            50% { transform: scale(1.15) translateY(-8px); }
+        }
+
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.6); }
+            70% { box-shadow: 0 0 0 12px rgba(234, 179, 8, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); }
+        }
+
         @keyframes bounce-sm {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
@@ -149,20 +178,20 @@
                             <rect x="0" y="380" width="400" height="120" fill="#8B4513" rx="10"/>
                             
                             <!-- Raíz -->
-                            <path onclick="reproducirSonido('click')" class="parte-planta" id="p-raiz" data-info="Absorben el agua y los minerales de la tierra. ¡Crecen hacia abajo!" d="M190 380 Q170 420 180 480 M210 380 Q230 420 220 480 M200 380 V470 M185 410 Q160 430 150 440 M215 410 Q240 430 250 440" stroke="#D2B48C" stroke-width="6" fill="none" stroke-linecap="round"/>
+                            <path onclick="mostrarInfoPlanta(this, 'Raíz')" class="parte-planta" id="p-raiz" data-info="Absorben el agua y los minerales de la tierra. ¡Crecen hacia abajo!" d="M190 380 Q170 420 180 480 M210 380 Q230 420 220 480 M200 380 V470 M185 410 Q160 430 150 440 M215 410 Q240 430 250 440" stroke="#D2B48C" stroke-width="6" fill="none" stroke-linecap="round"/>
                             
                             <!-- Tallo -->
-                            <path onclick="reproducirSonido('click')" class="parte-planta" id="p-tallo" data-info="Transporta el agua a las hojas y sostiene la planta. ¡Es como una bombilla (pajita)!" d="M200 380 Q190 250 200 120" stroke="#4CAF50" stroke-width="12" fill="none" stroke-linecap="round"/>
+                            <path onclick="mostrarInfoPlanta(this, 'Tallo')" class="parte-planta" id="p-tallo" data-info="Transporta el agua a las hojas y sostiene la planta. ¡Es como una bombilla (pajita)!" d="M200 380 Q190 250 200 120" stroke="#4CAF50" stroke-width="12" fill="none" stroke-linecap="round"/>
                             
                             <!-- Hojas -->
-                            <g onclick="reproducirSonido('click')" class="parte-planta" id="p-hojas" data-info="Usan el aire y la luz del Sol para fabricar el alimento de la planta.">
+                            <g onclick="mostrarInfoPlanta(this, 'Hojas')" class="parte-planta" id="p-hojas" data-info="Usan el aire y la luz del Sol para fabricar el alimento de la planta.">
                                 <path d="M200 250 Q120 220 150 280 Q180 280 200 250" fill="#81C784" stroke="#4CAF50" stroke-width="3"/>
                                 <path d="M200 180 Q280 150 250 210 Q220 210 200 180" fill="#81C784" stroke="#4CAF50" stroke-width="3"/>
                                 <path d="M195 320 Q130 300 150 350 Q180 340 195 320" fill="#81C784" stroke="#4CAF50" stroke-width="3"/>
                             </g>
                             
                             <!-- Flor -->
-                            <g onclick="reproducirSonido('click')" class="parte-planta" id="p-flor" data-info="¡Son hermosas y coloridas! Luego se convierten en frutos.">
+                            <g onclick="mostrarInfoPlanta(this, 'Flor')" class="parte-planta" id="p-flor" data-info="¡Son hermosas y coloridas! Luego se convierten en frutos.">
                                 <circle cx="200" cy="120" r="15" fill="#FFEB3B"/>
                                 <path d="M200 105 Q180 70 200 90 Q220 70 200 105" fill="#FF9800"/>
                                 <path d="M200 135 Q180 170 200 150 Q220 170 200 135" fill="#FF9800"/>
@@ -171,7 +200,7 @@
                             </g>
                             
                             <!-- Fruto -->
-                            <g onclick="reproducirSonido('click')" class="parte-planta" id="p-fruto" data-info="Contienen las semillas en su interior que darán origen a nuevas plantas.">
+                            <g onclick="mostrarInfoPlanta(this, 'Fruto')" class="parte-planta" id="p-fruto" data-info="Contienen las semillas en su interior que darán origen a nuevas plantas.">
                                 <circle cx="160" cy="240" r="18" fill="#F44336"/>
                                 <path d="M160 222 Q165 210 170 220" stroke="#4CAF50" stroke-width="3" fill="none"/>
                             </g>
@@ -541,6 +570,32 @@
 
         // --- SECCIÓN APRENDER (Planta Interactiva) ---
         const partesPlanta = document.querySelectorAll('.parte-planta');
+
+        function mostrarInfoPlanta(elemento, nombre) {
+            reproducirSonido('click');
+            
+            // Actualizar textos
+            const info = elemento.getAttribute('data-info');
+            document.getElementById('info-titulo').innerText = nombre;
+            document.getElementById('info-texto').innerText = info;
+            
+            // Efecto visual: opacar las demás partes
+            partesPlanta.forEach(p => {
+                p.classList.remove('destacada');
+                p.classList.add('opaca');
+            });
+            
+            // Destacar la seleccionada
+            elemento.classList.remove('opaca');
+            elemento.classList.add('destacada');
+            
+            // Pequeña animación al cuadro de info
+            const cajaInfo = document.getElementById('info-texto').parentElement;
+            cajaInfo.style.transform = 'scale(1.05)';
+            cajaInfo.style.transition = 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            setTimeout(() => { cajaInfo.style.transform = 'scale(1)'; }, 250);
+        }
+
         // --- LÓGICA GLOBAL: TAP TO SELECT (Reemplaza Drag & Drop) ---
         let itemSeleccionadoGlobal = null;
         let idJuegoActivo = null; // Para saber en qué juego estamos seleccionando
