@@ -3,1384 +3,877 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exploradores de Plantas - ¡Aprende Jugando!</title>
+    <title>¡Aprende Jugando! - 1° Básico</title>
+    
+    <!-- Tailwind CSS para el diseño -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React y ReactDOM para la interactividad -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!-- Babel para compilar JSX en el navegador -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Fuente amigable para niños -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    
     <style>
         body {
             font-family: 'Nunito', sans-serif;
-            background-color: #f0fdf4; /* Verde muy claro */
-            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23dcfce7" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+            background-color: #f0fdfa; /* Fondo suave */
+            touch-action: manipulation; /* Mejor respuesta en tablets */
         }
         
-        .tab-btn.active {
-            background-color: #22c55e; /* green-500 */
-            color: white;
-            border-bottom: 4px solid #16a34a; /* green-600 */
-            transform: translateY(2px);
-        }
-
-        .tab-btn {
-            background-color: white;
-            color: #16a34a;
-            border: 2px solid #22c55e;
-            border-bottom: 6px solid #16a34a;
-            transition: all 0.2s;
-        }
-
-        .tab-btn:hover:not(.active) {
-            transform: translateY(2px);
-            border-bottom: 4px solid #16a34a;
-        }
-
-        .card-shadow {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 8px 0px 0px rgba(34, 197, 94, 0.2);
-            border-radius: 24px;
-        }
-
-        .item-interactivo {
-            cursor: pointer;
-            transition: all 0.2s;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+        .bounce-in {
+            animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        .item-interactivo:active {
-            transform: scale(0.95);
+        @keyframes bounceIn {
+            0% { transform: scale(0.1); opacity: 0; }
+            60% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); }
         }
 
-        .item-seleccionado {
-            transform: scale(1.15) translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(251, 191, 36, 0.5), 0 0 0 4px #fbbf24;
-            z-index: 10;
-            animation: float 2s infinite ease-in-out;
-        }
-
-        .zona-destino {
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .zona-destino.activa-destino {
-            background-color: #fef08a;
-            border-color: #eab308;
-            transform: scale(1.02);
-            animation: pulse-border 1.5s infinite;
-        }
-
-        /* Estilos interactivos para la planta */
-        .parte-planta {
-            cursor: pointer;
-            transition: all 0.3s ease;
-            transform-origin: center;
-        }
-        .parte-planta:hover {
-            filter: drop-shadow(0px 0px 6px rgba(34, 197, 94, 0.8));
-        }
-        .parte-planta.destacada {
-            filter: drop-shadow(0px 0px 8px rgba(34, 197, 94, 1));
-        }
-        .parte-planta.opaca {
-            opacity: 0.3;
-        }
-
-        /* Animaciones */
-        @keyframes float {
-            0%, 100% { transform: scale(1.15) translateY(-4px); }
-            50% { transform: scale(1.15) translateY(-8px); }
-        }
-
-        @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.6); }
-            70% { box-shadow: 0 0 0 12px rgba(234, 179, 8, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); }
-        }
-
-        @keyframes bounce-sm {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        .animate-bounce-sm {
-            animation: bounce-sm 2s infinite ease-in-out;
+        .shake {
+            animation: shake 0.5s;
         }
 
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+            100% { transform: translateX(0); }
         }
-        .animate-shake {
-            animation: shake 0.4s ease-in-out;
+
+        .success-pulse {
+            animation: pulseGreen 1s infinite;
+        }
+
+        @keyframes pulseGreen {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(74, 222, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+
+        .btn-game {
+            transition: all 0.2s;
+        }
+        .btn-game:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
-<body class="min-h-screen text-gray-800 pb-12">
+<body>
+    <div id="root"></div>
 
-    <header class="bg-white p-3 md:p-6 shadow-md border-b-4 border-green-500 sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3 md:gap-4">
-            <h1 class="text-xl md:text-3xl font-black text-green-600 flex items-center gap-2">
-                <span class="text-2xl md:text-4xl">🌱</span> Exploradores de Plantas
-            </h1>
-            
-            <nav class="flex flex-wrap gap-2 md:gap-4 w-full justify-center mt-2 md:mt-0">
-                <button onclick="switchTab('aprender')" id="btn-aprender" class="tab-btn active px-3 py-2 md:px-6 md:py-3 rounded-xl font-bold text-sm md:text-lg whitespace-nowrap">
-                    📖 Aprender
-                </button>
-                <button onclick="switchTab('jugar')" id="btn-jugar" class="tab-btn px-3 py-2 md:px-6 md:py-3 rounded-xl font-bold text-sm md:text-lg whitespace-nowrap">
-                    🎮 Jugar
-                </button>
-                <button onclick="switchTab('desafio')" id="btn-desafio" class="tab-btn px-3 py-2 md:px-6 md:py-3 rounded-xl font-bold text-sm md:text-lg whitespace-nowrap">
-                    🏆 Desafío
-                </button>
-            </nav>
-        </div>
-    </header>
-
-    <main class="max-w-4xl mx-auto mt-8 px-4">
+    <script type="text/babel">
+        // Sistema de audio sintetizado (no requiere archivos externos)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
-        <!-- SECCIÓN: APRENDER -->
-        <section id="sec-aprender" class="space-y-8">
-            
-            <!-- ¿Qué son? -->
-            <div class="bg-white p-8 card-shadow text-center">
-                <h2 class="text-3xl font-bold text-amber-500 mb-6">¿Qué son las plantas? 🌿</h2>
-                <p class="text-xl mb-4">Las plantas son seres vivos, ¡igual que tú y los animalitos! Necesitan cosas especiales para crecer fuertes y sanas.</p>
-                <div class="flex justify-center items-center gap-8 flex-wrap mt-8">
-                    <div class="bg-blue-50 p-6 rounded-2xl border-4 border-blue-200 w-40 animate-bounce-sm" style="animation-delay: 0s;">
-                        <span class="text-5xl block mb-2">💧</span>
-                        <p class="font-bold text-blue-600">Agua</p>
-                    </div>
-                    <div class="bg-yellow-50 p-6 rounded-2xl border-4 border-yellow-200 w-40 animate-bounce-sm" style="animation-delay: 0.2s;">
-                        <span class="text-5xl block mb-2">☀️</span>
-                        <p class="font-bold text-yellow-600">Luz del Sol</p>
-                    </div>
-                    <div class="bg-stone-50 p-6 rounded-2xl border-4 border-stone-200 w-40 animate-bounce-sm" style="animation-delay: 0.4s;">
-                        <span class="text-5xl block mb-2">🪨</span>
-                        <p class="font-bold text-stone-600">Tierra</p>
-                    </div>
-                    <div class="bg-sky-50 p-6 rounded-2xl border-4 border-sky-200 w-40 animate-bounce-sm" style="animation-delay: 0.6s;">
-                        <span class="text-5xl block mb-2">💨</span>
-                        <p class="font-bold text-sky-600">Aire</p>
-                    </div>
-                </div>
-            </div>
+        const playTone = (freq, type, duration, vol=0.1) => {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = type;
+            oscillator.frequency.value = freq;
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+            oscillator.stop(audioCtx.currentTime + duration);
+        };
 
-            <!-- Partes de la Planta -->
-            <div class="bg-white p-8 card-shadow">
-                <h2 class="text-3xl font-bold text-green-600 mb-6 text-center">Partes de una planta 🌸</h2>
-                
-                <div class="flex flex-col md:flex-row items-center gap-8">
-                    <div class="flex-1 relative w-full max-w-sm mx-auto">
-                        <!-- SVG Planta interactiva -->
-                        <svg viewBox="0 0 400 500" class="w-full h-auto" id="planta-svg">
-                            <!-- Tierra -->
-                            <rect x="0" y="380" width="400" height="120" fill="#8B4513" rx="10"/>
-                            
-                            <!-- Raíz -->
-                            <path onclick="mostrarInfoPlanta(this, 'Raíz')" class="parte-planta" id="p-raiz" data-info="Absorben el agua y los minerales de la tierra. ¡Crecen hacia abajo!" d="M190 380 Q170 420 180 480 M210 380 Q230 420 220 480 M200 380 V470 M185 410 Q160 430 150 440 M215 410 Q240 430 250 440" stroke="#D2B48C" stroke-width="6" fill="none" stroke-linecap="round"/>
-                            
-                            <!-- Tallo -->
-                            <path onclick="mostrarInfoPlanta(this, 'Tallo')" class="parte-planta" id="p-tallo" data-info="Transporta el agua a las hojas y sostiene la planta. ¡Es como una bombilla (pajita)!" d="M200 380 Q190 250 200 120" stroke="#4CAF50" stroke-width="12" fill="none" stroke-linecap="round"/>
-                            
-                            <!-- Hojas -->
-                            <g onclick="mostrarInfoPlanta(this, 'Hojas')" class="parte-planta" id="p-hojas" data-info="Usan el aire y la luz del Sol para fabricar el alimento de la planta.">
-                                <path d="M200 250 Q120 220 150 280 Q180 280 200 250" fill="#81C784" stroke="#4CAF50" stroke-width="3"/>
-                                <path d="M200 180 Q280 150 250 210 Q220 210 200 180" fill="#81C784" stroke="#4CAF50" stroke-width="3"/>
-                                <path d="M195 320 Q130 300 150 350 Q180 340 195 320" fill="#81C784" stroke="#4CAF50" stroke-width="3"/>
-                            </g>
-                            
-                            <!-- Flor -->
-                            <g onclick="mostrarInfoPlanta(this, 'Flor')" class="parte-planta" id="p-flor" data-info="¡Son hermosas y coloridas! Luego se convierten en frutos.">
-                                <circle cx="200" cy="120" r="15" fill="#FFEB3B"/>
-                                <path d="M200 105 Q180 70 200 90 Q220 70 200 105" fill="#FF9800"/>
-                                <path d="M200 135 Q180 170 200 150 Q220 170 200 135" fill="#FF9800"/>
-                                <path d="M185 120 Q150 100 170 120 Q150 140 185 120" fill="#FF9800"/>
-                                <path d="M215 120 Q250 100 230 120 Q250 140 215 120" fill="#FF9800"/>
-                            </g>
-                            
-                            <!-- Fruto -->
-                            <g onclick="mostrarInfoPlanta(this, 'Fruto')" class="parte-planta" id="p-fruto" data-info="Contienen las semillas en su interior que darán origen a nuevas plantas.">
-                                <circle cx="160" cy="240" r="18" fill="#F44336"/>
-                                <path d="M160 222 Q165 210 170 220" stroke="#4CAF50" stroke-width="3" fill="none"/>
-                            </g>
-                        </svg>
-                        <p class="text-sm text-center text-gray-500 mt-2">👆 Toca las partes de la planta</p>
-                    </div>
-                    
-                    <div class="flex-1 w-full bg-green-50 p-6 rounded-2xl border-4 border-green-200 min-h-[200px] flex flex-col justify-center">
-                        <h3 class="text-2xl font-bold text-green-700 mb-2" id="info-titulo">¡Descubre!</h3>
-                        <p class="text-xl text-gray-700" id="info-texto">Toca el dibujo de la planta para aprender qué hace cada parte.</p>
-                    </div>
-                </div>
-            </div>
+        const playSuccess = () => {
+            playTone(523.25, 'sine', 0.1); // C5
+            setTimeout(() => playTone(659.25, 'sine', 0.2), 100); // E5
+            setTimeout(() => playTone(783.99, 'sine', 0.3), 200); // G5
+        };
 
-            <!-- Tipos de Plantas (NUEVO) -->
-            <div class="bg-white p-8 card-shadow">
-                <h2 class="text-3xl font-bold text-teal-600 mb-6 text-center">¿De qué tamaño son? 🌳🪴🌱</h2>
-                <p class="text-xl mb-6 text-center text-gray-700">Las plantas pueden ser de diferentes tamaños y formas dependiendo de su <strong>tallo</strong>. ¡Vamos a conocerlas!</p>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Árbol -->
-                    <div class="bg-teal-50 p-6 rounded-2xl border-4 border-teal-200 text-center flex flex-col items-center shadow-sm hover:transform hover:scale-105 transition-transform">
-                        <span class="text-7xl mb-4 drop-shadow-md">🌳</span>
-                        <h3 class="font-black text-2xl text-teal-800 mb-2">Árboles</h3>
-                        <p class="text-lg text-teal-700">Tienen un tallo grueso y muy duro llamado <strong>tronco</strong>. ¡Sus ramas crecen muy alto! <br><span class="text-sm italic text-teal-600 mt-2 block">Ej: El manzano o el pino.</span></p>
-                    </div>
-                    
-                    <!-- Arbusto -->
-                    <div class="bg-lime-50 p-6 rounded-2xl border-4 border-lime-200 text-center flex flex-col items-center shadow-sm hover:transform hover:scale-105 transition-transform">
-                        <span class="text-7xl mb-4 drop-shadow-md">🪴</span>
-                        <h3 class="font-black text-2xl text-lime-800 mb-2">Arbustos</h3>
-                        <p class="text-lg text-lime-700">Son más bajitos. Tienen tallos duros pero sus ramas nacen desde muy cerquita del suelo. <br><span class="text-sm italic text-lime-600 mt-2 block">Ej: Las rosas o las moras.</span></p>
-                    </div>
-                    
-                    <!-- Hierba / Pasto -->
-                    <div class="bg-green-50 p-6 rounded-2xl border-4 border-green-200 text-center flex flex-col items-center shadow-sm hover:transform hover:scale-105 transition-transform">
-                        <span class="text-7xl mb-4 drop-shadow-md">🌱</span>
-                        <h3 class="font-black text-2xl text-green-800 mb-2">Hierbas y Pasto</h3>
-                        <p class="text-lg text-green-700">Tienen un tallo blandito, delgado y de color verde. Por lo general son muy pequeñitas. <br><span class="text-sm italic text-green-600 mt-2 block">Ej: El pasto, la menta o el cilantro.</span></p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Plantas Comestibles (AMPLIADO) -->
-            <div class="bg-white p-8 card-shadow">
-                <h2 class="text-3xl font-bold text-orange-500 mb-6 text-center">¡Plantas deliciosas! 🍎🥕🥦</h2>
-                <p class="text-xl mb-6 text-center text-gray-700">¿Sabías que comemos diferentes partes de las plantas? ¡Mira todo lo que nos dan!</p>
-                
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
-                    <div class="bg-orange-50 p-4 rounded-xl border-4 border-orange-200 text-center hover:bg-orange-100 transition-colors">
-                        <span class="text-5xl block mb-2">🥕</span>
-                        <h4 class="font-bold text-xl text-orange-700">Comemos su Raíz</h4>
-                        <p class="text-gray-600">Zanahoria, betarraga.</p>
-                    </div>
-                    <div class="bg-green-50 p-4 rounded-xl border-4 border-green-200 text-center hover:bg-green-100 transition-colors">
-                        <span class="text-5xl block mb-2">🥬</span>
-                        <h4 class="font-bold text-xl text-green-700">Comemos sus Hojas</h4>
-                        <p class="text-gray-600">Lechuga, espinaca.</p>
-                    </div>
-                    <div class="bg-red-50 p-4 rounded-xl border-4 border-red-200 text-center hover:bg-red-100 transition-colors">
-                        <span class="text-5xl block mb-2">🍅</span>
-                        <h4 class="font-bold text-xl text-red-700">Comemos su Fruto</h4>
-                        <p class="text-gray-600">Tomate, manzana, palta.</p>
-                    </div>
-                    <div class="bg-yellow-50 p-4 rounded-xl border-4 border-yellow-200 text-center hover:bg-yellow-100 transition-colors">
-                        <span class="text-5xl block mb-2">🎋</span>
-                        <h4 class="font-bold text-xl text-yellow-700">Comemos su Tallo</h4>
-                        <p class="text-gray-600">Apio, espárrago.</p>
-                    </div>
-                    <div class="bg-emerald-50 p-4 rounded-xl border-4 border-emerald-200 text-center hover:bg-emerald-100 transition-colors">
-                        <span class="text-5xl block mb-2">🥦</span>
-                        <h4 class="font-bold text-xl text-emerald-700">Comemos su Flor</h4>
-                        <p class="text-gray-600">Brócoli, coliflor.</p>
-                    </div>
-                    <div class="bg-amber-50 p-4 rounded-xl border-4 border-amber-200 text-center hover:bg-amber-100 transition-colors">
-                        <span class="text-5xl block mb-2">🫛</span>
-                        <h4 class="font-bold text-xl text-amber-700">Comemos la Semilla</h4>
-                        <p class="text-gray-600">Arvejas, lentejas, maíz.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        const playError = () => {
+            playTone(200, 'sawtooth', 0.3);
+        };
 
-        <!-- SECCIÓN: JUGAR -->
-        <section id="sec-jugar" class="space-y-8 hidden">
-            
-            <!-- Juego 1: Clasificador de semillas -->
-            <div class="bg-white p-8 card-shadow">
-                <h2 class="text-3xl font-bold text-purple-600 mb-2">Juego 1: ¿Cuántas semillas tienen?</h2>
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-6 flex items-start gap-4">
-                    <span class="text-3xl">👆</span>
-                    <p class="text-lg text-blue-800 font-medium"><strong>Cómo jugar:</strong> Toca una fruta para seleccionarla, y luego toca la caja donde crees que debe ir.</p>
-                </div>
-                
-                <div class="flex flex-col md:flex-row gap-8">
-                    <!-- Contenedor de frutas -->
-                    <div class="w-full md:w-1/3 bg-gray-50 p-4 rounded-xl border-2 border-dashed border-gray-300 flex flex-wrap gap-4 justify-center items-start min-h-[150px] zona-origen" id="frutas-container" onclick="manejarToqueContenedorOrigen(event, 'frutas-container')">
-                        <!-- Las frutas se generan con JS -->
-                    </div>
-                    
-                    <!-- Zonas para soltar -->
-                    <div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="zona-destino dropzone bg-green-50 p-4 rounded-xl border-4 border-green-200 min-h-[150px] flex flex-col items-center" data-target="una" onclick="manejarToqueDestino(this, 'juego1')">
-                            <h3 class="font-bold text-xl text-green-700 mb-2 pointer-events-none">1 Semilla (Un cuesco)</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                        <div class="zona-destino dropzone bg-orange-50 p-4 rounded-xl border-4 border-orange-200 min-h-[150px] flex flex-col items-center" data-target="varias" onclick="manejarToqueDestino(this, 'juego1')">
-                            <h3 class="font-bold text-xl text-orange-700 mb-2 pointer-events-none">Varias Semillas (Pepitas)</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button id="btn-verificar-j1" onclick="verificarJuego1()" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
-                        ¡Revisar mis respuestas!
-                    </button>
-                    <p id="msg-juego1" class="mt-4 text-xl font-bold min-h-[30px]"></p>
-                    <button id="btn-reinicio-j1" onclick="reiniciarJuego1()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
-                </div>
-            </div>
+        const playPop = () => {
+            playTone(400, 'sine', 0.1);
+        };
 
-            <!-- Juego 2: Ayuda a la planta -->
-            <div class="bg-white p-8 card-shadow">
-                <h2 class="text-3xl font-bold text-blue-600 mb-2">Juego 2: ¡Ayuda a la plantita!</h2>
-                <p class="text-lg mb-6 text-gray-600">Esta planta está triste y marchita. ¿Qué crees que le falta?</p>
-                
-                <div class="flex flex-col items-center gap-6">
-                    <div class="text-9xl mb-4" id="planta-triste-emoji">🥀</div>
-                    
-                    <div class="flex gap-4 flex-wrap justify-center">
-                        <button onclick="curarPlanta('agua')" class="opcion-cura bg-blue-100 hover:bg-blue-200 border-4 border-blue-400 p-4 rounded-2xl flex flex-col items-center gap-2 transition-transform hover:scale-110 w-32">
-                            <span class="text-5xl">💧</span>
-                            <span class="font-bold text-blue-700">Agua</span>
-                        </button>
-                        <button onclick="curarPlanta('dulces')" class="opcion-cura bg-pink-100 hover:bg-pink-200 border-4 border-pink-400 p-4 rounded-2xl flex flex-col items-center gap-2 transition-transform hover:scale-110 w-32">
-                            <span class="text-5xl">🍬</span>
-                            <span class="font-bold text-pink-700">Dulces</span>
-                        </button>
-                        <button onclick="curarPlanta('luz')" class="opcion-cura bg-yellow-100 hover:bg-yellow-200 border-4 border-yellow-400 p-4 rounded-2xl flex flex-col items-center gap-2 transition-transform hover:scale-110 w-32">
-                            <span class="text-5xl">☀️</span>
-                            <span class="font-bold text-yellow-700">Luz del sol</span>
-                        </button>
-                        <button onclick="curarPlanta('juguete')" class="opcion-cura bg-purple-100 hover:bg-purple-200 border-4 border-purple-400 p-4 rounded-2xl flex flex-col items-center gap-2 transition-transform hover:scale-110 w-32">
-                            <span class="text-5xl">🧸</span>
-                            <span class="font-bold text-purple-700">Un juguete</span>
-                        </button>
-                    </div>
-                    
-                    <p id="msg-juego2" class="mt-4 text-2xl font-bold min-h-[35px] text-center"></p>
-                    <button id="btn-reinicio-j2" onclick="reiniciarJuego2()" class="hidden mt-4 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
-                </div>
-            </div>
-
-            <!-- Juego 3: ¿Qué parte de la planta comemos? -->
-            <div class="bg-white p-8 card-shadow">
-                <h2 class="text-3xl font-bold text-red-500 mb-2">Juego 3: ¿Qué parte nos comemos? 🥦🥕🍎</h2>
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-6 flex items-start gap-4">
-                    <span class="text-3xl">👆</span>
-                    <p class="text-lg text-blue-800 font-medium"><strong>Cómo jugar:</strong> Toca un alimento y luego toca la caja correcta.</p>
-                </div>
-                
-                <div class="flex flex-col md:flex-row gap-8">
-                    <!-- Contenedor de vegetales -->
-                    <div class="w-full md:w-1/3 bg-gray-50 p-4 rounded-xl border-2 border-dashed border-gray-300 flex flex-wrap gap-4 justify-center items-start min-h-[150px] zona-origen" id="vegetales-container" onclick="manejarToqueContenedorOrigen(event, 'vegetales-container')">
-                        <!-- Los vegetales se generan con JS -->
-                    </div>
-                    
-                    <!-- Zonas para soltar -->
-                    <div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="zona-destino dropzone bg-orange-50 p-4 rounded-xl border-4 border-orange-200 min-h-[120px] flex flex-col items-center" data-target="raiz" onclick="manejarToqueDestino(this, 'juego3')">
-                            <h3 class="font-bold text-xl text-orange-700 mb-2 pointer-events-none">Raíz</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                        <div class="zona-destino dropzone bg-green-50 p-4 rounded-xl border-4 border-green-200 min-h-[120px] flex flex-col items-center" data-target="hoja" onclick="manejarToqueDestino(this, 'juego3')">
-                            <h3 class="font-bold text-xl text-green-700 mb-2 pointer-events-none">Hojas</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                        <div class="zona-destino dropzone bg-red-50 p-4 rounded-xl border-4 border-red-200 min-h-[120px] flex flex-col items-center" data-target="fruto" onclick="manejarToqueDestino(this, 'juego3')">
-                            <h3 class="font-bold text-xl text-red-700 mb-2 pointer-events-none">Fruto</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                         <div class="zona-destino dropzone bg-yellow-50 p-4 rounded-xl border-4 border-yellow-200 min-h-[120px] flex flex-col items-center" data-target="tallo" onclick="manejarToqueDestino(this, 'juego3')">
-                            <h3 class="font-bold text-xl text-yellow-700 mb-2 pointer-events-none">Tallo</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button id="btn-verificar-j3" onclick="verificarJuego3()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
-                        ¡Revisar mis respuestas!
-                    </button>
-                    <p id="msg-juego3" class="mt-4 text-xl font-bold min-h-[30px]"></p>
-                    <button id="btn-reinicio-j3" onclick="reiniciarJuego3()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
-                </div>
-            </div>
-
-            <!-- Juego 4: Clasificador de hojas -->
-            <div class="bg-white p-8 card-shadow">
-                <h2 class="text-3xl font-bold text-emerald-600 mb-2">Juego 4: ¡A ordenar las hojas! 🍂🌿</h2>
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-6 flex items-start gap-4">
-                    <span class="text-3xl">👆</span>
-                    <p class="text-lg text-blue-800 font-medium"><strong>Cómo jugar:</strong> Toca una hoja para seleccionarla, y luego toca su grupo correspondiente.</p>
-                </div>
-                
-                <div class="flex flex-col md:flex-row gap-8">
-                    <!-- Contenedor de hojas -->
-                    <div class="w-full md:w-1/3 bg-gray-50 p-4 rounded-xl border-2 border-dashed border-gray-300 flex flex-wrap gap-4 justify-center items-start min-h-[150px] zona-origen" id="hojas-container" onclick="manejarToqueContenedorOrigen(event, 'hojas-container')">
-                        <!-- Las hojas se generan con JS -->
-                    </div>
-                    
-                    <!-- Zonas para soltar -->
-                    <div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="zona-destino dropzone bg-emerald-50 p-4 rounded-xl border-4 border-emerald-200 min-h-[150px] flex flex-col items-center" data-target="pequena" onclick="manejarToqueDestino(this, 'juego4')">
-                            <h3 class="font-bold text-lg text-emerald-700 mb-2 text-center pointer-events-none">Hojas Pequeñas</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                        <div class="zona-destino dropzone bg-teal-50 p-4 rounded-xl border-4 border-teal-200 min-h-[150px] flex flex-col items-center" data-target="puntas" onclick="manejarToqueDestino(this, 'juego4')">
-                            <h3 class="font-bold text-lg text-teal-700 mb-2 text-center pointer-events-none">Con más de una punta</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                        <div class="zona-destino dropzone bg-cyan-50 p-4 rounded-xl border-4 border-cyan-200 min-h-[150px] flex flex-col items-center" data-target="alargada" onclick="manejarToqueDestino(this, 'juego4')">
-                            <h3 class="font-bold text-lg text-cyan-700 mb-2 text-center pointer-events-none">Hojas Alargadas</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button id="btn-verificar-j4" onclick="verificarJuego4()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
-                        ¡Revisar mis respuestas!
-                    </button>
-                    <p id="msg-juego4" class="mt-4 text-xl font-bold min-h-[30px]"></p>
-                    <button id="btn-reinicio-j4" onclick="reiniciarJuego4()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
-                </div>
-            </div>
-
-            <!-- Juego 5: Árbol, Arbusto o Hierba -->
-            <div class="bg-white p-8 card-shadow">
-                <h2 class="text-3xl font-bold text-teal-600 mb-2">Juego 5: ¿De qué tamaño son? 🌳🪴🌱</h2>
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-6 flex items-start gap-4">
-                    <span class="text-3xl">👆</span>
-                    <p class="text-lg text-blue-800 font-medium"><strong>Cómo jugar:</strong> Clasifica estas plantas según su tipo de tallo y tamaño.</p>
-                </div>
-                
-                <div class="flex flex-col md:flex-row gap-8">
-                    <!-- Contenedor de plantas -->
-                    <div class="w-full md:w-1/3 bg-gray-50 p-4 rounded-xl border-2 border-dashed border-gray-300 flex flex-wrap gap-4 justify-center items-start min-h-[150px] zona-origen" id="tamaños-container" onclick="manejarToqueContenedorOrigen(event, 'tamaños-container')">
-                        <!-- Generado con JS -->
-                    </div>
-                    
-                    <!-- Zonas para soltar -->
-                    <div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="zona-destino dropzone bg-teal-50 p-4 rounded-xl border-4 border-teal-200 min-h-[150px] flex flex-col items-center" data-target="arbol" onclick="manejarToqueDestino(this, 'juego5')">
-                            <h3 class="font-bold text-lg text-teal-800 mb-2 text-center pointer-events-none">Árbol (Tronco grueso)</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                        <div class="zona-destino dropzone bg-lime-50 p-4 rounded-xl border-4 border-lime-200 min-h-[150px] flex flex-col items-center" data-target="arbusto" onclick="manejarToqueDestino(this, 'juego5')">
-                            <h3 class="font-bold text-lg text-lime-800 mb-2 text-center pointer-events-none">Arbusto (Bajito)</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                        <div class="zona-destino dropzone bg-green-50 p-4 rounded-xl border-4 border-green-200 min-h-[150px] flex flex-col items-center" data-target="hierba" onclick="manejarToqueDestino(this, 'juego5')">
-                            <h3 class="font-bold text-lg text-green-800 mb-2 text-center pointer-events-none">Hierba (Tallo blando)</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button id="btn-verificar-j5" onclick="verificarJuego5()" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
-                        ¡Revisar mis respuestas!
-                    </button>
-                    <p id="msg-juego5" class="mt-4 text-xl font-bold min-h-[30px]"></p>
-                    <button id="btn-reinicio-j5" onclick="reiniciarJuego5()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
-                </div>
-            </div>
-
-            <!-- Juego 6: La Cosecha Comestible -->
-            <div class="bg-white p-8 card-shadow">
-                <h2 class="text-3xl font-bold text-amber-500 mb-2">Juego 6: ¡La Cosecha! 🧺</h2>
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 mb-6 flex items-start gap-4">
-                    <span class="text-3xl">👆</span>
-                    <p class="text-lg text-blue-800 font-medium"><strong>Cómo jugar:</strong> Separa las partes de plantas que <strong>SÍ</strong> podemos comer para nuestra ensalada de las que <strong>NO</strong>.</p>
-                </div>
-                
-                <div class="flex flex-col md:flex-row gap-8">
-                    <!-- Contenedor de recolección -->
-                    <div class="w-full md:w-1/3 bg-gray-50 p-4 rounded-xl border-2 border-dashed border-gray-300 flex flex-wrap gap-4 justify-center items-start min-h-[150px] zona-origen" id="cosecha-container" onclick="manejarToqueContenedorOrigen(event, 'cosecha-container')">
-                        <!-- Generado con JS -->
-                    </div>
-                    
-                    <!-- Zonas para soltar -->
-                    <div class="w-full md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="zona-destino dropzone bg-green-50 p-4 rounded-xl border-4 border-green-300 min-h-[150px] flex flex-col items-center" data-target="comestible" onclick="manejarToqueDestino(this, 'juego6')">
-                            <h3 class="font-bold text-xl text-green-700 mb-2 text-center pointer-events-none">¡A la ensalada! 🥗</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                        <div class="zona-destino dropzone bg-stone-100 p-4 rounded-xl border-4 border-stone-300 min-h-[150px] flex flex-col items-center" data-target="nocomestible" onclick="manejarToqueDestino(this, 'juego6')">
-                            <h3 class="font-bold text-xl text-stone-600 mb-2 text-center pointer-events-none">¡No se come! 🚫</h3>
-                            <div class="w-full h-full flex flex-wrap gap-2 justify-center items-center drop-area pointer-events-none"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-6 text-center">
-                    <button id="btn-verificar-j6" onclick="verificarJuego6()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl">
-                        ¡Revisar mis respuestas!
-                    </button>
-                    <p id="msg-juego6" class="mt-4 text-xl font-bold min-h-[30px]"></p>
-                    <button id="btn-reinicio-j6" onclick="reiniciarJuego6()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- SECCIÓN: DESAFÍO -->
-        <section id="sec-desafio" class="space-y-8 hidden">
-            
-            <div class="bg-white p-8 card-shadow">
-                <div class="flex justify-between items-start mb-6">
-                    <div>
-                        <h2 class="text-3xl font-bold text-rose-500 mb-2">¡Un nuevo desafío! 🏆</h2>
-                        <p class="text-xl text-gray-700">Observa la imagen y cuenta. Luego completa la tabla.</p>
-                    </div>
-                    <div class="text-5xl animate-bounce-sm">🦊</div> <!-- Mascota guía -->
-                </div>
-                
-                <!-- Imagen del desafío -->
-                <div class="bg-sky-50 rounded-2xl p-6 border-4 border-sky-100 mb-8 relative">
-                    <div class="flex flex-wrap justify-center gap-6 p-4">
-                        <!-- Frutos -->
-                        <div class="text-6xl cursor-pointer hover:scale-110 transition-transform">🍎</div>
-                        <div class="text-6xl cursor-pointer hover:scale-110 transition-transform">🍐</div>
-                        <div class="text-6xl cursor-pointer hover:scale-110 transition-transform">🍎</div>
-                        
-                        <!-- Flores -->
-                        <div class="text-6xl cursor-pointer hover:scale-110 transition-transform">🌻</div>
-                        <div class="text-6xl cursor-pointer hover:scale-110 transition-transform">🌼</div>
-                        <div class="text-6xl cursor-pointer hover:scale-110 transition-transform">🌺</div>
-                        <div class="text-6xl cursor-pointer hover:scale-110 transition-transform">🌻</div>
-                        <div class="text-6xl cursor-pointer hover:scale-110 transition-transform">🌷</div>
-                        
-                        <!-- Otros (Árboles/Arbustos para distraer/completar) -->
-                        <div class="text-6xl">🌲</div>
-                        <div class="text-6xl">🌳</div>
-                        <div class="text-6xl">🪴</div>
-                    </div>
-                </div>
-
-                <!-- Pasos del desafío -->
-                <div class="space-y-6">
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                        <p class="font-bold text-lg mb-2"><span class="bg-rose-500 text-white px-3 py-1 rounded-full mr-2">Paso 1</span> ¿Qué te piden contar en la tabla?</p>
-                        <div class="flex gap-4 ml-12">
-                            <label class="flex items-center gap-2 cursor-pointer text-lg">
-                                <input type="radio" name="p1" class="w-5 h-5 text-rose-500"> Árboles y arbustos
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer text-lg">
-                                <input type="radio" name="p1" value="correcta" class="w-5 h-5 text-rose-500"> Frutos y flores
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                        <p class="font-bold text-lg mb-2"><span class="bg-green-500 text-white px-3 py-1 rounded-full mr-2">Paso 2</span> ¡A contar! Registra en la tabla:</p>
-                        
-                        <div class="flex justify-center mt-4">
-                            <table class="w-full max-w-md bg-white border-4 border-green-300 rounded-xl overflow-hidden shadow-sm">
-                                <thead>
-                                    <tr class="bg-green-200 text-green-900">
-                                        <th class="py-3 px-4 text-xl border-b-2 border-green-300 w-1/2">Cantidad de frutos 🍎</th>
-                                        <th class="py-3 px-4 text-xl border-b-2 border-green-300 w-1/2">Cantidad de flores 🌻</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="p-4 text-center border-r-2 border-green-100">
-                                            <input type="number" id="input-frutos" min="0" class="w-24 text-center text-3xl font-bold text-green-700 bg-gray-50 border-2 border-gray-300 rounded-xl p-2 focus:border-green-500 focus:outline-none">
-                                        </td>
-                                        <td class="p-4 text-center">
-                                            <input type="number" id="input-flores" min="0" class="w-24 text-center text-3xl font-bold text-green-700 bg-gray-50 border-2 border-gray-300 rounded-xl p-2 focus:border-green-500 focus:outline-none">
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8 text-center border-t-2 border-dashed border-gray-200 pt-6">
-                    <button id="btn-verificar-desafio" onclick="verificarDesafio()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold py-4 px-10 rounded-full shadow-lg transform hover:scale-105 transition-transform text-2xl">
-                        ¡Terminé!
-                    </button>
-                    <p id="msg-desafio" class="mt-4 text-xl font-bold min-h-[30px]"></p>
-                    <button id="btn-reinicio-desafio" onclick="reiniciarDesafio()" class="hidden mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 px-8 rounded-full shadow-md transform hover:scale-105 transition-transform text-xl cursor-pointer">¡Volver a jugar! 🔄</button>
-                </div>
-            </div>
-            
-        </section>
-
-    </main>
-
-    <script>
-        // --- SISTEMA DE AUDIO (Tone.js) ---
-        let audioIniciado = false;
-        const synths = {};
-
-        async function initAudio() {
-            if (audioIniciado) return;
-            await Tone.start(); 
-            audioIniciado = true;
-
-            synths.click = new Tone.Synth({ 
-                oscillator: { type: 'sine' }, 
-                envelope: { attack: 0.01, decay: 0.1, sustain: 0, release: 0.1 } 
-            }).toDestination();
-            synths.click.volume.value = -10;
-
-            synths.drop = new Tone.MembraneSynth().toDestination();
-            synths.drop.volume.value = -15;
-
-            synths.error = new Tone.Synth({ 
-                oscillator: { type: 'triangle' }, 
-                envelope: { attack: 0.05, decay: 0.3, sustain: 0, release: 0.2 } 
-            }).toDestination();
-            synths.error.volume.value = -10;
-
-            synths.magic = new Tone.PolySynth(Tone.Synth, { 
-                oscillator: { type: 'sine' } 
-            }).toDestination();
-            synths.magic.volume.value = -10;
-
-            synths.win = new Tone.PolySynth(Tone.Synth, { 
-                oscillator: { type: 'triangle' } 
-            }).toDestination();
-            synths.win.volume.value = -10;
-        }
-
-        document.body.addEventListener('click', initAudio, { once: true });
-        document.body.addEventListener('touchstart', initAudio, { once: true });
-
-        function reproducirSonido(tipo) {
-            if (!audioIniciado) return;
-            const now = Tone.now();
-            switch (tipo) {
-                case 'click':
-                    synths.click.triggerAttackRelease("C6", "32n", now);
-                    break;
-                case 'drop':
-                    synths.drop.triggerAttackRelease("G2", "16n", now);
-                    break;
-                case 'error':
-                    synths.error.triggerAttackRelease("D3", "8n", now);
-                    synths.error.triggerAttackRelease("C3", "4n", now + 0.15);
-                    break;
-                case 'magic':
-                    synths.magic.triggerAttackRelease(["C5", "E5", "G5"], "16n", now);
-                    synths.magic.triggerAttackRelease(["E5", "G5", "C6"], "8n", now + 0.15);
-                    break;
-                case 'win':
-                    synths.win.triggerAttackRelease(["C4", "E4", "G4"], "8n", now);
-                    synths.win.triggerAttackRelease(["F4", "A4", "C5"], "8n", now + 0.2);
-                    synths.win.triggerAttackRelease(["G4", "B4", "D5"], "8n", now + 0.4);
-                    synths.win.triggerAttackRelease(["C5", "E5", "G5", "C6"], "2n", now + 0.6);
-                    break;
+        const playCheer = () => {
+            // Sonido de victoria al terminar una materia
+            let freq = 400;
+            for(let i=0; i<10; i++) {
+                setTimeout(() => playTone(freq + (i*50), 'sine', 0.1, 0.05), i*50);
             }
-        }
+        };
 
-        // --- NAVEGACIÓN ---
-        function switchTab(tabId) {
-            reproducirSonido('click');
-            document.getElementById('sec-aprender').classList.add('hidden');
-            document.getElementById('sec-jugar').classList.add('hidden');
-            document.getElementById('sec-desafio').classList.add('hidden');
-            
-            document.getElementById('btn-aprender').classList.remove('active');
-            document.getElementById('btn-jugar').classList.remove('active');
-            document.getElementById('btn-desafio').classList.remove('active');
-            
-            document.getElementById('sec-' + tabId).classList.remove('hidden');
-            document.getElementById('btn-' + tabId).classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // --- SECCIÓN APRENDER (Planta Interactiva) ---
-        const partesPlanta = document.querySelectorAll('.parte-planta');
-
-        function mostrarInfoPlanta(elemento, nombre) {
-            reproducirSonido('click');
-            
-            const info = elemento.getAttribute('data-info');
-            document.getElementById('info-titulo').innerText = nombre;
-            document.getElementById('info-texto').innerText = info;
-            
-            partesPlanta.forEach(p => {
-                p.classList.remove('destacada');
-                p.classList.add('opaca');
-            });
-            
-            elemento.classList.remove('opaca');
-            elemento.classList.add('destacada');
-            
-            const cajaInfo = document.getElementById('info-texto').parentElement;
-            cajaInfo.style.transform = 'scale(1.05)';
-            cajaInfo.style.transition = 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            setTimeout(() => { cajaInfo.style.transform = 'scale(1)'; }, 250);
-        }
-
-        // --- LÓGICA GLOBAL: TAP TO SELECT ---
-        let itemSeleccionadoGlobal = null;
-        let idJuegoActivo = null; 
-
-        function deseleccionarTodo() {
-            if (itemSeleccionadoGlobal) {
-                itemSeleccionadoGlobal.classList.remove('item-seleccionado');
-                itemSeleccionadoGlobal = null;
-                idJuegoActivo = null;
-            }
-            document.querySelectorAll('.zona-destino').forEach(z => z.classList.remove('activa-destino'));
-        }
-
-        function manejarToqueItem(event, juegoId) {
-            event.stopPropagation(); 
-            
-            const item = event.currentTarget;
-
-            if (item === itemSeleccionadoGlobal) {
-                reproducirSonido('click');
-                deseleccionarTodo();
-                return;
-            }
-
-            deseleccionarTodo();
-
-            reproducirSonido('click');
-            itemSeleccionadoGlobal = item;
-            idJuegoActivo = juegoId;
-            item.classList.add('item-seleccionado');
-
-            let selectorDestinos = '';
-            if(juegoId === 'juego1') selectorDestinos = '#sec-jugar .zona-destino[data-target="una"], #sec-jugar .zona-destino[data-target="varias"]';
-            if(juegoId === 'juego3') selectorDestinos = '#sec-jugar .zona-destino[data-target="raiz"], #sec-jugar .zona-destino[data-target="hoja"], #sec-jugar .zona-destino[data-target="fruto"], #sec-jugar .zona-destino[data-target="tallo"]';
-            if(juegoId === 'juego4') selectorDestinos = '#sec-jugar .zona-destino[data-target="pequena"], #sec-jugar .zona-destino[data-target="puntas"], #sec-jugar .zona-destino[data-target="alargada"]';
-            if(juegoId === 'juego5') selectorDestinos = '#sec-jugar .zona-destino[data-target="arbol"], #sec-jugar .zona-destino[data-target="arbusto"], #sec-jugar .zona-destino[data-target="hierba"]';
-            if(juegoId === 'juego6') selectorDestinos = '#sec-jugar .zona-destino[data-target="comestible"], #sec-jugar .zona-destino[data-target="nocomestible"]';
-            
-            if(selectorDestinos) {
-                document.querySelectorAll(selectorDestinos).forEach(z => z.classList.add('activa-destino'));
-            }
-        }
-
-        function manejarToqueDestino(zona, juegoId) {
-            if (!itemSeleccionadoGlobal || idJuegoActivo !== juegoId) return;
-
-            const dropArea = zona.querySelector('.drop-area');
-            if (dropArea) {
-                reproducirSonido('drop');
-                dropArea.appendChild(itemSeleccionadoGlobal);
-            }
-            
-            deseleccionarTodo();
-        }
-
-        function manejarToqueContenedorOrigen(event, containerId) {
-            if (!itemSeleccionadoGlobal) return;
-            
-            let valido = false;
-            if(containerId === 'frutas-container' && idJuegoActivo === 'juego1') valido = true;
-            if(containerId === 'vegetales-container' && idJuegoActivo === 'juego3') valido = true;
-            if(containerId === 'hojas-container' && idJuegoActivo === 'juego4') valido = true;
-            if(containerId === 'tamaños-container' && idJuegoActivo === 'juego5') valido = true;
-            if(containerId === 'cosecha-container' && idJuegoActivo === 'juego6') valido = true;
-
-            if (valido) {
-                reproducirSonido('drop');
-                const container = document.getElementById(containerId);
-                container.appendChild(itemSeleccionadoGlobal);
-                deseleccionarTodo();
-            }
-        }
-
-        // --- JUEGO 1: Clasificador ---
-        const frutasData = [
-            { id: 'f1', emoji: '🥑', tipo: 'una', nombre: 'Palta' },
-            { id: 'f2', emoji: '🍉', tipo: 'varias', nombre: 'Sandía' },
-            { id: 'f3', emoji: '🍑', tipo: 'una', nombre: 'Durazno' },
-            { id: 'f4', emoji: '🍎', tipo: 'varias', nombre: 'Manzana' },
-            { id: 'f5', emoji: '🥭', tipo: 'una', nombre: 'Mango' },
-            { id: 'f6', emoji: '🥝', tipo: 'varias', nombre: 'Kiwi' }
-        ];
-
-        function initJuego1() {
-            const container = document.getElementById('frutas-container');
-            container.innerHTML = ''; 
-            
-            const mezcladas = [...frutasData].sort(() => Math.random() - 0.5);
-
-            mezcladas.forEach(f => {
-                const el = document.createElement('div');
-                el.className = 'item-interactivo text-5xl bg-white p-2 rounded-xl shadow-sm border border-gray-200';
-                el.id = f.id;
-                el.dataset.tipo = f.tipo;
-                el.innerText = f.emoji;
-                el.title = f.nombre;
-                
-                el.onclick = (e) => manejarToqueItem(e, 'juego1');
-                
-                container.appendChild(el);
-            });
-
-            document.querySelectorAll('.dropzone[data-target="una"] .drop-area, .dropzone[data-target="varias"] .drop-area').forEach(z => z.innerHTML = '');
-            document.getElementById('msg-juego1').innerText = "";
-            const btnReset = document.getElementById('btn-reinicio-j1');
-            if(btnReset) btnReset.classList.add('hidden');
-            const btnVerificar = document.getElementById('btn-verificar-j1');
-            if(btnVerificar) btnVerificar.classList.remove('hidden');
-        }
-        
-        function verificarJuego1() {
-            const dropUna = document.querySelector('.dropzone[data-target="una"] .drop-area');
-            const dropVarias = document.querySelector('.dropzone[data-target="varias"] .drop-area');
-            const msg = document.getElementById('msg-juego1');
-            
-            if (document.getElementById('frutas-container').children.length > 0) {
-                msg.innerText = "¡Faltan frutas por clasificar! 🤔";
-                msg.className = "mt-4 text-xl font-bold text-orange-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-j1').classList.remove('hidden');
-                return;
-            }
-
-            let correcto = true;
-
-            const revisarZona = (dropArea, tipoCorrecto) => {
-                Array.from(dropArea.children).forEach(el => {
-                    el.classList.remove('animate-shake', 'animate-bounce-sm');
-                    void el.offsetWidth;
-                    
-                    if (el.dataset.tipo !== tipoCorrecto) {
-                        correcto = false;
-                        el.classList.add('bg-red-100', 'border-red-500', 'animate-shake');
-                        el.classList.remove('bg-green-100', 'border-green-500');
-                    } else {
-                        el.classList.remove('bg-red-100', 'border-red-500');
-                        el.classList.add('bg-green-100', 'border-green-500', 'animate-bounce-sm');
+        // --- BASE DE DATOS DE ACTIVIDADES EXTRAIDAS DE LOS PDFs ---
+        const gameData = {
+            historia: {
+                title: "Historia de mi Familia",
+                color: "bg-orange-400",
+                shadow: "shadow-orange-600",
+                icon: "👨‍👩‍👧‍👦",
+                activities: [
+                    {
+                        type: "quiz",
+                        question: "¿Qué evento forma parte de la historia de tu familia?",
+                        options: ["Ir al supermercado 🛒", "Nacimiento de un hermano 👶", "Ver televisión 📺", "Comer un helado 🍦"],
+                        correct: 1
+                    },
+                    {
+                        type: "sequence",
+                        question: "Ordena la historia de Cecilia tocando los cuadros:",
+                        items: ["1. Sus papás se casan 💍", "2. Nace Cecilia 👧", "3. Se mudan de casa 🏠", "4. Nace su hermano Álex 👦"],
+                        correctOrder: [0, 1, 2, 3]
+                    },
+                    {
+                        type: "quiz",
+                        question: "¿Cómo sabemos la historia de nuestra familia del pasado?",
+                        options: ["Viendo el clima 🌤️", "Revisando fotos antiguas 📸", "Mirando las plantas 🌿"],
+                        correct: 1
+                    },
+                    {
+                        type: "multiselect",
+                        question: "Toca las cosas que pueden CAMBIAR en una familia con el tiempo:",
+                        options: ["La forma de vestir 👗", "El número de integrantes 👨‍👩‍👦", "El sol en el cielo ☀️", "La edad de las personas 🎂"],
+                        correct: [0, 1, 3]
+                    },
+                    {
+                        type: "quiz",
+                        question: "¿A quién le puedes preguntar para conocer tu historia cuando eras bebé?",
+                        options: ["A tu mascota 🐶", "A tus abuelos o padres 👵👴", "A tu juguete 🧸"],
+                        correct: 1
+                    },
+                    {
+                        type: "quiz",
+                        question: "¿Qué actividad hacías cuando eras bebé y AHORA puedes hacer solito?",
+                        options: ["Tomar en mamadera 🍼", "Llorar todo el día 😭", "Amarrarte los zapatos 👟", "Dormir en cuna 🛏️"],
+                        correct: 2
+                    },
+                    {
+                        type: "multiselect",
+                        question: "Toca quiénes pueden formar parte de tu familia (selecciona varios):",
+                        options: ["Los abuelos 👴👵", "Tus mascotas 🐶🐱", "Tus tíos 🧔👩", "Un auto viejo 🚗"],
+                        correct: [0, 1, 2]
+                    },
+                    {
+                        type: "sequence",
+                        question: "Ordena las etapas de la vida de menor a mayor edad:",
+                        items: ["1. Bebé 👶", "2. Niño 🧒", "3. Adulto 👨", "4. Abuelo 👴"],
+                        correctOrder: [0, 1, 2, 3]
+                    },
+                    {
+                        type: "truefalse",
+                        question: "¿Tus abuelos son los papás de tus papás?",
+                        answer: true
+                    },
+                    {
+                        type: "match",
+                        question: "Une a cada persona con su etapa de vida:",
+                        pairs: [
+                            { left: "Bebé", right: "🍼" },
+                            { left: "Abuelo", right: "👴" },
+                            { left: "Niño", right: "🎒" }
+                        ]
                     }
-                });
+                ]
+            },
+            matematicas: {
+                title: "Patrones y Números",
+                color: "bg-blue-500",
+                shadow: "shadow-blue-700",
+                icon: "🔢",
+                activities: [
+                    {
+                        type: "quiz",
+                        question: "Completa el patrón de colores: 🔴 🔵 🔴 🔵 🔴 ___",
+                        options: ["🟡", "🔵", "🔴", "🟢"],
+                        correct: 1
+                    },
+                    {
+                        type: "quiz",
+                        question: "Completa el patrón de formas: ⭐ 🟩 ⭐ 🟩 ___",
+                        options: ["🔵", "🟩", "⭐", "🔺"],
+                        correct: 2
+                    },
+                    {
+                        type: "quiz",
+                        question: "¿Qué es lo que cambia en este patrón? 🍎 🍏 🍎 🍏",
+                        options: ["El tamaño", "El color", "La forma"],
+                        correct: 1
+                    },
+                    {
+                        type: "quiz",
+                        question: "Secuencia Creciente: ¿Qué número sigue? 1, 3, 5, 7, ___",
+                        options: ["6", "8", "9", "10"],
+                        correct: 2
+                    },
+                    {
+                        type: "quiz",
+                        question: "Secuencia Decreciente: ¿Qué número sigue? 10, 8, 6, 4, ___",
+                        options: ["2", "5", "3", "1"],
+                        correct: 0
+                    },
+                    {
+                        type: "quiz",
+                        question: "Completa el patrón de sonidos: 👏 🦶 👏 🦶 ___",
+                        options: ["🗣️ (hablar)", "🦶 (pie)", "👏 (aplauso)", "👃 (nariz)"],
+                        correct: 2
+                    },
+                    {
+                        type: "quiz",
+                        question: "Secuencia contando de 2 en 2: 2, 4, 6, ___",
+                        options: ["7", "8", "9", "10"],
+                        correct: 1
+                    },
+                    {
+                        type: "sequence",
+                        question: "Ordena los números del más chico al más grande (menor a mayor):",
+                        items: ["1", "5", "8", "12"],
+                        correctOrder: [0, 1, 2, 3]
+                    },
+                    {
+                        type: "multiselect",
+                        question: "Toca TODOS los números que son MAYORES que 5:",
+                        options: ["2", "7", "4", "9"],
+                        correct: [1, 3]
+                    },
+                    {
+                        type: "counting",
+                        question: "¿Cuántas manzanas hay?",
+                        emoji: "🍎",
+                        count: 6,
+                        options: [4, 5, 6, 7],
+                        correct: 2
+                    },
+                    {
+                        type: "match",
+                        question: "Une la cantidad con el número:",
+                        pairs: [
+                            { left: "⭐⭐⭐", right: "3" },
+                            { left: "⭐⭐⭐⭐⭐", right: "5" },
+                            { left: "⭐", right: "1" }
+                        ]
+                    }
+                ]
+            },
+            lenguaje: {
+                title: "Juntos Compartimos",
+                color: "bg-green-500",
+                shadow: "shadow-green-700",
+                icon: "📚",
+                activities: [
+                    {
+                        type: "quiz",
+                        question: "Los sustantivos PROPIOS se escriben con mayúscula. ¿Cuál es un sustantivo propio?",
+                        options: ["perro 🐶", "mesa 🪑", "Diego 👦", "ciudad 🏙️"],
+                        correct: 2
+                    },
+                    {
+                        type: "quiz",
+                        question: "¿Qué artículo acompaña a la palabra 'Gatos'?",
+                        options: ["Un gatos", "Una gatos", "Unos gatos", "Unas gatos"],
+                        correct: 2
+                    },
+                    {
+                        type: "quiz",
+                        question: "Completa la palabra con la sílaba correcta: ___bolla 🧅",
+                        options: ["Se", "Ce", "Ci", "Ze"],
+                        correct: 1
+                    },
+                    {
+                        type: "quiz",
+                        question: "Completa la palabra con la sílaba correcta: ___so 🧀",
+                        options: ["Ce", "Ke", "Que", "Qui"],
+                        correct: 2
+                    },
+                    {
+                        type: "quiz",
+                        question: "En el poema de Charlie el dormilón que saca las lanitas... ¿Qué animal es Charlie?",
+                        options: ["Un ratón 🐭", "Un perro 🐶", "Un gatito 🐱", "Un pajarito 🐦"],
+                        correct: 2
+                    },
+                    {
+                        type: "quiz",
+                        question: "Completa la palabra con la sílaba correcta: Bos___ 🌲",
+                        options: ["ce", "que", "qui", "se"],
+                        correct: 1
+                    },
+                    {
+                        type: "quiz",
+                        question: "¿Qué artículo usarías para decir '___ mariposa'?",
+                        options: ["La", "El", "Los", "Las"],
+                        correct: 0
+                    },
+                    {
+                        type: "multiselect",
+                        question: "Toca SOLO los sustantivos PROPIOS (nombres, que van con mayúscula inicial):",
+                        options: ["María 👧", "mesa 🪑", "Chile 🇨🇱", "lápiz ✏️"],
+                        correct: [0, 2]
+                    },
+                    {
+                        type: "sequence",
+                        question: "Ordena la oración para que tenga sentido:",
+                        items: ["1. El", "2. perro 🐶", "3. come 🍖", "4. mucho 😋"],
+                        correctOrder: [0, 1, 2, 3]
+                    },
+                    {
+                        type: "truefalse",
+                        question: "La palabra 'perro' es un sustantivo propio y se escribe con mayúscula.",
+                        answer: false
+                    },
+                    {
+                        type: "match",
+                        question: "Une la sílaba para formar la palabra:",
+                        pairs: [
+                            { left: "Bo", right: "tella 🍾" },
+                            { left: "Galle", right: "ta 🍪" },
+                            { left: "Pe", right: "rrito 🐶" }
+                        ]
+                    }
+                ]
+            }
+        };
+
+        const QuizActivity = ({ data, onComplete }) => {
+            const [selected, setSelected] = React.useState(null);
+            const [isWrong, setIsWrong] = React.useState(false);
+
+            const handleOptionClick = (index) => {
+                if (selected !== null) return; // Prevent multiple clicks
+
+                if (index === data.correct) {
+                    playSuccess();
+                    setSelected(index);
+                    setIsWrong(false);
+                    setTimeout(onComplete, 1500);
+                } else {
+                    playError();
+                    setSelected(index);
+                    setIsWrong(true);
+                    setTimeout(() => {
+                        setSelected(null);
+                        setIsWrong(false);
+                    }, 800);
+                }
             };
 
-            revisarZona(dropUna, 'una');
-            revisarZona(dropVarias, 'varias');
+            return (
+                <div className="flex flex-col items-center w-full max-w-2xl mx-auto bounce-in">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
+                        {data.question}
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                        {data.options.map((option, index) => {
+                            let btnStyle = "bg-white text-gray-700 hover:bg-gray-50 border-4 border-gray-200";
+                            let animStyle = "";
+                            
+                            if (selected === index) {
+                                if (isWrong) {
+                                    btnStyle = "bg-red-500 text-white border-red-600";
+                                    animStyle = "shake";
+                                } else {
+                                    btnStyle = "bg-green-400 text-white border-green-500 success-pulse";
+                                }
+                            } else if (selected !== null && !isWrong) {
+                                btnStyle = "bg-gray-100 text-gray-400 border-gray-200 opacity-50"; // Dim others
+                            }
 
-            if (correcto) {
-                msg.innerText = "¡Excelente! Todas las frutas están en su lugar. 🌟";
-                msg.className = "mt-4 text-xl font-bold text-green-600";
-                reproducirSonido('win');
-                lanzarConfeti();
-                document.getElementById('btn-reinicio-j1').classList.remove('hidden');
-                document.getElementById('btn-verificar-j1').classList.add('hidden');
-            } else {
-                msg.innerText = "Mmm... revisa las que están marcadas en rojo. ¡Tú puedes! 💪";
-                msg.className = "mt-4 text-xl font-bold text-red-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-j1').classList.remove('hidden');
-            }
-        }
-
-        function reiniciarJuego1() {
-            initJuego1();
-        }
-
-        // --- JUEGO 2: Curar Planta ---
-        let cosasBuenas = 0;
-        let curadas = { agua: false, luz: false };
-
-        function curarPlanta(opcion) {
-            const emoji = document.getElementById('planta-triste-emoji');
-            const msg = document.getElementById('msg-juego2');
-            const btnReinicio = document.getElementById('btn-reinicio-j2');
-            
-            if (opcion === 'agua' && !curadas.agua) {
-                curadas.agua = true;
-                cosasBuenas++;
-                reproducirSonido('magic');
-                msg.innerText = "¡Agüita fresca! 💧 ¡Me siento un poco mejor!";
-                msg.className = "mt-4 text-2xl font-bold text-blue-500 text-center";
-            } else if (opcion === 'luz' && !curadas.luz) {
-                curadas.luz = true;
-                cosasBuenas++;
-                reproducirSonido('magic');
-                msg.innerText = "¡Qué rico Sol! ☀️ ¡Me da mucha energía!";
-                msg.className = "mt-4 text-2xl font-bold text-yellow-500 text-center";
-            } else if (opcion === 'dulces' || opcion === 'juguete') {
-                reproducirSonido('error');
-                msg.innerText = "Hmm... las plantas no necesitan eso para crecer. 🌱";
-                msg.className = "mt-4 text-2xl font-bold text-red-500 text-center";
-                btnReinicio.classList.remove('hidden');
-            } else {
-                msg.innerText = "¡Ya me diste de eso! 🌱";
-                msg.className = "mt-4 text-2xl font-bold text-gray-500 text-center";
-            }
-
-            if (cosasBuenas === 1) {
-                emoji.innerText = "🌱";
-            } else if (cosasBuenas === 2) {
-                emoji.innerText = "🌻";
-                msg.innerText = "¡Gracias! Ahora soy una planta feliz y fuerte. ✨";
-                msg.className = "mt-4 text-2xl font-bold text-green-600 text-center animate-bounce-sm";
-                reproducirSonido('win');
-                lanzarConfeti();
-                btnReinicio.classList.remove('hidden');
-                
-                // Deshabilitar botones
-                document.querySelectorAll('.opcion-cura').forEach(btn => btn.style.pointerEvents = 'none');
-            }
-        }
-
-        function reiniciarJuego2() {
-            cosasBuenas = 0;
-            curadas = { agua: false, luz: false };
-            document.getElementById('planta-triste-emoji').innerText = "🥀";
-            document.getElementById('msg-juego2').innerText = "";
-            document.getElementById('btn-reinicio-j2').classList.add('hidden');
-            document.querySelectorAll('.opcion-cura').forEach(btn => btn.style.pointerEvents = 'auto');
-        }
-
-        // --- JUEGO 3: Partes comestibles ---
-        const vegetalesData = [
-            { id: 'v1', emoji: '🥕', tipo: 'raiz', nombre: 'Zanahoria' },
-            { id: 'v2', emoji: '🥬', tipo: 'hoja', nombre: 'Lechuga' },
-            { id: 'v3', emoji: '🍅', tipo: 'fruto', nombre: 'Tomate' },
-            { id: 'v4', emoji: '🎋', tipo: 'tallo', nombre: 'Apio' }
-        ];
-
-        function initJuego3() {
-            const container = document.getElementById('vegetales-container');
-            container.innerHTML = ''; 
-            
-            const mezcladas = [...vegetalesData].sort(() => Math.random() - 0.5);
-
-            mezcladas.forEach(v => {
-                const el = document.createElement('div');
-                el.className = 'item-interactivo text-5xl bg-white p-2 rounded-xl shadow-sm border border-gray-200';
-                el.id = v.id;
-                el.dataset.tipo = v.tipo;
-                el.innerText = v.emoji;
-                el.title = v.nombre;
-                
-                el.onclick = (e) => manejarToqueItem(e, 'juego3');
-                
-                container.appendChild(el);
-            });
-            
-            // Limpiar zonas al reiniciar
-            document.querySelectorAll('.dropzone[data-target="raiz"] .drop-area, .dropzone[data-target="hoja"] .drop-area, .dropzone[data-target="fruto"] .drop-area, .dropzone[data-target="tallo"] .drop-area').forEach(z => z.innerHTML = '');
-            document.getElementById('msg-juego3').innerText = "";
-            const btnReset = document.getElementById('btn-reinicio-j3');
-            if(btnReset) btnReset.classList.add('hidden');
-            const btnVerificar = document.getElementById('btn-verificar-j3');
-            if(btnVerificar) btnVerificar.classList.remove('hidden');
-        }
-
-        function verificarJuego3() {
-            const msg = document.getElementById('msg-juego3');
-            
-            if (document.getElementById('vegetales-container').children.length > 0) {
-                msg.innerText = "¡Faltan alimentos por clasificar! 🤔";
-                msg.className = "mt-4 text-xl font-bold text-orange-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-j3').classList.remove('hidden');
-                return;
-            }
-
-            let correcto = true;
-            const tipos = ['raiz', 'hoja', 'fruto', 'tallo'];
-
-            tipos.forEach(tipo => {
-                const dropArea = document.querySelector(`.dropzone[data-target="${tipo}"] .drop-area`);
-                if(dropArea) {
-                    Array.from(dropArea.children).forEach(el => {
-                        el.classList.remove('animate-shake', 'animate-bounce-sm');
-                        void el.offsetWidth;
-                        
-                        if (el.dataset.tipo !== tipo) {
-                            correcto = false;
-                            el.classList.add('bg-red-100', 'border-red-500', 'animate-shake');
-                            el.classList.remove('bg-green-100', 'border-green-500');
-                        } else {
-                            el.classList.remove('bg-red-100', 'border-red-500');
-                            el.classList.add('bg-green-100', 'border-green-500', 'animate-bounce-sm');
-                        }
-                    });
-                }
-            });
-
-            if (correcto) {
-                msg.innerText = "¡Excelente! Sabes muy bien qué parte de la planta comemos. 🌟";
-                msg.className = "mt-4 text-xl font-bold text-green-600";
-                reproducirSonido('win');
-                lanzarConfeti();
-                document.getElementById('btn-reinicio-j3').classList.remove('hidden');
-                document.getElementById('btn-verificar-j3').classList.add('hidden');
-            } else {
-                msg.innerText = "Mmm... revisa los que están marcados en rojo. ¡Tú puedes! 💪";
-                msg.className = "mt-4 text-xl font-bold text-red-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-j3').classList.remove('hidden');
-            }
-        }
-        
-        function reiniciarJuego3() {
-            initJuego3();
-        }
-
-        // --- JUEGO 4: Ordenar hojas ---
-        const hojasData = [
-            { id: 'h1', emoji: '🍃', tipo: 'pequena', nombre: 'Hojas pequeñas' },
-            { id: 'h2', emoji: '🍁', tipo: 'puntas', nombre: 'Hoja con puntas' },
-            { id: 'h3', emoji: '🌿', tipo: 'alargada', nombre: 'Hoja alargada' },
-            { id: 'h4', emoji: '🍀', tipo: 'pequena', nombre: 'Trébol' },
-            { id: 'h5', emoji: '🍂', tipo: 'puntas', nombre: 'Hoja seca' }
-        ];
-
-        function initJuego4() {
-            const container = document.getElementById('hojas-container');
-            container.innerHTML = ''; 
-            
-            const mezcladas = [...hojasData].sort(() => Math.random() - 0.5);
-
-            mezcladas.forEach(h => {
-                const el = document.createElement('div');
-                el.className = 'item-interactivo text-5xl bg-white p-2 rounded-xl shadow-sm border border-gray-200';
-                el.id = h.id;
-                el.dataset.tipo = h.tipo;
-                el.innerText = h.emoji;
-                el.title = h.nombre;
-                
-                el.onclick = (e) => manejarToqueItem(e, 'juego4');
-                
-                container.appendChild(el);
-            });
-
-            document.querySelectorAll('.dropzone[data-target="pequena"] .drop-area, .dropzone[data-target="puntas"] .drop-area, .dropzone[data-target="alargada"] .drop-area').forEach(z => z.innerHTML = '');
-            document.getElementById('msg-juego4').innerText = "";
-            const btnReset = document.getElementById('btn-reinicio-j4');
-            if(btnReset) btnReset.classList.add('hidden');
-            const btnVerificar = document.getElementById('btn-verificar-j4');
-            if(btnVerificar) btnVerificar.classList.remove('hidden');
-        }
-
-        function verificarJuego4() {
-            const msg = document.getElementById('msg-juego4');
-            
-            if (document.getElementById('hojas-container').children.length > 0) {
-                msg.innerText = "¡Faltan hojas por clasificar! 🤔";
-                msg.className = "mt-4 text-xl font-bold text-orange-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-j4').classList.remove('hidden');
-                return;
-            }
-
-            let correcto = true;
-            const tipos = ['pequena', 'puntas', 'alargada'];
-
-            tipos.forEach(tipo => {
-                const dropArea = document.querySelector(`.dropzone[data-target="${tipo}"] .drop-area`);
-                if(dropArea) {
-                    Array.from(dropArea.children).forEach(el => {
-                        el.classList.remove('animate-shake', 'animate-bounce-sm');
-                        void el.offsetWidth;
-                        
-                        if (el.dataset.tipo !== tipo) {
-                            correcto = false;
-                            el.classList.add('bg-red-100', 'border-red-500', 'animate-shake');
-                            el.classList.remove('bg-green-100', 'border-green-500');
-                        } else {
-                            el.classList.remove('bg-red-100', 'border-red-500');
-                            el.classList.add('bg-green-100', 'border-green-500', 'animate-bounce-sm');
-                        }
-                    });
-                }
-            });
-
-            if (correcto) {
-                msg.innerText = "¡Fantástico! Las hojas están ordenadas. 🍃✨";
-                msg.className = "mt-4 text-xl font-bold text-emerald-600";
-                reproducirSonido('win');
-                lanzarConfeti();
-                document.getElementById('btn-reinicio-j4').classList.remove('hidden');
-                document.getElementById('btn-verificar-j4').classList.add('hidden');
-            } else {
-                msg.innerText = "Ups... algunas hojas se equivocaron de grupo. Revisa las rojas. 🍂";
-                msg.className = "mt-4 text-xl font-bold text-red-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-j4').classList.remove('hidden');
-            }
-        }
-
-        function reiniciarJuego4() {
-            initJuego4();
-        }
-
-        // --- JUEGO 5: Tipos de Plantas ---
-        const tamanosData = [
-            { id: 't1', emoji: '🌲', tipo: 'arbol', nombre: 'Pino (Árbol)' },
-            { id: 't2', emoji: '🌿', tipo: 'hierba', nombre: 'Menta (Hierba)' },
-            { id: 't3', emoji: '🪴', tipo: 'arbusto', nombre: 'Helecho (Arbusto)' },
-            { id: 't4', emoji: '🍎', tipo: 'arbol', nombre: 'Manzano (Árbol)' },
-            { id: 't5', emoji: '🌱', tipo: 'hierba', nombre: 'Pasto (Hierba)' },
-            { id: 't6', emoji: '🌹', tipo: 'arbusto', nombre: 'Rosal (Arbusto)' }
-        ];
-
-        function initJuego5() {
-            const container = document.getElementById('tamaños-container');
-            container.innerHTML = ''; 
-            
-            const mezcladas = [...tamanosData].sort(() => Math.random() - 0.5);
-
-            mezcladas.forEach(t => {
-                const el = document.createElement('div');
-                el.className = 'item-interactivo text-5xl bg-white p-2 rounded-xl shadow-sm border border-gray-200';
-                el.id = t.id;
-                el.dataset.tipo = t.tipo;
-                el.innerText = t.emoji;
-                el.title = t.nombre;
-                
-                el.onclick = (e) => manejarToqueItem(e, 'juego5');
-                
-                container.appendChild(el);
-            });
-
-            document.querySelectorAll('.dropzone[data-target="arbol"] .drop-area, .dropzone[data-target="arbusto"] .drop-area, .dropzone[data-target="hierba"] .drop-area').forEach(z => z.innerHTML = '');
-            document.getElementById('msg-juego5').innerText = "";
-            const btnReset = document.getElementById('btn-reinicio-j5');
-            if(btnReset) btnReset.classList.add('hidden');
-            const btnVerificar = document.getElementById('btn-verificar-j5');
-            if(btnVerificar) btnVerificar.classList.remove('hidden');
-        }
-
-        function verificarJuego5() {
-            const msg = document.getElementById('msg-juego5');
-            
-            if (document.getElementById('tamaños-container').children.length > 0) {
-                msg.innerText = "¡Faltan plantas por clasificar! 🔍";
-                msg.className = "mt-4 text-xl font-bold text-orange-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-j5').classList.remove('hidden');
-                return;
-            }
-
-            let correcto = true;
-            const tipos = ['arbol', 'arbusto', 'hierba'];
-
-            tipos.forEach(tipo => {
-                const dropArea = document.querySelector(`.dropzone[data-target="${tipo}"] .drop-area`);
-                if(dropArea) {
-                    Array.from(dropArea.children).forEach(el => {
-                        el.classList.remove('animate-shake', 'animate-bounce-sm');
-                        void el.offsetWidth;
-                        
-                        if (el.dataset.tipo !== tipo) {
-                            correcto = false;
-                            el.classList.add('bg-red-100', 'border-red-500', 'animate-shake');
-                            el.classList.remove('bg-green-100', 'border-green-500');
-                        } else {
-                            el.classList.remove('bg-red-100', 'border-red-500');
-                            el.classList.add('bg-green-100', 'border-green-500', 'animate-bounce-sm');
-                        }
-                    });
-                }
-            });
-
-            if (correcto) {
-                msg.innerText = "¡Genial! Conoces muy bien los tamaños de las plantas. 🌟";
-                msg.className = "mt-4 text-xl font-bold text-teal-600";
-                reproducirSonido('win');
-                lanzarConfeti();
-                document.getElementById('btn-reinicio-j5').classList.remove('hidden');
-                document.getElementById('btn-verificar-j5').classList.add('hidden');
-            } else {
-                msg.innerText = "Recuerda: Los árboles son los más grandes y de tronco grueso. ¡Revisa los marcados en rojo! 🌳";
-                msg.className = "mt-4 text-xl font-bold text-red-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-j5').classList.remove('hidden');
-            }
-        }
-
-        function reiniciarJuego5() {
-            initJuego5();
-        }
-
-        // --- JUEGO 6: Cosecha Comestible ---
-        const cosechaData = [
-            { id: 'c1', emoji: '🍓', tipo: 'comestible', nombre: 'Frutilla' },
-            { id: 'c2', emoji: '🍂', tipo: 'nocomestible', nombre: 'Hoja seca' },
-            { id: 'c3', emoji: '🥒', tipo: 'comestible', nombre: 'Pepino' },
-            { id: 'c4', emoji: '🪵', tipo: 'nocomestible', nombre: 'Tronco de madera' },
-            { id: 'c5', emoji: '🌽', tipo: 'comestible', nombre: 'Choclo / Maíz' },
-            { id: 'c6', emoji: '🪨', tipo: 'nocomestible', nombre: 'Piedra' }
-        ];
-
-        function initJuego6() {
-            const container = document.getElementById('cosecha-container');
-            container.innerHTML = ''; 
-            
-            const mezcladas = [...cosechaData].sort(() => Math.random() - 0.5);
-
-            mezcladas.forEach(c => {
-                const el = document.createElement('div');
-                el.className = 'item-interactivo text-5xl bg-white p-2 rounded-xl shadow-sm border border-gray-200';
-                el.id = c.id;
-                el.dataset.tipo = c.tipo;
-                el.innerText = c.emoji;
-                el.title = c.nombre;
-                
-                el.onclick = (e) => manejarToqueItem(e, 'juego6');
-                
-                container.appendChild(el);
-            });
-
-            document.querySelectorAll('.dropzone[data-target="comestible"] .drop-area, .dropzone[data-target="nocomestible"] .drop-area').forEach(z => z.innerHTML = '');
-            document.getElementById('msg-juego6').innerText = "";
-            const btnReset = document.getElementById('btn-reinicio-j6');
-            if(btnReset) btnReset.classList.add('hidden');
-            const btnVerificar = document.getElementById('btn-verificar-j6');
-            if(btnVerificar) btnVerificar.classList.remove('hidden');
-        }
-
-        function verificarJuego6() {
-            const msg = document.getElementById('msg-juego6');
-            
-            if (document.getElementById('cosecha-container').children.length > 0) {
-                msg.innerText = "¡Aún quedan cosas por recoger! 🧺";
-                msg.className = "mt-4 text-xl font-bold text-orange-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-j6').classList.remove('hidden');
-                return;
-            }
-
-            let correcto = true;
-            const tipos = ['comestible', 'nocomestible'];
-
-            tipos.forEach(tipo => {
-                const dropArea = document.querySelector(`.dropzone[data-target="${tipo}"] .drop-area`);
-                if(dropArea) {
-                    Array.from(dropArea.children).forEach(el => {
-                        el.classList.remove('animate-shake', 'animate-bounce-sm');
-                        void el.offsetWidth;
-                        
-                        if (el.dataset.tipo !== tipo) {
-                            correcto = false;
-                            el.classList.add('bg-red-100', 'border-red-500', 'animate-shake');
-                            el.classList.remove('bg-green-100', 'border-green-500');
-                        } else {
-                            el.classList.remove('bg-red-100', 'border-red-500');
-                            el.classList.add('bg-green-100', 'border-green-500', 'animate-bounce-sm');
-                        }
-                    });
-                }
-            });
-
-            if (correcto) {
-                msg.innerText = "¡Qué rica ensalada vamos a preparar! 🥗✨";
-                msg.className = "mt-4 text-xl font-bold text-amber-600";
-                reproducirSonido('win');
-                lanzarConfeti();
-                document.getElementById('btn-reinicio-j6').classList.remove('hidden');
-                document.getElementById('btn-verificar-j6').classList.add('hidden');
-            } else {
-                msg.innerText = "¡Cuidado! Hay cosas ahí que nos podrían hacer doler la pancita. 🤢";
-                msg.className = "mt-4 text-xl font-bold text-red-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-j6').classList.remove('hidden');
-            }
-        }
-
-        function reiniciarJuego6() {
-            initJuego6();
-        }
-
-        // --- DESAFÍO ---
-        const respuestasDesafio = {
-            frutos: 3, 
-            flores: 5  
+                            return (
+                                <button 
+                                    key={index}
+                                    onClick={() => handleOptionClick(index)}
+                                    className={`btn-game text-xl md:text-2xl font-bold p-6 rounded-2xl shadow-lg transition-all transform flex items-center justify-center ${btnStyle} ${animStyle}`}
+                                >
+                                    {option}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
         };
 
-        function verificarDesafio() {
-            const paso1Select = document.querySelector('input[name="p1"]:checked');
-            const inpFrutos = document.getElementById('input-frutos').value;
-            const inpFlores = document.getElementById('input-flores').value;
-            const msg = document.getElementById('msg-desafio');
+        const MultiSelectActivity = ({ data, onComplete }) => {
+            const [selectedIndexes, setSelectedIndexes] = React.useState([]);
+            const [showError, setShowError] = React.useState(false);
 
-            if (!paso1Select) {
-                msg.innerText = "Falta responder el Paso 1 🧐";
-                msg.className = "mt-4 text-xl font-bold text-orange-500";
-                document.getElementById('btn-reinicio-desafio').classList.remove('hidden');
-                return;
-            }
+            const toggleOption = (index) => {
+                playPop();
+                if (selectedIndexes.includes(index)) {
+                    setSelectedIndexes(selectedIndexes.filter(i => i !== index));
+                } else {
+                    setSelectedIndexes([...selectedIndexes, index]);
+                }
+            };
 
-            if (inpFrutos === "" || inpFlores === "") {
-                msg.innerText = "Completa los números en la tabla del Paso 2 ✍️";
-                msg.className = "mt-4 text-xl font-bold text-orange-500";
-                document.getElementById('btn-reinicio-desafio').classList.remove('hidden');
-                return;
-            }
+            const checkAnswer = () => {
+                const isCorrect = 
+                    selectedIndexes.length === data.correct.length && 
+                    data.correct.every(val => selectedIndexes.includes(val));
 
-            let todoCorrecto = true;
-            let errores = [];
+                if (isCorrect) {
+                    playSuccess();
+                    setTimeout(onComplete, 1500);
+                } else {
+                    playError();
+                    setShowError(true);
+                    setTimeout(() => setShowError(false), 800);
+                }
+            };
 
-            if (paso1Select.value !== "correcta") {
-                todoCorrecto = false;
-                errores.push("Revisa el Paso 1.");
-            }
-
-            if (parseInt(inpFrutos) !== respuestasDesafio.frutos) {
-                todoCorrecto = false;
-                document.getElementById('input-frutos').classList.add('border-red-500');
-            } else {
-                document.getElementById('input-frutos').classList.remove('border-red-500');
-                document.getElementById('input-frutos').classList.add('border-green-500');
-            }
-
-            if (parseInt(inpFlores) !== respuestasDesafio.flores) {
-                todoCorrecto = false;
-                document.getElementById('input-flores').classList.add('border-red-500');
-            } else {
-                document.getElementById('input-flores').classList.remove('border-red-500');
-                document.getElementById('input-flores').classList.add('border-green-500');
-            }
-
-            if (todoCorrecto) {
-                msg.innerText = "¡Felicitaciones! Has completado el desafío perfecto. 🏆✨";
-                msg.className = "mt-4 text-2xl font-bold text-green-600";
-                reproducirSonido('win');
-                lanzarConfeti();
-                document.getElementById('btn-reinicio-desafio').classList.remove('hidden');
-                document.getElementById('btn-verificar-desafio').classList.add('hidden');
-                confetti({ particleCount: 100, spread: 100, origin: { y: 0.3 } });
-            } else {
-                msg.innerText = "Casi... Vuelve a contar con cuidado. " + errores.join(" ");
-                msg.className = "mt-4 text-xl font-bold text-red-500";
-                reproducirSonido('error');
-                document.getElementById('btn-reinicio-desafio').classList.remove('hidden');
-            }
-        }
-
-        function reiniciarDesafio() {
-            const opciones = document.querySelectorAll('input[name="p1"]');
-            opciones.forEach(op => op.checked = false);
-            
-            document.getElementById('input-frutos').value = "";
-            document.getElementById('input-frutos').classList.remove('border-red-500', 'border-green-500');
-            
-            document.getElementById('input-flores').value = "";
-            document.getElementById('input-flores').classList.remove('border-red-500', 'border-green-500');
-            
-            document.getElementById('msg-desafio').innerText = "";
-            const btnReset = document.getElementById('btn-reinicio-desafio');
-            if(btnReset) btnReset.classList.add('hidden');
-            const btnVerificar = document.getElementById('btn-verificar-desafio');
-            if(btnVerificar) btnVerificar.classList.remove('hidden');
-        }
-
-        // Utilidad
-        function lanzarConfeti() {
-            confetti({
-                particleCount: 80,
-                spread: 70,
-                origin: { y: 0.6 }
-            });
-        }
-
-        // Inicializar al cargar
-        window.onload = () => {
-            initJuego1();
-            initJuego3();
-            initJuego4();
-            initJuego5();
-            initJuego6();
+            return (
+                <div className="flex flex-col items-center w-full max-w-2xl mx-auto bounce-in">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-4 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
+                        {data.question}
+                    </h2>
+                    <p className="text-gray-500 font-bold mb-6">(Toca todas las opciones correctas y luego pulsa Revisar)</p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-8">
+                        {data.options.map((option, index) => {
+                            const isSelected = selectedIndexes.includes(index);
+                            return (
+                                <button 
+                                    key={index}
+                                    onClick={() => toggleOption(index)}
+                                    className={`btn-game text-xl md:text-2xl font-bold p-4 rounded-2xl border-4 transition-all ${isSelected ? 'bg-blue-400 text-white border-blue-600 scale-105' : 'bg-white text-gray-700 border-gray-200'}`}
+                                >
+                                    {option}
+                                </button>
+                            );
+                        })}
+                    </div>
+                    
+                    <button 
+                        onClick={checkAnswer}
+                        className={`btn-game text-2xl font-bold py-4 px-12 rounded-full shadow-xl text-white ${showError ? 'bg-red-500 shake' : 'bg-green-500 hover:bg-green-600'}`}
+                    >
+                        {showError ? '¡Intenta de nuevo!' : '¡Revisar! ✅'}
+                    </button>
+                </div>
+            );
         };
 
+        const SequenceActivity = ({ data, onComplete }) => {
+            const [sequence, setSequence] = React.useState([]);
+            const [available, setAvailable] = React.useState(data.items.map((_, i) => i));
+            const [isWrong, setIsWrong] = React.useState(false);
+
+            const handlePick = (index) => {
+                // Check if it's the correct next step
+                const nextExpectedIndex = data.correctOrder[sequence.length];
+                
+                if (index === nextExpectedIndex) {
+                    playPop();
+                    const newSequence = [...sequence, index];
+                    setSequence(newSequence);
+                    setAvailable(available.filter(i => i !== index));
+                    
+                    if (newSequence.length === data.correctOrder.length) {
+                        playSuccess();
+                        setTimeout(onComplete, 1500);
+                    }
+                } else {
+                    playError();
+                    setIsWrong(true);
+                    setTimeout(() => setIsWrong(false), 500);
+                }
+            };
+
+            const reset = () => {
+                playPop();
+                setSequence([]);
+                setAvailable(data.items.map((_, i) => i));
+            };
+
+            return (
+                <div className="flex flex-col items-center w-full max-w-3xl mx-auto bounce-in">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-6 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
+                        {data.question}
+                    </h2>
+                    
+                    {/* Contenedor de la secuencia armándose */}
+                    <div className="w-full bg-blue-50 border-4 border-blue-200 rounded-2xl p-4 min-h-[120px] mb-6 flex flex-col gap-2">
+                        {sequence.length === 0 && <p className="text-gray-400 text-center font-bold text-xl mt-4">Toca los botones de abajo en orden...</p>}
+                        {sequence.map((itemIndex, i) => (
+                            <div key={i} className="bg-green-400 text-white font-bold text-xl p-3 rounded-xl shadow bounce-in">
+                                {data.items[itemIndex]}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Botones disponibles */}
+                    <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 w-full ${isWrong ? 'shake' : ''}`}>
+                        {available.map((itemIndex) => (
+                            <button 
+                                key={itemIndex}
+                                onClick={() => handlePick(itemIndex)}
+                                className="btn-game bg-white border-4 border-purple-300 text-gray-700 hover:bg-purple-50 text-lg md:text-xl font-bold p-4 rounded-2xl shadow-md flex items-center justify-center"
+                            >
+                                {data.items[itemIndex].replace(/^\d+\.\s*/, '') /* Quitar el número para que tengan que pensar */}
+                            </button>
+                        ))}
+                    </div>
+                    
+                    {sequence.length > 0 && sequence.length < data.items.length && (
+                        <button onClick={reset} className="mt-6 text-red-500 font-bold underline text-lg">
+                            Empezar de nuevo 🔄
+                        </button>
+                    )}
+                </div>
+            );
+        };
+
+
+        const TrueFalseActivity = ({ data, onComplete }) => {
+            const [selected, setSelected] = React.useState(null);
+            const [isWrong, setIsWrong] = React.useState(false);
+
+            const handleSelect = (val) => {
+                if (selected !== null) return;
+                
+                if (val === data.answer) {
+                    playSuccess();
+                    setSelected(val);
+                    setTimeout(onComplete, 1500);
+                } else {
+                    playError();
+                    setSelected(val);
+                    setIsWrong(true);
+                    setTimeout(() => { setSelected(null); setIsWrong(false); }, 800);
+                }
+            };
+
+            return (
+                <div className="flex flex-col items-center w-full max-w-2xl mx-auto bounce-in">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
+                        {data.question}
+                    </h2>
+                    <div className="flex gap-4 md:gap-8 w-full justify-center">
+                        <button 
+                            onClick={() => handleSelect(true)} 
+                            className={`btn-game text-2xl md:text-3xl font-bold p-6 rounded-3xl w-40 md:w-48 flex flex-col items-center justify-center transition-all ${selected===true && !isWrong ? 'bg-green-400 text-white success-pulse border-4 border-green-600 scale-110' : (selected===true && isWrong ? 'bg-red-500 text-white shake border-4 border-red-600' : 'bg-white text-green-600 border-4 border-green-200 hover:bg-green-50 shadow-lg')}`}
+                        >
+                            <span className="text-5xl mb-2">✅</span> Verdadero
+                        </button>
+                        <button 
+                            onClick={() => handleSelect(false)} 
+                            className={`btn-game text-2xl md:text-3xl font-bold p-6 rounded-3xl w-40 md:w-48 flex flex-col items-center justify-center transition-all ${selected===false && !isWrong ? 'bg-green-400 text-white success-pulse border-4 border-green-600 scale-110' : (selected===false && isWrong ? 'bg-red-500 text-white shake border-4 border-red-600' : 'bg-white text-red-600 border-4 border-red-200 hover:bg-red-50 shadow-lg')}`}
+                        >
+                            <span className="text-5xl mb-2">❌</span> Falso
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const MatchActivity = ({ data, onComplete }) => {
+            const [leftItems, setLeftItems] = React.useState([]);
+            const [rightItems, setRightItems] = React.useState([]);
+            const [selectedLeft, setSelectedLeft] = React.useState(null);
+            const [selectedRight, setSelectedRight] = React.useState(null);
+            const [matchedPairs, setMatchedPairs] = React.useState([]);
+            const [isWrong, setIsWrong] = React.useState(false);
+
+            React.useEffect(() => {
+                const lefts = data.pairs.map((p, i) => ({ id: i, text: p.left }));
+                // Desordenar la columna derecha para el desafío
+                const rights = data.pairs.map((p, i) => ({ id: i, text: p.right }))
+                                         .sort(() => Math.random() - 0.5);
+                setLeftItems(lefts);
+                setRightItems(rights);
+            }, [data]);
+
+            const handleLeftClick = (id) => {
+                if (matchedPairs.includes(id)) return;
+                playPop();
+                setSelectedLeft(id);
+                checkMatch(id, selectedRight);
+            };
+
+            const handleRightClick = (id) => {
+                if (matchedPairs.includes(id)) return;
+                playPop();
+                setSelectedRight(id);
+                checkMatch(selectedLeft, id);
+            };
+
+            const checkMatch = (leftId, rightId) => {
+                if (leftId !== null && rightId !== null) {
+                    if (leftId === rightId) {
+                        playSuccess();
+                        const newMatched = [...matchedPairs, leftId];
+                        setMatchedPairs(newMatched);
+                        setSelectedLeft(null);
+                        setSelectedRight(null);
+                        if (newMatched.length === data.pairs.length) {
+                            setTimeout(onComplete, 1500);
+                        }
+                    } else {
+                        playError();
+                        setIsWrong(true);
+                        setTimeout(() => {
+                            setIsWrong(false);
+                            setSelectedLeft(null);
+                            setSelectedRight(null);
+                        }, 600);
+                    }
+                }
+            };
+
+            return (
+                <div className="flex flex-col items-center w-full max-w-3xl mx-auto bounce-in">
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 text-center mb-6 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
+                        {data.question} <br/><span className="text-base text-gray-500">(Toca uno de cada lado)</span>
+                    </h2>
+                    <div className={`flex w-full justify-between gap-4 md:gap-8 ${isWrong ? 'shake' : ''}`}>
+                        {/* Columna Izquierda */}
+                        <div className="flex flex-col gap-3 w-1/2">
+                            {leftItems.map(item => (
+                                <button 
+                                    key={`l-${item.id}`} 
+                                    onClick={() => handleLeftClick(item.id)}
+                                    className={`btn-game p-4 md:p-6 text-xl md:text-2xl font-bold rounded-2xl border-4 transition-all shadow-md flex justify-center items-center ${matchedPairs.includes(item.id) ? 'bg-green-100 border-green-300 text-green-700 opacity-60' : selectedLeft === item.id ? 'bg-blue-400 border-blue-600 text-white scale-105' : 'bg-white border-blue-200 text-gray-700 hover:bg-blue-50'}`}
+                                >
+                                    {item.text}
+                                </button>
+                            ))}
+                        </div>
+                        {/* Columna Derecha */}
+                        <div className="flex flex-col gap-3 w-1/2">
+                            {rightItems.map(item => (
+                                <button 
+                                    key={`r-${item.id}`} 
+                                    onClick={() => handleRightClick(item.id)}
+                                    className={`btn-game p-4 md:p-6 text-xl md:text-2xl font-bold rounded-2xl border-4 transition-all shadow-md flex justify-center items-center ${matchedPairs.includes(item.id) ? 'bg-green-100 border-green-300 text-green-700 opacity-60' : selectedRight === item.id ? 'bg-pink-400 border-pink-600 text-white scale-105' : 'bg-white border-pink-200 text-gray-700 hover:bg-pink-50'}`}
+                                >
+                                    {item.text}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const CountingActivity = ({ data, onComplete }) => {
+            const [selected, setSelected] = React.useState(null);
+            const [isWrong, setIsWrong] = React.useState(false);
+
+            const handleOptionClick = (index) => {
+                if (selected !== null) return;
+                
+                if (index === data.correct) {
+                    playSuccess();
+                    setSelected(index);
+                    setTimeout(onComplete, 1500);
+                } else {
+                    playError();
+                    setSelected(index);
+                    setIsWrong(true);
+                    setTimeout(() => { setSelected(null); setIsWrong(false); }, 800);
+                }
+            };
+
+            const emojis = Array(data.count).fill(data.emoji);
+
+            return (
+                <div className="flex flex-col items-center w-full max-w-2xl mx-auto bounce-in">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-4 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
+                        {data.question}
+                    </h2>
+                    
+                    {/* Área donde se muestran los elementos a contar */}
+                    <div className="bg-white/60 p-6 rounded-3xl mb-8 flex flex-wrap justify-center gap-4 border-4 border-dashed border-gray-300 min-h-[150px] items-center w-full shadow-inner">
+                        {emojis.map((em, i) => (
+                            <span 
+                                key={i} 
+                                className="text-6xl md:text-7xl drop-shadow-md animate-bounce" 
+                                style={{animationDelay: `${i * 0.1}s`, animationDuration: '2s'}}
+                            >
+                                {em}
+                            </span>
+                        ))}
+                    </div>
+
+                    <div className="flex gap-4 w-full justify-center flex-wrap">
+                        {data.options.map((opt, index) => {
+                            let btnStyle = "bg-white text-gray-700 border-4 border-gray-200 hover:bg-gray-50";
+                            let animStyle = "";
+                            
+                            if (selected === index) {
+                                if (isWrong) {
+                                    btnStyle = "bg-red-500 text-white border-red-600";
+                                    animStyle = "shake";
+                                } else {
+                                    btnStyle = "bg-green-400 text-white border-green-500 success-pulse";
+                                }
+                            }
+                            
+                            return (
+                                <button 
+                                    key={index}
+                                    onClick={() => handleOptionClick(index)}
+                                    className={`btn-game text-4xl font-black w-20 h-20 md:w-24 md:h-24 rounded-2xl shadow-lg transition-all transform flex items-center justify-center ${btnStyle} ${animStyle}`}
+                                >
+                                    {opt}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        const SubjectScreen = ({ subjectKey, onBack }) => {
+            const subject = gameData[subjectKey];
+            const [currentAct, setCurrentAct] = React.useState(0);
+            const [completed, setCompleted] = React.useState(false);
+
+            const handleCompleteActivity = () => {
+                if (currentAct < subject.activities.length - 1) {
+                    setCurrentAct(currentAct + 1);
+                } else {
+                    playCheer();
+                    setCompleted(true);
+                }
+            };
+
+            const activity = subject.activities[currentAct];
+
+            return (
+                <div className="min-h-screen flex flex-col bg-slate-100">
+                    {/* Header */}
+                    <header className={`${subject.color} p-4 text-white flex justify-between items-center shadow-md relative z-10`}>
+                        <button onClick={() => { playPop(); onBack(); }} className="btn-game bg-white/20 hover:bg-white/30 p-2 px-4 rounded-full font-bold flex items-center gap-2">
+                            <span>⬅️</span> Volver
+                        </button>
+                        <h1 className="text-2xl md:text-4xl font-black text-center flex-1 drop-shadow-md">
+                            {subject.icon} {subject.title}
+                        </h1>
+                        <div className="w-24"></div> {/* spacer */}
+                    </header>
+
+                    {/* Progress Bar */}
+                    <div className="w-full bg-gray-200 h-6">
+                        <div 
+                            className={`h-6 ${subject.color} transition-all duration-500 flex items-center justify-end px-2`} 
+                            style={{width: `${((currentAct) / subject.activities.length) * 100}%`}}
+                        >
+                             {currentAct > 0 && <span className="text-xs text-white font-bold">⭐</span>}
+                        </div>
+                    </div>
+
+                    {/* Game Area */}
+                    <main className="flex-1 p-4 flex flex-col justify-center items-center relative overflow-hidden">
+                        {/* Background Decor */}
+                        <div className="absolute top-10 left-10 text-6xl opacity-10">✏️</div>
+                        <div className="absolute bottom-10 right-10 text-6xl opacity-10">📖</div>
+                        <div className="absolute top-20 right-20 text-6xl opacity-10">🎨</div>
+
+                        {!completed ? (
+                            <div className="w-full relative z-10" key={currentAct}>
+                                <div className="text-center mb-4">
+                                    <span className="inline-block bg-white text-gray-500 font-black rounded-full px-4 py-1 shadow-sm border-2 border-gray-200">
+                                        Desafío {currentAct + 1} de {subject.activities.length}
+                                    </span>
+                                </div>
+                                
+                                {activity.type === 'quiz' && <QuizActivity data={activity} onComplete={handleCompleteActivity} />}
+                                {activity.type === 'multiselect' && <MultiSelectActivity data={activity} onComplete={handleCompleteActivity} />}
+                                {activity.type === 'sequence' && <SequenceActivity data={activity} onComplete={handleCompleteActivity} />}
+                                {activity.type === 'truefalse' && <TrueFalseActivity data={activity} onComplete={handleCompleteActivity} />}
+                                {activity.type === 'match' && <MatchActivity data={activity} onComplete={handleCompleteActivity} />}
+                                {activity.type === 'counting' && <CountingActivity data={activity} onComplete={handleCompleteActivity} />}
+                            </div>
+                        ) : (
+                            <div className="text-center bounce-in bg-white p-10 rounded-3xl shadow-2xl border-8 border-yellow-400 relative z-10">
+                                <div className="text-8xl mb-4">🏆</div>
+                                <h2 className="text-4xl font-black text-gray-800 mb-4">¡Felicidades!</h2>
+                                <p className="text-2xl font-bold text-gray-600 mb-8">Has terminado todas las actividades de {subject.title}. ¡Eres genial!</p>
+                                <button 
+                                    onClick={() => { playPop(); onBack(); }}
+                                    className={`btn-game text-3xl font-black text-white px-10 py-4 rounded-full shadow-lg ${subject.color}`}
+                                >
+                                    Volver al Inicio 🏠
+                                </button>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [currentScreen, setCurrentScreen] = React.useState('home');
+
+            const openSubject = (key) => {
+                playPop();
+                setCurrentScreen(key);
+            };
+
+            if (currentScreen !== 'home') {
+                return <SubjectScreen subjectKey={currentScreen} onBack={() => setCurrentScreen('home')} />;
+            }
+
+            return (
+                <div className="min-h-screen bg-sky-100 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+                    {/* Decoraciones de fondo */}
+                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+                        <div className="absolute top-10 left-10 text-6xl bounce-in" style={{animationDelay: '0.2s'}}>☀️</div>
+                        <div className="absolute bottom-10 right-10 text-8xl opacity-50">🎈</div>
+                        <div className="absolute top-1/4 right-10 text-5xl opacity-50">☁️</div>
+                        <div className="absolute bottom-1/4 left-10 text-5xl opacity-50">☁️</div>
+                    </div>
+
+                    <div className="relative z-10 flex flex-col items-center max-w-4xl w-full">
+                        <div className="bg-white p-6 md:p-8 rounded-[3rem] shadow-2xl border-8 border-white w-full text-center bounce-in">
+                            <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 mb-4 drop-shadow-sm">
+                                ¡Aprende Jugando!
+                            </h1>
+                            <p className="text-xl md:text-2xl font-bold text-gray-600 mb-8">
+                                1° Básico • Elige una materia para empezar:
+                            </p>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full">
+                                {/* Botón Historia */}
+                                <button 
+                                    onClick={() => openSubject('historia')}
+                                    className="btn-game flex flex-col items-center justify-center bg-orange-400 hover:bg-orange-500 text-white rounded-3xl p-6 shadow-[0_8px_0_0_#c2410c] hover:shadow-[0_4px_0_0_#c2410c] hover:translate-y-1 transition-all border-4 border-orange-300"
+                                >
+                                    <span className="text-6xl md:text-7xl mb-4 bg-white/20 p-4 rounded-full">👨‍👩‍👧‍👦</span>
+                                    <span className="text-2xl md:text-3xl font-black drop-shadow-md">Historia</span>
+                                    <span className="text-lg font-bold text-orange-100 mt-2">Mi Familia</span>
+                                </button>
+
+                                {/* Botón Matemáticas */}
+                                <button 
+                                    onClick={() => openSubject('matematicas')}
+                                    className="btn-game flex flex-col items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-3xl p-6 shadow-[0_8px_0_0_#1d4ed8] hover:shadow-[0_4px_0_0_#1d4ed8] hover:translate-y-1 transition-all border-4 border-blue-400"
+                                >
+                                    <span className="text-6xl md:text-7xl mb-4 bg-white/20 p-4 rounded-full">🔢</span>
+                                    <span className="text-2xl md:text-3xl font-black drop-shadow-md">Matemáticas</span>
+                                    <span className="text-lg font-bold text-blue-100 mt-2">Patrones</span>
+                                </button>
+
+                                {/* Botón Lenguaje */}
+                                <button 
+                                    onClick={() => openSubject('lenguaje')}
+                                    className="btn-game flex flex-col items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-3xl p-6 shadow-[0_8px_0_0_#15803d] hover:shadow-[0_4px_0_0_#15803d] hover:translate-y-1 transition-all border-4 border-green-400"
+                                >
+                                    <span className="text-6xl md:text-7xl mb-4 bg-white/20 p-4 rounded-full">📚</span>
+                                    <span className="text-2xl md:text-3xl font-black drop-shadow-md">Lenguaje</span>
+                                    <span className="text-lg font-bold text-green-100 mt-2">Compartimos</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
     </script>
 </body>
 </html>
