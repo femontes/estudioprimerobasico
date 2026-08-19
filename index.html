@@ -3,877 +3,1204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Aprende Jugando! - 1° Básico</title>
-    
-    <!-- Tailwind CSS para el diseño -->
+    <title>Nos Ubicamos en el Espacio - 1° Básico</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for child-friendly typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- React y ReactDOM para la interactividad -->
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-    <!-- Babel para compilar JSX en el navegador -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Fuente amigable para niños -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        nunito: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        chileRed: '#D62828',
+                        chileBlue: '#003049',
+                        chileSky: '#4EA8DE',
+                        funYellow: '#FDF0D5',
+                        brightYellow: '#FFB703',
+                        softGreen: '#A7C957',
+                        darkGreen: '#386641',
+                        andesPurple: '#6A4C93'
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
         body {
             font-family: 'Nunito', sans-serif;
-            background-color: #f0fdfa; /* Fondo suave */
-            touch-action: manipulation; /* Mejor respuesta en tablets */
+            background-color: #F8F9FA;
+            user-select: none;
         }
-        
-        .bounce-in {
-            animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        h1, h2, h3, .font-title {
+            font-family: 'Fredoka', cursive;
         }
-        
-        @keyframes bounceIn {
-            0% { transform: scale(0.1); opacity: 0; }
-            60% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); }
+        .bounce-gentle {
+            animation: bounceGentle 2s infinite;
         }
-
-        .shake {
-            animation: shake 0.5s;
+        @keyframes bounceGentle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
         }
-
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            50% { transform: translateX(10px); }
-            75% { transform: translateX(-10px); }
-            100% { transform: translateX(0); }
+        .pulse-glow {
+            animation: pulseGlow 1.8s infinite;
         }
-
-        .success-pulse {
-            animation: pulseGreen 1s infinite;
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(255,183,3,0.6)); }
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(255,183,3,0.9)); }
         }
-
-        @keyframes pulseGreen {
-            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(74, 222, 128, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        .float-item {
+            animation: floatSlow 3s ease-in-out infinite;
         }
-
-        .btn-game {
-            transition: all 0.2s;
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(2deg); }
         }
-        .btn-game:active {
-            transform: scale(0.95);
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #E2E8F0;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #4EA8DE;
+            border-radius: 10px;
         }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="bg-amber-50/40 text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <script type="text/babel">
-        // Sistema de audio sintetizado (no requiere archivos externos)
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        const playTone = (freq, type, duration, vol=0.1) => {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            oscillator.type = type;
-            oscillator.frequency.value = freq;
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            oscillator.start();
-            gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-            oscillator.stop(audioCtx.currentTime + duration);
-        };
+    <!-- Header Principal -->
+    <header class="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 text-white shadow-lg sticky top-0 z-50 border-b-4 border-yellow-400">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+            
+            <!-- Logo & Mascots -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('inicio')">
+                <div class="relative bg-white/20 p-2 rounded-2xl backdrop-blur-sm border-2 border-white/40 flex items-center gap-1">
+                    <span class="text-3xl bounce-gentle">🦅</span>
+                    <span class="text-3xl float-item">🦌</span>
+                </div>
+                <div>
+                    <span class="text-xs font-bold tracking-wider uppercase text-yellow-300 bg-blue-900/40 px-2 py-0.5 rounded-full">1° Básico • Historia</span>
+                    <h1 class="text-xl sm:text-2xl font-bold tracking-wide leading-tight">Nos Ubicamos en el Espacio</h1>
+                </div>
+            </div>
 
-        const playSuccess = () => {
-            playTone(523.25, 'sine', 0.1); // C5
-            setTimeout(() => playTone(659.25, 'sine', 0.2), 100); // E5
-            setTimeout(() => playTone(783.99, 'sine', 0.3), 200); // G5
-        };
+            <!-- Sound & Helper Controls -->
+            <div class="flex items-center gap-2">
+                <button id="btn-sound" onclick="toggleAudio()" class="bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold px-3 py-2 rounded-xl shadow-md transition flex items-center gap-2 border-2 border-yellow-200">
+                    <i class="fa-solid fa-volume-high text-lg" id="sound-icon"></i>
+                    <span class="hidden sm:inline text-sm">Efectos: ON</span>
+                </button>
+                <button onclick="speakCurrentModule()" class="bg-emerald-400 hover:bg-emerald-300 text-emerald-950 font-bold px-3 py-2 rounded-xl shadow-md transition flex items-center gap-2 border-2 border-emerald-200">
+                    <i class="fa-solid fa-circle-play text-xl"></i>
+                    <span class="text-sm hidden md:inline">Escuchar Léeme</span>
+                </button>
+            </div>
+        </div>
 
-        const playError = () => {
-            playTone(200, 'sawtooth', 0.3);
-        };
+        <!-- Navigation Bar for Kids -->
+        <nav class="bg-blue-700/80 backdrop-blur-md border-t border-blue-400/40">
+            <div class="max-w-6xl mx-auto px-2 flex items-center justify-start md:justify-center overflow-x-auto custom-scrollbar py-2 gap-2 text-xs sm:text-sm font-bold">
+                <button onclick="switchTab('inicio')" id="nav-inicio" class="nav-btn px-4 py-2 rounded-xl transition whitespace-nowrap bg-yellow-400 text-blue-950 shadow-md">
+                    🏠 Inicio
+                </button>
+                <button onclick="switchTab('posiciones')" id="nav-posiciones" class="nav-btn px-4 py-2 rounded-xl transition whitespace-nowrap hover:bg-blue-600 text-white">
+                    📍 Mi Posición
+                </button>
+                <button onclick="switchTab('planos')" id="nav-planos" class="nav-btn px-4 py-2 rounded-xl transition whitespace-nowrap hover:bg-blue-600 text-white">
+                    🗺️ Los Planos
+                </button>
+                <button onclick="switchTab('planisferio')" id="nav-planisferio" class="nav-btn px-4 py-2 rounded-xl transition whitespace-nowrap hover:bg-blue-600 text-white">
+                    🌍 Chile en el Mundo
+                </button>
+                <button onclick="switchTab('mapachile')" id="nav-mapachile" class="nav-btn px-4 py-2 rounded-xl transition whitespace-nowrap hover:bg-blue-600 text-white">
+                    🇨🇱 Mapa de Chile
+                </button>
+                <button onclick="switchTab('desafios')" id="nav-desafios" class="nav-btn px-4 py-2 rounded-xl transition whitespace-nowrap hover:bg-blue-600 text-white">
+                    ✈️ Rutas y Juegos
+                </button>
+                <button onclick="switchTab('diploma')" id="nav-diploma" class="nav-btn px-4 py-2 rounded-xl transition whitespace-nowrap hover:bg-blue-600 text-white">
+                    ⭐ Mi Diploma
+                </button>
+            </div>
+        </nav>
+    </header>
 
-        const playPop = () => {
-            playTone(400, 'sine', 0.1);
-        };
+    <main class="max-w-5xl mx-auto px-4 py-6 flex-grow w-full">
 
-        const playCheer = () => {
-            // Sonido de victoria al terminar una materia
-            let freq = 400;
-            for(let i=0; i<10; i++) {
-                setTimeout(() => playTone(freq + (i*50), 'sine', 0.1, 0.05), i*50);
-            }
-        };
-
-        // --- BASE DE DATOS DE ACTIVIDADES EXTRAIDAS DE LOS PDFs ---
-        const gameData = {
-            historia: {
-                title: "Historia de mi Familia",
-                color: "bg-orange-400",
-                shadow: "shadow-orange-600",
-                icon: "👨‍👩‍👧‍👦",
-                activities: [
-                    {
-                        type: "quiz",
-                        question: "¿Qué evento forma parte de la historia de tu familia?",
-                        options: ["Ir al supermercado 🛒", "Nacimiento de un hermano 👶", "Ver televisión 📺", "Comer un helado 🍦"],
-                        correct: 1
-                    },
-                    {
-                        type: "sequence",
-                        question: "Ordena la historia de Cecilia tocando los cuadros:",
-                        items: ["1. Sus papás se casan 💍", "2. Nace Cecilia 👧", "3. Se mudan de casa 🏠", "4. Nace su hermano Álex 👦"],
-                        correctOrder: [0, 1, 2, 3]
-                    },
-                    {
-                        type: "quiz",
-                        question: "¿Cómo sabemos la historia de nuestra familia del pasado?",
-                        options: ["Viendo el clima 🌤️", "Revisando fotos antiguas 📸", "Mirando las plantas 🌿"],
-                        correct: 1
-                    },
-                    {
-                        type: "multiselect",
-                        question: "Toca las cosas que pueden CAMBIAR en una familia con el tiempo:",
-                        options: ["La forma de vestir 👗", "El número de integrantes 👨‍👩‍👦", "El sol en el cielo ☀️", "La edad de las personas 🎂"],
-                        correct: [0, 1, 3]
-                    },
-                    {
-                        type: "quiz",
-                        question: "¿A quién le puedes preguntar para conocer tu historia cuando eras bebé?",
-                        options: ["A tu mascota 🐶", "A tus abuelos o padres 👵👴", "A tu juguete 🧸"],
-                        correct: 1
-                    },
-                    {
-                        type: "quiz",
-                        question: "¿Qué actividad hacías cuando eras bebé y AHORA puedes hacer solito?",
-                        options: ["Tomar en mamadera 🍼", "Llorar todo el día 😭", "Amarrarte los zapatos 👟", "Dormir en cuna 🛏️"],
-                        correct: 2
-                    },
-                    {
-                        type: "multiselect",
-                        question: "Toca quiénes pueden formar parte de tu familia (selecciona varios):",
-                        options: ["Los abuelos 👴👵", "Tus mascotas 🐶🐱", "Tus tíos 🧔👩", "Un auto viejo 🚗"],
-                        correct: [0, 1, 2]
-                    },
-                    {
-                        type: "sequence",
-                        question: "Ordena las etapas de la vida de menor a mayor edad:",
-                        items: ["1. Bebé 👶", "2. Niño 🧒", "3. Adulto 👨", "4. Abuelo 👴"],
-                        correctOrder: [0, 1, 2, 3]
-                    },
-                    {
-                        type: "truefalse",
-                        question: "¿Tus abuelos son los papás de tus papás?",
-                        answer: true
-                    },
-                    {
-                        type: "match",
-                        question: "Une a cada persona con su etapa de vida:",
-                        pairs: [
-                            { left: "Bebé", right: "🍼" },
-                            { left: "Abuelo", right: "👴" },
-                            { left: "Niño", right: "🎒" }
-                        ]
-                    }
-                ]
-            },
-            matematicas: {
-                title: "Patrones y Números",
-                color: "bg-blue-500",
-                shadow: "shadow-blue-700",
-                icon: "🔢",
-                activities: [
-                    {
-                        type: "quiz",
-                        question: "Completa el patrón de colores: 🔴 🔵 🔴 🔵 🔴 ___",
-                        options: ["🟡", "🔵", "🔴", "🟢"],
-                        correct: 1
-                    },
-                    {
-                        type: "quiz",
-                        question: "Completa el patrón de formas: ⭐ 🟩 ⭐ 🟩 ___",
-                        options: ["🔵", "🟩", "⭐", "🔺"],
-                        correct: 2
-                    },
-                    {
-                        type: "quiz",
-                        question: "¿Qué es lo que cambia en este patrón? 🍎 🍏 🍎 🍏",
-                        options: ["El tamaño", "El color", "La forma"],
-                        correct: 1
-                    },
-                    {
-                        type: "quiz",
-                        question: "Secuencia Creciente: ¿Qué número sigue? 1, 3, 5, 7, ___",
-                        options: ["6", "8", "9", "10"],
-                        correct: 2
-                    },
-                    {
-                        type: "quiz",
-                        question: "Secuencia Decreciente: ¿Qué número sigue? 10, 8, 6, 4, ___",
-                        options: ["2", "5", "3", "1"],
-                        correct: 0
-                    },
-                    {
-                        type: "quiz",
-                        question: "Completa el patrón de sonidos: 👏 🦶 👏 🦶 ___",
-                        options: ["🗣️ (hablar)", "🦶 (pie)", "👏 (aplauso)", "👃 (nariz)"],
-                        correct: 2
-                    },
-                    {
-                        type: "quiz",
-                        question: "Secuencia contando de 2 en 2: 2, 4, 6, ___",
-                        options: ["7", "8", "9", "10"],
-                        correct: 1
-                    },
-                    {
-                        type: "sequence",
-                        question: "Ordena los números del más chico al más grande (menor a mayor):",
-                        items: ["1", "5", "8", "12"],
-                        correctOrder: [0, 1, 2, 3]
-                    },
-                    {
-                        type: "multiselect",
-                        question: "Toca TODOS los números que son MAYORES que 5:",
-                        options: ["2", "7", "4", "9"],
-                        correct: [1, 3]
-                    },
-                    {
-                        type: "counting",
-                        question: "¿Cuántas manzanas hay?",
-                        emoji: "🍎",
-                        count: 6,
-                        options: [4, 5, 6, 7],
-                        correct: 2
-                    },
-                    {
-                        type: "match",
-                        question: "Une la cantidad con el número:",
-                        pairs: [
-                            { left: "⭐⭐⭐", right: "3" },
-                            { left: "⭐⭐⭐⭐⭐", right: "5" },
-                            { left: "⭐", right: "1" }
-                        ]
-                    }
-                ]
-            },
-            lenguaje: {
-                title: "Juntos Compartimos",
-                color: "bg-green-500",
-                shadow: "shadow-green-700",
-                icon: "📚",
-                activities: [
-                    {
-                        type: "quiz",
-                        question: "Los sustantivos PROPIOS se escriben con mayúscula. ¿Cuál es un sustantivo propio?",
-                        options: ["perro 🐶", "mesa 🪑", "Diego 👦", "ciudad 🏙️"],
-                        correct: 2
-                    },
-                    {
-                        type: "quiz",
-                        question: "¿Qué artículo acompaña a la palabra 'Gatos'?",
-                        options: ["Un gatos", "Una gatos", "Unos gatos", "Unas gatos"],
-                        correct: 2
-                    },
-                    {
-                        type: "quiz",
-                        question: "Completa la palabra con la sílaba correcta: ___bolla 🧅",
-                        options: ["Se", "Ce", "Ci", "Ze"],
-                        correct: 1
-                    },
-                    {
-                        type: "quiz",
-                        question: "Completa la palabra con la sílaba correcta: ___so 🧀",
-                        options: ["Ce", "Ke", "Que", "Qui"],
-                        correct: 2
-                    },
-                    {
-                        type: "quiz",
-                        question: "En el poema de Charlie el dormilón que saca las lanitas... ¿Qué animal es Charlie?",
-                        options: ["Un ratón 🐭", "Un perro 🐶", "Un gatito 🐱", "Un pajarito 🐦"],
-                        correct: 2
-                    },
-                    {
-                        type: "quiz",
-                        question: "Completa la palabra con la sílaba correcta: Bos___ 🌲",
-                        options: ["ce", "que", "qui", "se"],
-                        correct: 1
-                    },
-                    {
-                        type: "quiz",
-                        question: "¿Qué artículo usarías para decir '___ mariposa'?",
-                        options: ["La", "El", "Los", "Las"],
-                        correct: 0
-                    },
-                    {
-                        type: "multiselect",
-                        question: "Toca SOLO los sustantivos PROPIOS (nombres, que van con mayúscula inicial):",
-                        options: ["María 👧", "mesa 🪑", "Chile 🇨🇱", "lápiz ✏️"],
-                        correct: [0, 2]
-                    },
-                    {
-                        type: "sequence",
-                        question: "Ordena la oración para que tenga sentido:",
-                        items: ["1. El", "2. perro 🐶", "3. come 🍖", "4. mucho 😋"],
-                        correctOrder: [0, 1, 2, 3]
-                    },
-                    {
-                        type: "truefalse",
-                        question: "La palabra 'perro' es un sustantivo propio y se escribe con mayúscula.",
-                        answer: false
-                    },
-                    {
-                        type: "match",
-                        question: "Une la sílaba para formar la palabra:",
-                        pairs: [
-                            { left: "Bo", right: "tella 🍾" },
-                            { left: "Galle", right: "ta 🍪" },
-                            { left: "Pe", right: "rrito 🐶" }
-                        ]
-                    }
-                ]
-            }
-        };
-
-        const QuizActivity = ({ data, onComplete }) => {
-            const [selected, setSelected] = React.useState(null);
-            const [isWrong, setIsWrong] = React.useState(false);
-
-            const handleOptionClick = (index) => {
-                if (selected !== null) return; // Prevent multiple clicks
-
-                if (index === data.correct) {
-                    playSuccess();
-                    setSelected(index);
-                    setIsWrong(false);
-                    setTimeout(onComplete, 1500);
-                } else {
-                    playError();
-                    setSelected(index);
-                    setIsWrong(true);
-                    setTimeout(() => {
-                        setSelected(null);
-                        setIsWrong(false);
-                    }, 800);
-                }
-            };
-
-            return (
-                <div className="flex flex-col items-center w-full max-w-2xl mx-auto bounce-in">
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
-                        {data.question}
+        <!-- ==================== TAB 1: INICIO / BIENVENIDA ==================== -->
+        <section id="tab-inicio" class="tab-content block space-y-6">
+            
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-yellow-300 via-amber-200 to-orange-200 rounded-3xl p-6 md:p-8 shadow-xl border-4 border-yellow-400 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="space-y-4 max-w-lg z-10">
+                    <span class="bg-chileRed text-white font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider">Unidad 3 • Tema 1</span>
+                    <h2 class="text-3xl md:text-4xl font-black text-slate-800 leading-tight">
+                        ¡Bienvenido, Pequeño Explorador! 🚀
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-                        {data.options.map((option, index) => {
-                            let btnStyle = "bg-white text-gray-700 hover:bg-gray-50 border-4 border-gray-200";
-                            let animStyle = "";
-                            
-                            if (selected === index) {
-                                if (isWrong) {
-                                    btnStyle = "bg-red-500 text-white border-red-600";
-                                    animStyle = "shake";
-                                } else {
-                                    btnStyle = "bg-green-400 text-white border-green-500 success-pulse";
-                                }
-                            } else if (selected !== null && !isWrong) {
-                                btnStyle = "bg-gray-100 text-gray-400 border-gray-200 opacity-50"; // Dim others
-                            }
-
-                            return (
-                                <button 
-                                    key={index}
-                                    onClick={() => handleOptionClick(index)}
-                                    className={`btn-game text-xl md:text-2xl font-bold p-6 rounded-2xl shadow-lg transition-all transform flex items-center justify-center ${btnStyle} ${animStyle}`}
-                                >
-                                    {option}
-                                </button>
-                            );
-                        })}
+                    <p class="text-base sm:text-lg text-slate-700 font-semibold leading-relaxed">
+                        Junto a nuestros amigos <strong class="text-blue-700">Condorín el Cóndor 🦅</strong> y <strong class="text-amber-800">Huemulín el Huemul 🦌</strong>, aprenderemos a ubicarnos en el espacio, leer planos y descubrir el mapa de Chile en el planeta Tierra.
+                    </p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button onclick="switchTab('posiciones'); playSound('click')" class="bg-chileRed hover:bg-red-700 text-white font-black text-lg px-6 py-3 rounded-2xl shadow-lg border-b-4 border-red-900 transition transform hover:-translate-y-1 flex items-center gap-2">
+                            <span>¡Empezar la Aventura!</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button onclick="speakText('¡Hola amigo! Soy Condorín y junto a Huemulín te enseñaremos a ubicarte en el espacio y conocer el mapa de Chile. ¡Haz clic en Empezar la Aventura!')" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-3 rounded-2xl shadow-md transition flex items-center gap-2">
+                            <i class="fa-solid fa-volume-high"></i>
+                            <span>Escuchar Saludo</span>
+                        </button>
                     </div>
                 </div>
-            );
-        };
 
-        const MultiSelectActivity = ({ data, onComplete }) => {
-            const [selectedIndexes, setSelectedIndexes] = React.useState([]);
-            const [showError, setShowError] = React.useState(false);
-
-            const toggleOption = (index) => {
-                playPop();
-                if (selectedIndexes.includes(index)) {
-                    setSelectedIndexes(selectedIndexes.filter(i => i !== index));
-                } else {
-                    setSelectedIndexes([...selectedIndexes, index]);
-                }
-            };
-
-            const checkAnswer = () => {
-                const isCorrect = 
-                    selectedIndexes.length === data.correct.length && 
-                    data.correct.every(val => selectedIndexes.includes(val));
-
-                if (isCorrect) {
-                    playSuccess();
-                    setTimeout(onComplete, 1500);
-                } else {
-                    playError();
-                    setShowError(true);
-                    setTimeout(() => setShowError(false), 800);
-                }
-            };
-
-            return (
-                <div className="flex flex-col items-center w-full max-w-2xl mx-auto bounce-in">
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-4 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
-                        {data.question}
-                    </h2>
-                    <p className="text-gray-500 font-bold mb-6">(Toca todas las opciones correctas y luego pulsa Revisar)</p>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mb-8">
-                        {data.options.map((option, index) => {
-                            const isSelected = selectedIndexes.includes(index);
-                            return (
-                                <button 
-                                    key={index}
-                                    onClick={() => toggleOption(index)}
-                                    className={`btn-game text-xl md:text-2xl font-bold p-4 rounded-2xl border-4 transition-all ${isSelected ? 'bg-blue-400 text-white border-blue-600 scale-105' : 'bg-white text-gray-700 border-gray-200'}`}
-                                >
-                                    {option}
-                                </button>
-                            );
-                        })}
+                <!-- Mascot Illustration Card -->
+                <div class="relative flex items-center justify-center gap-4 bg-white/70 p-6 rounded-3xl border-4 border-white shadow-inner max-w-xs w-full">
+                    <div class="text-center">
+                        <div class="text-7xl bounce-gentle">🦅</div>
+                        <span class="font-black text-sm text-blue-900 block mt-1">Condorín</span>
                     </div>
-                    
-                    <button 
-                        onClick={checkAnswer}
-                        className={`btn-game text-2xl font-bold py-4 px-12 rounded-full shadow-xl text-white ${showError ? 'bg-red-500 shake' : 'bg-green-500 hover:bg-green-600'}`}
-                    >
-                        {showError ? '¡Intenta de nuevo!' : '¡Revisar! ✅'}
+                    <div class="text-center">
+                        <div class="text-7xl float-item">🦌</div>
+                        <span class="font-black text-sm text-amber-900 block mt-1">Huemulín</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Objectives Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div onclick="switchTab('posiciones')" class="bg-white p-5 rounded-3xl border-2 border-emerald-200 shadow-md hover:shadow-xl transition cursor-pointer transform hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 text-2xl font-bold mb-3">📍</div>
+                    <h3 class="text-lg font-bold text-slate-800">1. Orientación Espacial</h3>
+                    <p class="text-xs text-slate-600 mt-1">Aprende qué está a la <strong>izquierda</strong>, <strong>derecha</strong>, <strong>arriba</strong> y <strong>abajo</strong>.</p>
+                </div>
+
+                <div onclick="switchTab('planos')" class="bg-white p-5 rounded-3xl border-2 border-sky-200 shadow-md hover:shadow-xl transition cursor-pointer transform hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-sky-100 rounded-2xl flex items-center justify-center text-sky-600 text-2xl font-bold mb-3">🗺️</div>
+                    <h3 class="text-lg font-bold text-slate-800">2. Los Planos</h3>
+                    <p class="text-xs text-slate-600 mt-1">Mira habitaciones y parques <strong>desde arriba</strong> y descubre la simbología.</p>
+                </div>
+
+                <div onclick="switchTab('planisferio')" class="bg-white p-5 rounded-3xl border-2 border-indigo-200 shadow-md hover:shadow-xl transition cursor-pointer transform hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 text-2xl font-bold mb-3">🌍</div>
+                    <h3 class="text-lg font-bold text-slate-800">3. Chile en el Planisferio</h3>
+                    <p class="text-xs text-slate-600 mt-1">Ubica los <strong>6 continentes</strong>, <strong>5 océanos</strong> y encuentra a Chile.</p>
+                </div>
+
+                <div onclick="switchTab('mapachile')" class="bg-white p-5 rounded-3xl border-2 border-red-200 shadow-md hover:shadow-xl transition cursor-pointer transform hover:-translate-y-1">
+                    <div class="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center text-red-600 text-2xl font-bold mb-3">🏔️</div>
+                    <h3 class="text-lg font-bold text-slate-800">4. El Mapa de Chile</h3>
+                    <p class="text-xs text-slate-600 mt-1">Descubre el <strong>Océano Pacífico</strong>, la <strong>Cordillera de los Andes</strong> y Santiago.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 2: MI POSICIÓN (IZQUIERDA/DERECHA/ARRIBA/ABAJO) ==================== -->
+        <section id="tab-posiciones" class="tab-content hidden space-y-6">
+            
+            <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-emerald-200">
+                <div class="flex items-center justify-between flex-wrap gap-2 border-b pb-4 mb-4">
+                    <div>
+                        <span class="bg-emerald-100 text-emerald-800 font-bold text-xs px-3 py-1 rounded-full">Actividad 1 • Evaluación Inicial</span>
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2 mt-1">
+                            📍 ¿Dónde están los objetos?
+                        </h2>
+                    </div>
+                    <button onclick="speakText('Ayuda a la niña a ubicar los objetos. Haz clic en las tarjetas de la derecha para colocarlos alrededor de ella.')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+                        🔊 Escuchar Instrucción
                     </button>
                 </div>
-            );
-        };
 
-        const SequenceActivity = ({ data, onComplete }) => {
-            const [sequence, setSequence] = React.useState([]);
-            const [available, setAvailable] = React.useState(data.items.map((_, i) => i));
-            const [isWrong, setIsWrong] = React.useState(false);
+                <p class="text-sm text-slate-600 mb-6">
+                    Observa a la niña en el centro. Haz clic en los botones de abajo para ubicar cada objeto en el lugar correcto (arriba, izquierda o derecha).
+                </p>
 
-            const handlePick = (index) => {
-                // Check if it's the correct next step
-                const nextExpectedIndex = data.correctOrder[sequence.length];
-                
-                if (index === nextExpectedIndex) {
-                    playPop();
-                    const newSequence = [...sequence, index];
-                    setSequence(newSequence);
-                    setAvailable(available.filter(i => i !== index));
+                <!-- Interactive Positioning Canvas Box -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
                     
-                    if (newSequence.length === data.correctOrder.length) {
-                        playSuccess();
-                        setTimeout(onComplete, 1500);
-                    }
-                } else {
-                    playError();
-                    setIsWrong(true);
-                    setTimeout(() => setIsWrong(false), 500);
-                }
-            };
+                    <!-- Display Scene -->
+                    <div class="md:col-span-2 bg-gradient-to-b from-sky-100 to-amber-50 rounded-3xl border-4 border-dashed border-emerald-300 p-6 min-h-[340px] relative flex items-center justify-center overflow-hidden">
+                        
+                        <!-- Reference Labels -->
+                        <span class="absolute top-2 left-1/2 -translate-x-1/2 bg-white/80 px-3 py-0.5 rounded-full text-xs font-black text-slate-500 border">ARRIBA ⬆️</span>
+                        <span class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-white/80 px-3 py-0.5 rounded-full text-xs font-black text-slate-500 border">ABAJO ⬇️</span>
+                        <span class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 px-3 py-0.5 rounded-full text-xs font-black text-slate-500 border">⬅️ IZQUIERDA</span>
+                        <span class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 px-3 py-0.5 rounded-full text-xs font-black text-slate-500 border">DERECHA ➡️</span>
 
-            const reset = () => {
-                playPop();
-                setSequence([]);
-                setAvailable(data.items.map((_, i) => i));
-            };
+                        <!-- Girl Character Center -->
+                        <div class="relative flex flex-col items-center">
+                            <!-- Girl Standing Top View/Back View -->
+                            <div class="text-7xl sm:text-8xl filter drop-shadow-md">👧</div>
+                            <span class="bg-amber-200 text-amber-900 font-bold text-xs px-2 py-0.5 rounded-md mt-1">Niña</span>
+                        </div>
 
-            return (
-                <div className="flex flex-col items-center w-full max-w-3xl mx-auto bounce-in">
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-6 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
-                        {data.question}
-                    </h2>
-                    
-                    {/* Contenedor de la secuencia armándose */}
-                    <div className="w-full bg-blue-50 border-4 border-blue-200 rounded-2xl p-4 min-h-[120px] mb-6 flex flex-col gap-2">
-                        {sequence.length === 0 && <p className="text-gray-400 text-center font-bold text-xl mt-4">Toca los botones de abajo en orden...</p>}
-                        {sequence.map((itemIndex, i) => (
-                            <div key={i} className="bg-green-400 text-white font-bold text-xl p-3 rounded-xl shadow bounce-in">
-                                {data.items[itemIndex]}
-                            </div>
-                        ))}
+                        <!-- Object Drop Slots -->
+                        <!-- TOP Slot -->
+                        <div id="slot-top" class="absolute top-8 left-1/2 -translate-x-1/2 w-20 h-20 bg-white/60 border-2 border-emerald-400 border-dashed rounded-2xl flex items-center justify-center transition">
+                            <span class="text-xs text-slate-400 font-bold text-center">Lámpara Arriba</span>
+                        </div>
+
+                        <!-- LEFT Slot -->
+                        <div id="slot-left" class="absolute left-8 top-1/2 -translate-y-1/2 w-20 h-20 bg-white/60 border-2 border-emerald-400 border-dashed rounded-2xl flex items-center justify-center transition">
+                            <span class="text-xs text-slate-400 font-bold text-center">Cuaderno Izquierda</span>
+                        </div>
+
+                        <!-- RIGHT Slot -->
+                        <div id="slot-right" class="absolute right-8 top-1/2 -translate-y-1/2 w-20 h-20 bg-white/60 border-2 border-emerald-400 border-dashed rounded-2xl flex items-center justify-center transition">
+                            <span class="text-xs text-slate-400 font-bold text-center">Pelota Derecha</span>
+                        </div>
                     </div>
 
-                    {/* Botones disponibles */}
-                    <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 w-full ${isWrong ? 'shake' : ''}`}>
-                        {available.map((itemIndex) => (
-                            <button 
-                                key={itemIndex}
-                                onClick={() => handlePick(itemIndex)}
-                                className="btn-game bg-white border-4 border-purple-300 text-gray-700 hover:bg-purple-50 text-lg md:text-xl font-bold p-4 rounded-2xl shadow-md flex items-center justify-center"
-                            >
-                                {data.items[itemIndex].replace(/^\d+\.\s*/, '') /* Quitar el número para que tengan que pensar */}
+                    <!-- Interactive Placement Controls -->
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wide">Selecciona y coloca:</h3>
+                        
+                        <!-- Item 1: Lamp -->
+                        <div class="bg-amber-50 p-3 rounded-2xl border-2 border-amber-200 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-3xl">💡</span>
+                                <span class="font-bold text-sm text-slate-700">Lámpara</span>
+                            </div>
+                            <button onclick="placePosObject('lamp', 'top')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl transition">
+                                Colocar Arriba
                             </button>
-                        ))}
-                    </div>
-                    
-                    {sequence.length > 0 && sequence.length < data.items.length && (
-                        <button onClick={reset} className="mt-6 text-red-500 font-bold underline text-lg">
-                            Empezar de nuevo 🔄
-                        </button>
-                    )}
-                </div>
-            );
-        };
-
-
-        const TrueFalseActivity = ({ data, onComplete }) => {
-            const [selected, setSelected] = React.useState(null);
-            const [isWrong, setIsWrong] = React.useState(false);
-
-            const handleSelect = (val) => {
-                if (selected !== null) return;
-                
-                if (val === data.answer) {
-                    playSuccess();
-                    setSelected(val);
-                    setTimeout(onComplete, 1500);
-                } else {
-                    playError();
-                    setSelected(val);
-                    setIsWrong(true);
-                    setTimeout(() => { setSelected(null); setIsWrong(false); }, 800);
-                }
-            };
-
-            return (
-                <div className="flex flex-col items-center w-full max-w-2xl mx-auto bounce-in">
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-8 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
-                        {data.question}
-                    </h2>
-                    <div className="flex gap-4 md:gap-8 w-full justify-center">
-                        <button 
-                            onClick={() => handleSelect(true)} 
-                            className={`btn-game text-2xl md:text-3xl font-bold p-6 rounded-3xl w-40 md:w-48 flex flex-col items-center justify-center transition-all ${selected===true && !isWrong ? 'bg-green-400 text-white success-pulse border-4 border-green-600 scale-110' : (selected===true && isWrong ? 'bg-red-500 text-white shake border-4 border-red-600' : 'bg-white text-green-600 border-4 border-green-200 hover:bg-green-50 shadow-lg')}`}
-                        >
-                            <span className="text-5xl mb-2">✅</span> Verdadero
-                        </button>
-                        <button 
-                            onClick={() => handleSelect(false)} 
-                            className={`btn-game text-2xl md:text-3xl font-bold p-6 rounded-3xl w-40 md:w-48 flex flex-col items-center justify-center transition-all ${selected===false && !isWrong ? 'bg-green-400 text-white success-pulse border-4 border-green-600 scale-110' : (selected===false && isWrong ? 'bg-red-500 text-white shake border-4 border-red-600' : 'bg-white text-red-600 border-4 border-red-200 hover:bg-red-50 shadow-lg')}`}
-                        >
-                            <span className="text-5xl mb-2">❌</span> Falso
-                        </button>
-                    </div>
-                </div>
-            );
-        };
-
-        const MatchActivity = ({ data, onComplete }) => {
-            const [leftItems, setLeftItems] = React.useState([]);
-            const [rightItems, setRightItems] = React.useState([]);
-            const [selectedLeft, setSelectedLeft] = React.useState(null);
-            const [selectedRight, setSelectedRight] = React.useState(null);
-            const [matchedPairs, setMatchedPairs] = React.useState([]);
-            const [isWrong, setIsWrong] = React.useState(false);
-
-            React.useEffect(() => {
-                const lefts = data.pairs.map((p, i) => ({ id: i, text: p.left }));
-                // Desordenar la columna derecha para el desafío
-                const rights = data.pairs.map((p, i) => ({ id: i, text: p.right }))
-                                         .sort(() => Math.random() - 0.5);
-                setLeftItems(lefts);
-                setRightItems(rights);
-            }, [data]);
-
-            const handleLeftClick = (id) => {
-                if (matchedPairs.includes(id)) return;
-                playPop();
-                setSelectedLeft(id);
-                checkMatch(id, selectedRight);
-            };
-
-            const handleRightClick = (id) => {
-                if (matchedPairs.includes(id)) return;
-                playPop();
-                setSelectedRight(id);
-                checkMatch(selectedLeft, id);
-            };
-
-            const checkMatch = (leftId, rightId) => {
-                if (leftId !== null && rightId !== null) {
-                    if (leftId === rightId) {
-                        playSuccess();
-                        const newMatched = [...matchedPairs, leftId];
-                        setMatchedPairs(newMatched);
-                        setSelectedLeft(null);
-                        setSelectedRight(null);
-                        if (newMatched.length === data.pairs.length) {
-                            setTimeout(onComplete, 1500);
-                        }
-                    } else {
-                        playError();
-                        setIsWrong(true);
-                        setTimeout(() => {
-                            setIsWrong(false);
-                            setSelectedLeft(null);
-                            setSelectedRight(null);
-                        }, 600);
-                    }
-                }
-            };
-
-            return (
-                <div className="flex flex-col items-center w-full max-w-3xl mx-auto bounce-in">
-                    <h2 className="text-xl md:text-2xl font-bold text-gray-800 text-center mb-6 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
-                        {data.question} <br/><span className="text-base text-gray-500">(Toca uno de cada lado)</span>
-                    </h2>
-                    <div className={`flex w-full justify-between gap-4 md:gap-8 ${isWrong ? 'shake' : ''}`}>
-                        {/* Columna Izquierda */}
-                        <div className="flex flex-col gap-3 w-1/2">
-                            {leftItems.map(item => (
-                                <button 
-                                    key={`l-${item.id}`} 
-                                    onClick={() => handleLeftClick(item.id)}
-                                    className={`btn-game p-4 md:p-6 text-xl md:text-2xl font-bold rounded-2xl border-4 transition-all shadow-md flex justify-center items-center ${matchedPairs.includes(item.id) ? 'bg-green-100 border-green-300 text-green-700 opacity-60' : selectedLeft === item.id ? 'bg-blue-400 border-blue-600 text-white scale-105' : 'bg-white border-blue-200 text-gray-700 hover:bg-blue-50'}`}
-                                >
-                                    {item.text}
-                                </button>
-                            ))}
                         </div>
-                        {/* Columna Derecha */}
-                        <div className="flex flex-col gap-3 w-1/2">
-                            {rightItems.map(item => (
-                                <button 
-                                    key={`r-${item.id}`} 
-                                    onClick={() => handleRightClick(item.id)}
-                                    className={`btn-game p-4 md:p-6 text-xl md:text-2xl font-bold rounded-2xl border-4 transition-all shadow-md flex justify-center items-center ${matchedPairs.includes(item.id) ? 'bg-green-100 border-green-300 text-green-700 opacity-60' : selectedRight === item.id ? 'bg-pink-400 border-pink-600 text-white scale-105' : 'bg-white border-pink-200 text-gray-700 hover:bg-pink-50'}`}
-                                >
-                                    {item.text}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            );
-        };
 
-        const CountingActivity = ({ data, onComplete }) => {
-            const [selected, setSelected] = React.useState(null);
-            const [isWrong, setIsWrong] = React.useState(false);
-
-            const handleOptionClick = (index) => {
-                if (selected !== null) return;
-                
-                if (index === data.correct) {
-                    playSuccess();
-                    setSelected(index);
-                    setTimeout(onComplete, 1500);
-                } else {
-                    playError();
-                    setSelected(index);
-                    setIsWrong(true);
-                    setTimeout(() => { setSelected(null); setIsWrong(false); }, 800);
-                }
-            };
-
-            const emojis = Array(data.count).fill(data.emoji);
-
-            return (
-                <div className="flex flex-col items-center w-full max-w-2xl mx-auto bounce-in">
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-4 bg-white p-4 rounded-2xl shadow-md border-4 border-yellow-300">
-                        {data.question}
-                    </h2>
-                    
-                    {/* Área donde se muestran los elementos a contar */}
-                    <div className="bg-white/60 p-6 rounded-3xl mb-8 flex flex-wrap justify-center gap-4 border-4 border-dashed border-gray-300 min-h-[150px] items-center w-full shadow-inner">
-                        {emojis.map((em, i) => (
-                            <span 
-                                key={i} 
-                                className="text-6xl md:text-7xl drop-shadow-md animate-bounce" 
-                                style={{animationDelay: `${i * 0.1}s`, animationDuration: '2s'}}
-                            >
-                                {em}
-                            </span>
-                        ))}
-                    </div>
-
-                    <div className="flex gap-4 w-full justify-center flex-wrap">
-                        {data.options.map((opt, index) => {
-                            let btnStyle = "bg-white text-gray-700 border-4 border-gray-200 hover:bg-gray-50";
-                            let animStyle = "";
-                            
-                            if (selected === index) {
-                                if (isWrong) {
-                                    btnStyle = "bg-red-500 text-white border-red-600";
-                                    animStyle = "shake";
-                                } else {
-                                    btnStyle = "bg-green-400 text-white border-green-500 success-pulse";
-                                }
-                            }
-                            
-                            return (
-                                <button 
-                                    key={index}
-                                    onClick={() => handleOptionClick(index)}
-                                    className={`btn-game text-4xl font-black w-20 h-20 md:w-24 md:h-24 rounded-2xl shadow-lg transition-all transform flex items-center justify-center ${btnStyle} ${animStyle}`}
-                                >
-                                    {opt}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            );
-        };
-
-        const SubjectScreen = ({ subjectKey, onBack }) => {
-            const subject = gameData[subjectKey];
-            const [currentAct, setCurrentAct] = React.useState(0);
-            const [completed, setCompleted] = React.useState(false);
-
-            const handleCompleteActivity = () => {
-                if (currentAct < subject.activities.length - 1) {
-                    setCurrentAct(currentAct + 1);
-                } else {
-                    playCheer();
-                    setCompleted(true);
-                }
-            };
-
-            const activity = subject.activities[currentAct];
-
-            return (
-                <div className="min-h-screen flex flex-col bg-slate-100">
-                    {/* Header */}
-                    <header className={`${subject.color} p-4 text-white flex justify-between items-center shadow-md relative z-10`}>
-                        <button onClick={() => { playPop(); onBack(); }} className="btn-game bg-white/20 hover:bg-white/30 p-2 px-4 rounded-full font-bold flex items-center gap-2">
-                            <span>⬅️</span> Volver
-                        </button>
-                        <h1 className="text-2xl md:text-4xl font-black text-center flex-1 drop-shadow-md">
-                            {subject.icon} {subject.title}
-                        </h1>
-                        <div className="w-24"></div> {/* spacer */}
-                    </header>
-
-                    {/* Progress Bar */}
-                    <div className="w-full bg-gray-200 h-6">
-                        <div 
-                            className={`h-6 ${subject.color} transition-all duration-500 flex items-center justify-end px-2`} 
-                            style={{width: `${((currentAct) / subject.activities.length) * 100}%`}}
-                        >
-                             {currentAct > 0 && <span className="text-xs text-white font-bold">⭐</span>}
-                        </div>
-                    </div>
-
-                    {/* Game Area */}
-                    <main className="flex-1 p-4 flex flex-col justify-center items-center relative overflow-hidden">
-                        {/* Background Decor */}
-                        <div className="absolute top-10 left-10 text-6xl opacity-10">✏️</div>
-                        <div className="absolute bottom-10 right-10 text-6xl opacity-10">📖</div>
-                        <div className="absolute top-20 right-20 text-6xl opacity-10">🎨</div>
-
-                        {!completed ? (
-                            <div className="w-full relative z-10" key={currentAct}>
-                                <div className="text-center mb-4">
-                                    <span className="inline-block bg-white text-gray-500 font-black rounded-full px-4 py-1 shadow-sm border-2 border-gray-200">
-                                        Desafío {currentAct + 1} de {subject.activities.length}
-                                    </span>
-                                </div>
-                                
-                                {activity.type === 'quiz' && <QuizActivity data={activity} onComplete={handleCompleteActivity} />}
-                                {activity.type === 'multiselect' && <MultiSelectActivity data={activity} onComplete={handleCompleteActivity} />}
-                                {activity.type === 'sequence' && <SequenceActivity data={activity} onComplete={handleCompleteActivity} />}
-                                {activity.type === 'truefalse' && <TrueFalseActivity data={activity} onComplete={handleCompleteActivity} />}
-                                {activity.type === 'match' && <MatchActivity data={activity} onComplete={handleCompleteActivity} />}
-                                {activity.type === 'counting' && <CountingActivity data={activity} onComplete={handleCompleteActivity} />}
+                        <!-- Item 2: Notebook -->
+                        <div class="bg-blue-50 p-3 rounded-2xl border-2 border-blue-200 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-3xl">📓</span>
+                                <span class="font-bold text-sm text-slate-700">Cuaderno</span>
                             </div>
-                        ) : (
-                            <div className="text-center bounce-in bg-white p-10 rounded-3xl shadow-2xl border-8 border-yellow-400 relative z-10">
-                                <div className="text-8xl mb-4">🏆</div>
-                                <h2 className="text-4xl font-black text-gray-800 mb-4">¡Felicidades!</h2>
-                                <p className="text-2xl font-bold text-gray-600 mb-8">Has terminado todas las actividades de {subject.title}. ¡Eres genial!</p>
-                                <button 
-                                    onClick={() => { playPop(); onBack(); }}
-                                    className={`btn-game text-3xl font-black text-white px-10 py-4 rounded-full shadow-lg ${subject.color}`}
-                                >
-                                    Volver al Inicio 🏠
+                            <button onclick="placePosObject('notebook', 'left')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl transition">
+                                Colocar Izquierda
+                            </button>
+                        </div>
+
+                        <!-- Item 3: Ball -->
+                        <div class="bg-red-50 p-3 rounded-2xl border-2 border-red-200 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-3xl">⚽</span>
+                                <span class="font-bold text-sm text-slate-700">Pelota</span>
+                            </div>
+                            <button onclick="placePosObject('ball', 'right')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl transition">
+                                Colocar Derecha
+                            </button>
+                        </div>
+
+                        <button onclick="resetPosGame()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-xs transition mt-2">
+                            🔄 Reiniciar Juego
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Feedback message box -->
+                <div id="pos-feedback" class="mt-4 p-4 rounded-2xl bg-emerald-50 text-emerald-900 border border-emerald-200 font-bold text-center text-sm hidden">
+                    🎉 ¡Excelente! Colocaste la lámpara arriba, el cuaderno a la izquierda y la pelota a la derecha de la niña.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: LOS PLANOS Y SIMBOLOGÍA ==================== -->
+        <section id="tab-planos" class="tab-content hidden space-y-6">
+            
+            <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-sky-200">
+                <div class="flex items-center justify-between flex-wrap gap-2 border-b pb-4 mb-4">
+                    <div>
+                        <span class="bg-sky-100 text-sky-800 font-bold text-xs px-3 py-1 rounded-full">Tema: ¿Qué es un Plano?</span>
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2 mt-1">
+                            🗺️ Los Planos y su Simbología
+                        </h2>
+                    </div>
+                    <button onclick="speakText('Un plano representa un lugar visto desde arriba, como si fueras un pajarito o un cóndor volando. Usamos símbolos para reconocer los objetos.')" class="bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+                        🔊 Escuchar Explicación
+                    </button>
+                </div>
+
+                <!-- Explanation Banner -->
+                <div class="bg-sky-50 border-l-4 border-sky-400 p-4 rounded-r-2xl mb-6 flex items-start gap-3">
+                    <span class="text-3xl">🦅</span>
+                    <p class="text-sm text-sky-950 font-semibold leading-relaxed">
+                        ¡Hola! Un <strong>plano</strong> es la representación de un lugar (como un dormitorio, sala de clases o parque) visto <strong>desde arriba</strong>. Como los objetos se ven distintos desde el cielo, usamos una <strong>Simbología</strong> (dibujos o íconos) para identificarlos.
+                    </p>
+                </div>
+
+                <!-- Interactive Switcher: Dormitorio vs Plaza -->
+                <div class="flex justify-center gap-3 mb-6">
+                    <button id="btn-plano-dormitorio" onclick="loadPlanoView('dormitorio')" class="px-5 py-2.5 rounded-2xl font-bold text-sm bg-sky-500 text-white shadow-md transition">
+                        🛏️ Plano de un Dormitorio
+                    </button>
+                    <button id="btn-plano-plaza" onclick="loadPlanoView('plaza')" class="px-5 py-2.5 rounded-2xl font-bold text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        🛝 Plano de una Plaza
+                    </button>
+                </div>
+
+                <!-- Plano Display Area -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Map/Plan Visual Grid -->
+                    <div class="lg:col-span-2 bg-amber-100/60 p-4 rounded-3xl border-4 border-amber-200 relative min-h-[320px] flex items-center justify-center">
+                        
+                        <!-- Dormitorio Plan View -->
+                        <div id="view-dormitorio" class="w-full max-w-md bg-amber-50 rounded-2xl border-4 border-amber-700 p-4 shadow-inner grid grid-cols-3 gap-3 text-center">
+                            <div id="symbol-bed" class="col-span-2 bg-pink-200 border-2 border-pink-400 p-3 rounded-xl flex flex-col items-center justify-center hover:bg-pink-300 transition cursor-pointer" onclick="highlightSymbol('bed')">
+                                <span class="text-3xl">🛏️</span>
+                                <span class="text-xs font-black text-pink-900 mt-1">Cama</span>
+                            </div>
+                            <div id="symbol-desk" class="bg-emerald-200 border-2 border-emerald-400 p-2 rounded-xl flex flex-col items-center justify-center hover:bg-emerald-300 transition cursor-pointer" onclick="highlightSymbol('desk')">
+                                <span class="text-2xl">🖥️</span>
+                                <span class="text-[10px] font-black text-emerald-900">Escritorio</span>
+                            </div>
+                            <div id="symbol-rug" class="col-span-2 bg-indigo-200 border-2 border-indigo-400 p-2 rounded-xl flex flex-col items-center justify-center hover:bg-indigo-300 transition cursor-pointer" onclick="highlightSymbol('rug')">
+                                <span class="text-2xl">🛋️</span>
+                                <span class="text-[10px] font-black text-indigo-900">Alfombra</span>
+                            </div>
+                            <div id="symbol-lamp" class="bg-yellow-200 border-2 border-yellow-400 p-2 rounded-xl flex flex-col items-center justify-center hover:bg-yellow-300 transition cursor-pointer" onclick="highlightSymbol('lamp')">
+                                <span class="text-2xl">💡</span>
+                                <span class="text-[10px] font-black text-yellow-900">Lámpara</span>
+                            </div>
+                        </div>
+
+                        <!-- Plaza Plan View -->
+                        <div id="view-plaza" class="hidden w-full max-w-md bg-emerald-100 rounded-2xl border-4 border-emerald-600 p-4 shadow-inner grid grid-cols-3 gap-3 text-center">
+                            <div id="symbol-trees" class="bg-emerald-300 border-2 border-emerald-600 p-3 rounded-xl flex flex-col items-center justify-center hover:bg-emerald-400 transition cursor-pointer" onclick="highlightSymbol('trees')">
+                                <span class="text-3xl">🌳</span>
+                                <span class="text-xs font-black text-emerald-950 mt-1">Árboles</span>
+                            </div>
+                            <div id="symbol-fountain" class="bg-cyan-200 border-2 border-cyan-500 p-3 rounded-xl flex flex-col items-center justify-center hover:bg-cyan-300 transition cursor-pointer" onclick="highlightSymbol('fountain')">
+                                <span class="text-3xl">⛲</span>
+                                <span class="text-xs font-black text-cyan-950 mt-1">Pileta</span>
+                            </div>
+                            <div id="symbol-games" class="bg-orange-200 border-2 border-orange-500 p-3 rounded-xl flex flex-col items-center justify-center hover:bg-orange-300 transition cursor-pointer" onclick="highlightSymbol('games')">
+                                <span class="text-3xl">🛝</span>
+                                <span class="text-xs font-black text-orange-950 mt-1">Juegos</span>
+                            </div>
+                            <div id="symbol-bench" class="col-span-2 bg-amber-200 border-2 border-amber-600 p-2 rounded-xl flex flex-col items-center justify-center hover:bg-amber-300 transition cursor-pointer" onclick="highlightSymbol('bench')">
+                                <span class="text-2xl">🪑</span>
+                                <span class="text-xs font-black text-amber-950">Banca</span>
+                            </div>
+                            <div id="symbol-flowers" class="bg-rose-200 border-2 border-rose-400 p-2 rounded-xl flex flex-col items-center justify-center hover:bg-rose-300 transition cursor-pointer" onclick="highlightSymbol('flowers')">
+                                <span class="text-2xl">💐</span>
+                                <span class="text-xs font-black text-rose-950">Flores</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Simbologia Panel -->
+                    <div class="bg-slate-50 p-5 rounded-3xl border-2 border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-black text-slate-800 text-base mb-3 flex items-center gap-2">
+                                🏷️ Simbología (Símbolos)
+                            </h3>
+                            <p class="text-xs text-slate-500 mb-4">Haz clic en un símbolo para encontrarlo en el plano:</p>
+                            
+                            <div id="legend-list" class="space-y-2">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+
+                        <div id="symbol-info" class="mt-4 p-3 rounded-2xl bg-amber-100 text-amber-900 text-xs font-bold text-center border border-amber-300">
+                            👆 Toca cualquier elemento para ver su nombre en la simbología.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: CHILE EN EL PLANISFERIO ==================== -->
+        <section id="tab-planisferio" class="tab-content hidden space-y-6">
+            
+            <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-indigo-200">
+                <div class="flex items-center justify-between flex-wrap gap-2 border-b pb-4 mb-4">
+                    <div>
+                        <span class="bg-indigo-100 text-indigo-800 font-bold text-xs px-3 py-1 rounded-full">Tema: El Planisferio</span>
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2 mt-1">
+                            🌍 Chile en el Planisferio (El Mundo)
+                        </h2>
+                    </div>
+                    <button onclick="speakText('El planeta Tierra tiene 6 continentes y 5 océanos. Chile es un país muy largo y angosto ubicado en el continente de América del Sur, junto al Océano Pacífico.')" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-sm px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+                        🔊 Escuchar Explicación
+                    </button>
+                </div>
+
+                <!-- Fact Badges -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+                    <div class="bg-blue-50 border border-blue-200 p-3 rounded-2xl text-center">
+                        <span class="block text-2xl">🌊</span>
+                        <span class="font-black text-xs text-blue-900">5 Océanos</span>
+                        <span class="block text-[10px] text-blue-700">Pacífico, Atlántico, Índico, Ártico, Austral</span>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl text-center">
+                        <span class="block text-2xl">🗺️</span>
+                        <span class="font-black text-xs text-amber-900">6 Continentes</span>
+                        <span class="block text-[10px] text-amber-700">América, Asia, Europa, África, Oceanía, Antártica</span>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1 bg-red-50 border border-red-200 p-3 rounded-2xl text-center">
+                        <span class="block text-2xl">🇨🇱</span>
+                        <span class="font-black text-xs text-red-900">Chile Tricontinental</span>
+                        <span class="block text-[10px] text-red-700">América, Antártica y Oceanía</span>
+                    </div>
+                </div>
+
+                <!-- Interactive World Map Container -->
+                <div class="bg-sky-100 p-4 rounded-3xl border-4 border-sky-400 relative overflow-hidden flex flex-col items-center justify-center space-y-4">
+                    
+                    <!-- Map Image Container with Interactive Audio Pins Overlay -->
+                    <div class="relative w-full max-w-4xl flex justify-center items-center bg-white p-2 sm:p-4 rounded-2xl shadow-md border-2 border-sky-200">
+                        <img src="https://raw.githubusercontent.com/femontes/estudioprimerobasico/refs/heads/main/736d39d1-5b2c-4889-85b2-93d34739bc02.png" 
+                             alt="Mapa de Chile y el Mundo" 
+                             class="w-full h-auto max-h-[500px] object-contain rounded-xl shadow-sm block"
+                             onerror="this.onerror=null; this.src='https://placehold.co/800x450/4EA8DE/ffffff?text=Mapa+de+Chile+y+el+Mundo';" />
+
+                        <!-- Audio Pins overlay directly over continents and Chile on the map -->
+                        <!-- Chile Pin -->
+                        <div class="absolute top-[68%] left-[25%] -translate-x-1/2 -translate-y-1/2 z-20">
+                            <button onclick="selectContinent('Chile')" class="bg-chileRed hover:bg-red-700 text-white text-[10px] sm:text-xs font-black px-2 sm:px-3 py-1 rounded-full shadow-lg border-2 border-white flex items-center gap-1 transition transform hover:scale-110 bounce-gentle">
+                                <span>🇨🇱 Chile</span>
+                                <i class="fa-solid fa-volume-high text-[10px]"></i>
+                            </button>
+                        </div>
+
+                        <!-- América Pin -->
+                        <div class="absolute top-[38%] left-[22%] -translate-x-1/2 -translate-y-1/2 z-10">
+                            <button onclick="selectContinent('America')" class="bg-amber-400 hover:bg-amber-500 text-amber-950 text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full shadow-md border border-white flex items-center gap-1 transition transform hover:scale-105">
+                                <span>🌎 América</span>
+                                <i class="fa-solid fa-volume-high text-[10px]"></i>
+                            </button>
+                        </div>
+
+                        <!-- Europa Pin -->
+                        <div class="absolute top-[28%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-10">
+                            <button onclick="selectContinent('Europa')" class="bg-yellow-300 hover:bg-yellow-400 text-yellow-950 text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full shadow-md border border-white flex items-center gap-1 transition transform hover:scale-105">
+                                <span>🌍 Europa</span>
+                                <i class="fa-solid fa-volume-high text-[10px]"></i>
+                            </button>
+                        </div>
+
+                        <!-- África Pin -->
+                        <div class="absolute top-[52%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-10">
+                            <button onclick="selectContinent('Africa')" class="bg-emerald-400 hover:bg-emerald-500 text-emerald-950 text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full shadow-md border border-white flex items-center gap-1 transition transform hover:scale-105">
+                                <span>🌍 África</span>
+                                <i class="fa-solid fa-volume-high text-[10px]"></i>
+                            </button>
+                        </div>
+
+                        <!-- Asia Pin -->
+                        <div class="absolute top-[32%] left-[73%] -translate-x-1/2 -translate-y-1/2 z-10">
+                            <button onclick="selectContinent('Asia')" class="bg-orange-400 hover:bg-orange-500 text-orange-950 text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full shadow-md border border-white flex items-center gap-1 transition transform hover:scale-105">
+                                <span>🌏 Asia</span>
+                                <i class="fa-solid fa-volume-high text-[10px]"></i>
+                            </button>
+                        </div>
+
+                        <!-- Oceanía Pin -->
+                        <div class="absolute top-[72%] left-[82%] -translate-x-1/2 -translate-y-1/2 z-10">
+                            <button onclick="selectContinent('Oceania')" class="bg-orange-300 hover:bg-orange-400 text-orange-950 text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full shadow-md border border-white flex items-center gap-1 transition transform hover:scale-105">
+                                <span>🏝️ Oceanía</span>
+                                <i class="fa-solid fa-volume-high text-[10px]"></i>
+                            </button>
+                        </div>
+
+                        <!-- Antártica Pin -->
+                        <div class="absolute top-[90%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-10">
+                            <button onclick="selectContinent('Antartica')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full shadow-md border border-white flex items-center gap-1 transition transform hover:scale-105">
+                                <span>❄️ Antártica</span>
+                                <i class="fa-solid fa-volume-high text-[10px]"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Interactive buttons to explore regions/continents on the map -->
+                    <div class="w-full bg-white/90 backdrop-blur-sm p-4 rounded-2xl border border-sky-200 shadow-sm space-y-2">
+                        <p class="text-xs font-black text-sky-900 text-center uppercase tracking-wide">Haz clic para explorar los continentes y a Chile en el mapa:</p>
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <button onclick="selectContinent('Chile')" class="bg-chileRed hover:bg-red-700 text-white font-bold text-xs px-3 py-2 rounded-xl transition shadow flex items-center gap-1 transform hover:scale-105">
+                                🇨🇱 Chile
+                            </button>
+                            <button onclick="selectContinent('America')" class="bg-amber-400 hover:bg-amber-500 text-amber-950 font-bold text-xs px-3 py-2 rounded-xl transition shadow transform hover:scale-105">
+                                🌎 América
+                            </button>
+                            <button onclick="selectContinent('Europa')" class="bg-yellow-300 hover:bg-yellow-400 text-yellow-950 font-bold text-xs px-3 py-2 rounded-xl transition shadow transform hover:scale-105">
+                                🌍 Europa
+                            </button>
+                            <button onclick="selectContinent('Africa')" class="bg-emerald-400 hover:bg-emerald-500 text-emerald-950 font-bold text-xs px-3 py-2 rounded-xl transition shadow transform hover:scale-105">
+                                🌍 África
+                            </button>
+                            <button onclick="selectContinent('Asia')" class="bg-orange-400 hover:bg-orange-500 text-orange-950 font-bold text-xs px-3 py-2 rounded-xl transition shadow transform hover:scale-105">
+                                🌏 Asia
+                            </button>
+                            <button onclick="selectContinent('Oceania')" class="bg-orange-300 hover:bg-orange-400 text-orange-950 font-bold text-xs px-3 py-2 rounded-xl transition shadow transform hover:scale-105">
+                                🏝️ Oceanía
+                            </button>
+                            <button onclick="selectContinent('Antartica')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs px-3 py-2 rounded-xl transition shadow transform hover:scale-105">
+                                ❄️ Antártica
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Info Modal / Box -->
+                <div id="planisferio-info" class="bg-indigo-50 border-2 border-indigo-200 p-4 rounded-2xl text-indigo-950 font-bold text-sm text-center">
+                    👈 Haz clic en cualquier botón de continente para descubrir información divertida sobre el mapa.
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: EL MAPA DE CHILE ==================== -->
+        <section id="tab-mapachile" class="tab-content hidden space-y-6">
+            
+            <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-red-200">
+                <div class="flex items-center justify-between flex-wrap gap-2 border-b pb-4 mb-4">
+                    <div>
+                        <span class="bg-red-100 text-red-800 font-bold text-xs px-3 py-1 rounded-full">Tema: Geografía de Chile</span>
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2 mt-1">
+                            🇨🇱 El Mapa Político de Chile
+                        </h2>
+                    </div>
+                    <button onclick="speakText('Chile se ubica entre el Océano Pacífico al oeste y la gran Cordillera de los Andes al este. Su capital es Santiago y está dividido en 16 regiones.')" class="bg-red-500 hover:bg-red-600 text-white font-bold text-sm px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+                        🔊 Escuchar Explicación
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    
+                    <!-- Chile Map Graphical View -->
+                    <div class="lg:col-span-2 bg-sky-100 p-4 rounded-3xl border-4 border-red-300 relative min-h-[420px] flex flex-col items-center justify-center space-y-4">
+                        
+                        <div class="relative w-full max-w-xl flex justify-center items-center bg-white p-2 sm:p-4 rounded-2xl shadow-md border-2 border-red-200">
+                            <img src="https://raw.githubusercontent.com/femontes/estudioprimerobasico/refs/heads/main/13a10c4d-6030-40d9-b94b-a91c559b9a46.png" 
+                                 alt="Mapa Político de Chile" 
+                                 class="w-full h-auto max-h-[500px] object-contain rounded-xl shadow-sm block"
+                                 onerror="this.onerror=null; this.src='https://placehold.co/600x800/D62828/ffffff?text=Mapa+de+Chile';" />
+
+                            <!-- Audio Pins overlay directly over Chile map -->
+                            <!-- Océano Pacífico Pin (Oeste) -->
+                            <div class="absolute top-[50%] left-[8%] sm:left-[12%] -translate-x-1/2 -translate-y-1/2 z-10">
+                                <button onclick="highlightChileRegion('pacifico')" class="bg-sky-500 hover:bg-sky-600 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-1 rounded-full shadow-md border border-white flex items-center gap-1 transition transform hover:scale-105">
+                                    <span>🌊 Océano Pacífico</span>
+                                    <i class="fa-solid fa-volume-high text-[10px]"></i>
                                 </button>
                             </div>
-                        )}
-                    </main>
+
+                            <!-- Zona Norte Pin -->
+                            <div class="absolute top-[20%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-10">
+                                <button onclick="highlightChileRegion('norte')" class="bg-amber-400 hover:bg-amber-500 text-amber-950 text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-1 rounded-full shadow-md border border-white flex items-center gap-1 transition transform hover:scale-105">
+                                    <span>🌵 Zona Norte</span>
+                                    <i class="fa-solid fa-volume-high text-[10px]"></i>
+                                </button>
+                            </div>
+
+                            <!-- Santiago Pin (Capital) -->
+                            <div class="absolute top-[48%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-20">
+                                <button onclick="highlightChileRegion('santiago')" class="bg-yellow-300 hover:bg-yellow-400 text-yellow-950 text-[10px] sm:text-xs font-black px-2 sm:px-2.5 py-1 rounded-full shadow-lg border-2 border-red-500 flex items-center gap-1 transition transform hover:scale-110 bounce-gentle">
+                                    <span>⭐ Santiago</span>
+                                    <i class="fa-solid fa-volume-high text-[10px]"></i>
+                                </button>
+                            </div>
+
+                            <!-- Cordillera de los Andes Pin (Este) -->
+                            <div class="absolute top-[50%] right-[8%] sm:right-[12%] translate-x-1/2 -translate-y-1/2 z-10">
+                                <button onclick="highlightChileRegion('andes')" class="bg-amber-800 hover:bg-amber-900 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-1 rounded-full shadow-md border border-white flex items-center gap-1 transition transform hover:scale-105">
+                                    <span>🏔️ Cordillera</span>
+                                    <i class="fa-solid fa-volume-high text-[10px]"></i>
+                                </button>
+                            </div>
+
+                            <!-- Zona Sur Pin -->
+                            <div class="absolute top-[75%] left-[52%] -translate-x-1/2 -translate-y-1/2 z-10">
+                                <button onclick="highlightChileRegion('sur')" class="bg-emerald-500 hover:bg-emerald-600 text-white text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-1 rounded-full shadow-md border border-white flex items-center gap-1 transition transform hover:scale-105">
+                                    <span>🌲 Zona Sur</span>
+                                    <i class="fa-solid fa-volume-high text-[10px]"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Buttons to highlight regions/zones -->
+                        <div class="w-full bg-white/90 backdrop-blur-sm p-3 rounded-2xl border border-red-200 shadow-sm">
+                            <p class="text-xs font-black text-red-900 text-center uppercase tracking-wide mb-2">Haz clic para explorar las zonas de Chile:</p>
+                            <div class="flex flex-wrap justify-center gap-2">
+                                <button onclick="highlightChileRegion('norte')" class="bg-amber-400 hover:bg-amber-500 text-amber-950 font-bold text-xs px-3 py-1.5 rounded-xl transition shadow transform hover:scale-105">
+                                    🌵 Zona Norte
+                                </button>
+                                <button onclick="highlightChileRegion('santiago')" class="bg-yellow-300 hover:bg-yellow-400 text-yellow-950 font-bold text-xs px-3 py-1.5 rounded-xl border border-red-500 transition shadow transform hover:scale-105">
+                                    ⭐ Santiago (Capital)
+                                </button>
+                                <button onclick="highlightChileRegion('sur')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition shadow transform hover:scale-105">
+                                    🌲 Zona Sur
+                                </button>
+                                <button onclick="highlightChileRegion('pacifico')" class="bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition shadow transform hover:scale-105">
+                                    🌊 Océano Pacífico (Oeste)
+                                </button>
+                                <button onclick="highlightChileRegion('andes')" class="bg-amber-800 hover:bg-amber-900 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition shadow transform hover:scale-105">
+                                    🏔️ Cordillera de los Andes (Este)
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Interactive Facts & Region Details -->
+                    <div class="space-y-4 flex flex-col justify-between">
+                        
+                        <div class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-200 space-y-3">
+                            <h3 class="font-black text-slate-800 text-sm uppercase">📌 Datos Importantes:</h3>
+                            <ul class="text-xs text-slate-700 space-y-2 font-semibold">
+                                <li class="flex items-start gap-2">
+                                    <span class="text-red-500 font-bold">•</span>
+                                    <span><strong>Capital de Chile:</strong> La ciudad de <strong>Santiago</strong>.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-red-500 font-bold">•</span>
+                                    <span><strong>Organización:</strong> Chile está dividido en <strong>16 Regiones</strong>.</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <span class="text-red-500 font-bold">•</span>
+                                    <span><strong>Límites naturales:</strong> El Océano Pacífico a la izquierda (Oeste) y la Cordillera de los Andes a la derecha (Este).</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div id="chile-region-box" class="bg-red-50 border-2 border-red-200 p-4 rounded-2xl text-red-950 font-bold text-xs text-center space-y-1">
+                            <span>👆 Toca una zona del mapa o la estrella de Santiago para aprender más.</span>
+                        </div>
+
+                        <div class="bg-sky-50 p-4 rounded-2xl border border-sky-200 text-xs text-sky-900">
+                            <span class="font-bold block mb-1">💬 Reflexiona con tu curso:</span>
+                            ¿Desde la ventana de tu casa o colegio puedes ver el mar u Océano Pacífico o la Cordillera de los Andes?
+                        </div>
+
+                    </div>
+
                 </div>
-            );
-        };
+            </div>
+        </section>
 
-        const App = () => {
-            const [currentScreen, setCurrentScreen] = React.useState('home');
+        <!-- ==================== TAB 6: RUTAS Y DESAFÍOS (JUEGO) ==================== -->
+        <section id="tab-desafios" class="tab-content hidden space-y-6">
+            
+            <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-amber-300">
+                <div class="flex items-center justify-between flex-wrap gap-2 border-b pb-4 mb-4">
+                    <div>
+                        <span class="bg-amber-100 text-amber-900 font-bold text-xs px-3 py-1 rounded-full">Desafío SIMCE / EPA • Lectura de Rutas</span>
+                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2 mt-1">
+                            ✈️ El Juego del Piloto y el Navegante
+                        </h2>
+                    </div>
+                    <button onclick="speakText('Observa la ruta del avión o barco en el mapa y responde a qué lugar llegará o de qué continente salió.')" class="bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+                        🔊 Escuchar Instrucción
+                    </button>
+                </div>
 
-            const openSubject = (key) => {
-                playPop();
-                setCurrentScreen(key);
-            };
+                <!-- Challenge Selector Tabs -->
+                <div class="flex justify-center gap-3 mb-4">
+                    <button id="btn-challenge-1" onclick="loadChallenge(1)" class="px-4 py-2 rounded-2xl font-bold text-xs bg-amber-500 text-white shadow-md transition">
+                        ✈️ Desafío 1: Ruta del Avión
+                    </button>
+                    <button id="btn-challenge-2" onclick="loadChallenge(2)" class="px-4 py-2 rounded-2xl font-bold text-xs bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        🚢 Desafío 2: Ruta del Barco
+                    </button>
+                </div>
 
-            if (currentScreen !== 'home') {
-                return <SubjectScreen subjectKey={currentScreen} onBack={() => setCurrentScreen('home')} />;
+                <!-- Active Challenge Container -->
+                <div id="challenge-box" class="bg-amber-50 p-6 rounded-3xl border-2 border-amber-200 space-y-6">
+                    <!-- Populated dynamically by JS -->
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ==================== TAB 7: DIPLOMA DE EXPLORADOR ==================== -->
+        <section id="tab-diploma" class="tab-content hidden space-y-6">
+            
+            <div class="bg-white rounded-3xl p-6 shadow-xl border-2 border-yellow-400">
+                <div class="text-center max-w-xl mx-auto space-y-4">
+                    <span class="text-6xl bounce-gentle inline-block">🏆</span>
+                    <h2 class="text-3xl font-black text-slate-800">
+                        ¡Felicitaciones, Gran Explorador!
+                    </h2>
+                    <p class="text-sm text-slate-600">
+                        Escribe tu nombre para recibir tu <strong>Diploma Oficial de la Unidad 3: Nos Ubicamos en el Espacio</strong>.
+                    </p>
+
+                    <!-- Name Input -->
+                    <div class="flex items-center justify-center gap-2 max-w-md mx-auto">
+                        <input type="text" id="student-name" placeholder="Escribe tu nombre aquí..." class="w-full border-2 border-yellow-400 rounded-2xl px-4 py-3 text-center font-bold text-lg text-slate-800 focus:outline-none focus:ring-4 focus:ring-yellow-200 shadow-inner">
+                        <button onclick="generateDiploma()" class="bg-yellow-400 hover:bg-yellow-500 text-blue-950 font-black px-6 py-3 rounded-2xl shadow-lg transition whitespace-nowrap">
+                            Generar 🎓
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Printable/Display Diploma Frame -->
+                <div id="diploma-card" class="mt-8 bg-gradient-to-br from-amber-100 via-yellow-50 to-orange-100 border-8 border-yellow-400 rounded-3xl p-8 text-center max-w-2xl mx-auto shadow-2xl relative overflow-hidden">
+                    
+                    <div class="border-4 border-dashed border-amber-400 p-6 rounded-2xl space-y-4 bg-white/80 backdrop-blur-sm">
+                        <div class="flex justify-between items-center text-3xl">
+                            <span>🦅</span>
+                            <span class="text-xs font-black text-amber-800 tracking-widest uppercase">República de Chile • 1° Básico</span>
+                            <span>🦌</span>
+                        </div>
+
+                        <h3 class="text-2xl sm:text-3xl font-black text-slate-800 uppercase tracking-wide">
+                            DIPLOMA DE HONOR
+                        </h3>
+
+                        <p class="text-xs text-slate-600 font-semibold">Se otorga con orgullo el presente reconocimiento a:</p>
+
+                        <div id="diploma-name-display" class="text-3xl sm:text-4xl font-black text-blue-900 border-b-4 border-yellow-400 inline-block px-8 py-2">
+                            [Tu Nombre Aquí]
+                        </div>
+
+                        <p class="text-xs sm:text-sm text-slate-700 font-bold max-w-md mx-auto leading-relaxed">
+                            Por haber completado con éxito todas las actividades de <strong>"Nos Ubicamos en el Espacio"</strong>, demostrando gran conocimiento en orientación, planos y mapas.
+                        </p>
+
+                        <div class="pt-4 flex justify-between items-end text-xs font-bold text-slate-500">
+                            <div>
+                                <span class="block border-t border-slate-400 pt-1">Condorín y Huemulín</span>
+                                <span class="text-[10px] text-slate-400">Guías de Aventura</span>
+                            </div>
+                            <div class="text-4xl">
+                                ⭐⭐⭐
+                            </div>
+                            <div>
+                                <span class="block border-t border-slate-400 pt-1">Profesor(a) de Historia</span>
+                                <span class="text-[10px] text-slate-400">1° Básico</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-6">
+                    <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-2xl shadow-md transition">
+                        🖨️ Imprimir Diploma
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer with Mascot Hints -->
+    <footer class="bg-slate-800 text-white py-4 px-4 text-center text-xs mt-12 border-t-4 border-yellow-400">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">🇨🇱</span>
+                <span class="font-bold">Unidad 3 • Tema 1: Nos ubicamos en el espacio</span>
+            </div>
+            <p class="text-slate-400">Diseñado especialmente para estudiantes de Primero Básico.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sound Engine using Web Audio API for fallback zero-external-audio dependency
+        let audioEnabled = true;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.getElementById('btn-sound');
+            const icon = document.getElementById('sound-icon');
+            if (audioEnabled) {
+                btn.classList.replace('bg-slate-300', 'bg-yellow-400');
+                btn.innerHTML = `<i class="fa-solid fa-volume-high text-lg"></i> <span class="hidden sm:inline text-sm">Efectos: ON</span>`;
+            } else {
+                btn.classList.replace('bg-yellow-400', 'bg-slate-300');
+                btn.innerHTML = `<i class="fa-solid fa-volume-xmark text-lg"></i> <span class="hidden sm:inline text-sm">Efectos: OFF</span>`;
+            }
+        }
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            initAudio();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.1);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'success') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, now); // C5
+                osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            } else if (type === 'pop') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(150, now + 0.15);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now);
+                osc.stop(now + 0.15);
+            }
+        }
+
+        // Text To Speech helper for 1st grade non-readers
+        function speakText(text) {
+            playSound('click');
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop active speech
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-CL';
+                utterance.rate = 0.9; // Slightly slower for kids
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function speakCurrentModule() {
+            const activeTab = document.querySelector('.tab-content:not(.hidden)');
+            if (!activeTab) return;
+
+            if (activeTab.id === 'tab-inicio') {
+                speakText("¡Bienvenidos exploradores! Vamos a aprender a ubicarnos en el espacio con Condorín y Huemulín.");
+            } else if (activeTab.id === 'tab-posiciones') {
+                speakText("Ubicación espacial: coloca los objetos arriba, a la izquierda o a la derecha de la niña.");
+            } else if (activeTab.id === 'tab-planos') {
+                speakText("Los planos representan habitaciones y parques vistos desde arriba con sus símbolos.");
+            } else if (activeTab.id === 'tab-planisferio') {
+                speakText("El planisferio muestra todos los continentes y océanos del planeta Tierra. Chile está en América del Sur.");
+            } else if (activeTab.id === 'tab-mapachile') {
+                speakText("Chile es largo y angosto. Tiene al Océano Pacífico al oeste y la Cordillera de los Andes al este.");
+            } else if (activeTab.id === 'tab-desafios') {
+                speakText("Ponte a prueba con las rutas de avión y barco para ganar tu diploma.");
+            } else if (activeTab.id === 'tab-diploma') {
+                speakText("Escribe tu nombre para recibir tu Diploma de Gran Explorador.");
+            }
+        }
+
+        // Navigation Tab Switching
+        function switchTab(tabId) {
+            playSound('click');
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.add('hidden'));
+
+            const selectedTab = document.getElementById(`tab-${tabId}`);
+            if (selectedTab) {
+                selectedTab.classList.remove('hidden');
             }
 
-            return (
-                <div className="min-h-screen bg-sky-100 flex flex-col items-center justify-center p-4 relative overflow-hidden">
-                    {/* Decoraciones de fondo */}
-                    <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-                        <div className="absolute top-10 left-10 text-6xl bounce-in" style={{animationDelay: '0.2s'}}>☀️</div>
-                        <div className="absolute bottom-10 right-10 text-8xl opacity-50">🎈</div>
-                        <div className="absolute top-1/4 right-10 text-5xl opacity-50">☁️</div>
-                        <div className="absolute bottom-1/4 left-10 text-5xl opacity-50">☁️</div>
-                    </div>
+            // Update Nav buttons state
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.classList.remove('bg-yellow-400', 'text-blue-950', 'shadow-md');
+                btn.classList.add('text-white');
+            });
 
-                    <div className="relative z-10 flex flex-col items-center max-w-4xl w-full">
-                        <div className="bg-white p-6 md:p-8 rounded-[3rem] shadow-2xl border-8 border-white w-full text-center bounce-in">
-                            <h1 className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 mb-4 drop-shadow-sm">
-                                ¡Aprende Jugando!
-                            </h1>
-                            <p className="text-xl md:text-2xl font-bold text-gray-600 mb-8">
-                                1° Básico • Elige una materia para empezar:
-                            </p>
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-yellow-400', 'text-blue-950', 'shadow-md');
+                activeBtn.classList.remove('text-white');
+            }
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full">
-                                {/* Botón Historia */}
-                                <button 
-                                    onClick={() => openSubject('historia')}
-                                    className="btn-game flex flex-col items-center justify-center bg-orange-400 hover:bg-orange-500 text-white rounded-3xl p-6 shadow-[0_8px_0_0_#c2410c] hover:shadow-[0_4px_0_0_#c2410c] hover:translate-y-1 transition-all border-4 border-orange-300"
-                                >
-                                    <span className="text-6xl md:text-7xl mb-4 bg-white/20 p-4 rounded-full">👨‍👩‍👧‍👦</span>
-                                    <span className="text-2xl md:text-3xl font-black drop-shadow-md">Historia</span>
-                                    <span className="text-lg font-bold text-orange-100 mt-2">Mi Familia</span>
-                                </button>
+            // Scroll smoothly to top of content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-                                {/* Botón Matemáticas */}
-                                <button 
-                                    onClick={() => openSubject('matematicas')}
-                                    className="btn-game flex flex-col items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-3xl p-6 shadow-[0_8px_0_0_#1d4ed8] hover:shadow-[0_4px_0_0_#1d4ed8] hover:translate-y-1 transition-all border-4 border-blue-400"
-                                >
-                                    <span className="text-6xl md:text-7xl mb-4 bg-white/20 p-4 rounded-full">🔢</span>
-                                    <span className="text-2xl md:text-3xl font-black drop-shadow-md">Matemáticas</span>
-                                    <span className="text-lg font-bold text-blue-100 mt-2">Patrones</span>
-                                </button>
+        // ================= TAB 2: POSITION GAME LOGIC =================
+        const posState = { lamp: false, notebook: false, ball: false };
 
-                                {/* Botón Lenguaje */}
-                                <button 
-                                    onClick={() => openSubject('lenguaje')}
-                                    className="btn-game flex flex-col items-center justify-center bg-green-500 hover:bg-green-600 text-white rounded-3xl p-6 shadow-[0_8px_0_0_#15803d] hover:shadow-[0_4px_0_0_#15803d] hover:translate-y-1 transition-all border-4 border-green-400"
-                                >
-                                    <span className="text-6xl md:text-7xl mb-4 bg-white/20 p-4 rounded-full">📚</span>
-                                    <span className="text-2xl md:text-3xl font-black drop-shadow-md">Lenguaje</span>
-                                    <span className="text-lg font-bold text-green-100 mt-2">Compartimos</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
+        function placePosObject(item, position) {
+            playSound('pop');
+            const slotTop = document.getElementById('slot-top');
+            const slotLeft = document.getElementById('slot-left');
+            const slotRight = document.getElementById('slot-right');
+
+            if (item === 'lamp' && position === 'top') {
+                slotTop.innerHTML = `<span class="text-4xl animate-bounce">💡</span>`;
+                slotTop.classList.add('bg-yellow-100', 'border-yellow-400');
+                posState.lamp = true;
+            } else if (item === 'notebook' && position === 'left') {
+                slotLeft.innerHTML = `<span class="text-4xl animate-bounce">📓</span>`;
+                slotLeft.classList.add('bg-blue-100', 'border-blue-400');
+                posState.notebook = true;
+            } else if (item === 'ball' && position === 'right') {
+                slotRight.innerHTML = `<span class="text-4xl animate-bounce">⚽</span>`;
+                slotRight.classList.add('bg-red-100', 'border-red-400');
+                posState.ball = true;
+            }
+
+            if (posState.lamp && posState.notebook && posState.ball) {
+                playSound('success');
+                document.getElementById('pos-feedback').classList.remove('hidden');
+            }
+        }
+
+        function resetPosGame() {
+            playSound('click');
+            posState.lamp = false;
+            posState.notebook = false;
+            posState.ball = false;
+
+            document.getElementById('slot-top').innerHTML = `<span class="text-xs text-slate-400 font-bold text-center">Lámpara Arriba</span>`;
+            document.getElementById('slot-left').innerHTML = `<span class="text-xs text-slate-400 font-bold text-center">Cuaderno Izquierda</span>`;
+            document.getElementById('slot-right').innerHTML = `<span class="text-xs text-slate-400 font-bold text-center">Pelota Derecha</span>`;
+
+            document.getElementById('pos-feedback').classList.add('hidden');
+        }
+
+        // ================= TAB 3: PLANOS & SIMBOLOGIA LOGIC =================
+        const legendData = {
+            dormitorio: [
+                { id: 'bed', name: 'Cama', icon: '🛏️' },
+                { id: 'desk', name: 'Escritorio con Cuaderno', icon: '🖥️' },
+                { id: 'rug', name: 'Alfombra', icon: '🛋️' },
+                { id: 'lamp', name: 'Velador / Lámpara', icon: '💡' }
+            ],
+            plaza: [
+                { id: 'trees', name: 'Árboles', icon: '🌳' },
+                { id: 'fountain', name: 'Pileta de Agua', icon: '⛲' },
+                { id: 'games', name: 'Juegos Infantiles', icon: '🛝' },
+                { id: 'bench', name: 'Banca para Sentarse', icon: '🪑' },
+                { id: 'flowers', name: 'Flores de Colores', icon: '💐' }
+            ]
         };
 
-        ReactDOM.render(<App />, document.getElementById('root'));
+        function loadPlanoView(type) {
+            playSound('click');
+            const viewDorm = document.getElementById('view-dormitorio');
+            const viewPlaza = document.getElementById('view-plaza');
+            const btnDorm = document.getElementById('btn-plano-dormitorio');
+            const btnPlaza = document.getElementById('btn-plano-plaza');
+
+            if (type === 'dormitorio') {
+                viewDorm.classList.remove('hidden');
+                viewPlaza.classList.add('hidden');
+                btnDorm.classList.replace('bg-slate-100', 'bg-sky-500');
+                btnDorm.classList.replace('text-slate-700', 'text-white');
+                btnPlaza.classList.replace('bg-sky-500', 'bg-slate-100');
+                btnPlaza.classList.replace('text-white', 'text-slate-700');
+            } else {
+                viewPlaza.classList.remove('hidden');
+                viewDorm.classList.add('hidden');
+                btnPlaza.classList.replace('bg-slate-100', 'bg-sky-500');
+                btnPlaza.classList.replace('text-slate-700', 'text-white');
+                btnDorm.classList.replace('bg-sky-500', 'bg-slate-100');
+                btnDorm.classList.replace('text-white', 'text-slate-700');
+            }
+
+            renderLegend(type);
+        }
+
+        function renderLegend(type) {
+            const listContainer = document.getElementById('legend-list');
+            listContainer.innerHTML = '';
+
+            legendData[type].forEach(item => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex items-center gap-3 p-2 bg-white rounded-xl border border-slate-200 cursor-pointer hover:bg-amber-50 transition';
+                itemEl.onclick = () => highlightSymbol(item.id);
+                itemEl.innerHTML = `
+                    <span class="text-2xl">${item.icon}</span>
+                    <span class="text-xs font-bold text-slate-700">${item.name}</span>
+                `;
+                listContainer.appendChild(itemEl);
+            });
+        }
+
+        function highlightSymbol(symId) {
+            playSound('pop');
+            const element = document.getElementById(`symbol-${symId}`);
+            if (element) {
+                element.classList.add('ring-4', 'ring-yellow-400', 'scale-105');
+                setTimeout(() => {
+                    element.classList.remove('ring-4', 'ring-yellow-400', 'scale-105');
+                }, 1500);
+            }
+
+            const infoBox = document.getElementById('symbol-info');
+            infoBox.innerHTML = `✨ ¡Encontraste el símbolo en el plano!`;
+        }
+
+        // ================= TAB 4: PLANISFERIO LOGIC =================
+        function selectContinent(continentKey) {
+            playSound('click');
+            const infoBox = document.getElementById('planisferio-info');
+
+            const infoMap = {
+                America: '🌎 <strong>América:</strong> ¡Es nuestro continente! Es largo y se divide en América del Norte, Central y del Sur. Aquí está Chile.',
+                Europa: '🌍 <strong>Europa:</strong> Está al norte de África. Tiene muchos países antiguos y castillos.',
+                Africa: '🌍 <strong>África:</strong> Es un continente grande conocido por sus sabanas, leones y elefantes.',
+                Asia: '🌏 <strong>Asia:</strong> Es el continente más grande del mundo.',
+                Oceania: '🌏 <strong>Oceanía:</strong> Un conjunto de islas en el Océano Pacífico, como Australia y la Isla de Pascua (Chile).',
+                Antartica: '❄️ <strong>Antártica:</strong> Continente en el extremo sur cubierto de hielo y pingüinos. ¡Chile también tiene territorio aquí!',
+                Chile: '🇨🇱 <strong>¡CHILE!:</strong> Un país tricontinental ubicado en América del Sur, con territorio en la Antártica e Islas en Oceanía.'
+            };
+
+            if (infoMap[continentKey]) {
+                infoBox.innerHTML = infoMap[continentKey];
+                speakText(infoBox.innerText);
+            }
+        }
+
+        // ================= TAB 5: CHILE MAP LOGIC =================
+        function highlightChileRegion(zone) {
+            playSound('click');
+            const box = document.getElementById('chile-region-box');
+
+            if (zone === 'norte') {
+                box.innerHTML = '🌵 <strong>Zona Norte de Chile:</strong> Calurosa, con desiertos y hermosas playas.';
+            } else if (zone === 'santiago') {
+                box.innerHTML = '⭐ <strong>Santiago de Chile:</strong> Es la Ciudad Capital de nuestro país, ubicada en la Zona Central.';
+            } else if (zone === 'sur') {
+                box.innerHTML = '🌲 <strong>Zona Sur de Chile:</strong> Famosa por sus bosques, volcanes, lagos e islas.';
+            } else if (zone === 'pacifico') {
+                box.innerHTML = '🌊 <strong>Océano Pacífico:</strong> Se encuentra al oeste (izquierda) de Chile a lo largo de todas sus costas.';
+            } else if (zone === 'andes') {
+                box.innerHTML = '🏔️ <strong>Cordillera de los Andes:</strong> Es la gran cadena de montañas situada al este (derecha) de Chile.';
+            }
+
+            speakText(box.innerText);
+        }
+
+        // ================= TAB 6: CHALLENGES LOGIC =================
+        let currentChallenge = 1;
+
+        function loadChallenge(num) {
+            playSound('click');
+            currentChallenge = num;
+            const btn1 = document.getElementById('btn-challenge-1');
+            const btn2 = document.getElementById('btn-challenge-2');
+            const box = document.getElementById('challenge-box');
+
+            if (num === 1) {
+                btn1.classList.replace('bg-slate-100', 'bg-amber-500');
+                btn1.classList.replace('text-slate-700', 'text-white');
+                btn2.classList.replace('bg-amber-500', 'bg-slate-100');
+                btn2.classList.replace('text-white', 'text-slate-700');
+
+                box.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-2xl border flex flex-col md:flex-row items-center gap-4">
+                            <div class="text-center md:text-left flex-grow">
+                                <span class="bg-blue-100 text-blue-900 font-bold text-xs px-2 py-1 rounded-md">Ruta de Vuelo ✈️</span>
+                                <h3 class="font-bold text-slate-800 text-base mt-1">Un avión despega de Santiago (América) y vuela hacia el oeste cruzando el océano.</h3>
+                                <p class="text-xs text-slate-600 mt-1">¿A qué ciudad/continente llegará la ruta de vuelo?</p>
+                            </div>
+                            <div class="text-5xl">✈️ ➡️ 🛬</div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="checkAnswer(1, 'tokyo')" class="bg-white hover:bg-amber-100 border-2 border-amber-300 p-3 rounded-2xl font-bold text-slate-800 text-sm transition">
+                                A) Tokyo / Sidney (Oceanía)
+                            </button>
+                            <button onclick="checkAnswer(1, 'wrong')" class="bg-white hover:bg-amber-100 border-2 border-amber-300 p-3 rounded-2xl font-bold text-slate-800 text-sm transition">
+                                B) África
+                            </button>
+                            <button onclick="checkAnswer(1, 'wrong')" class="bg-white hover:bg-amber-100 border-2 border-amber-300 p-3 rounded-2xl font-bold text-slate-800 text-sm transition">
+                                C) Europa
+                            </button>
+                        </div>
+
+                        <div id="challenge-feedback-1" class="hidden p-3 rounded-2xl text-center text-sm font-bold"></div>
+                    </div>
+                `;
+            } else {
+                btn2.classList.replace('bg-slate-100', 'bg-amber-500');
+                btn2.classList.replace('text-slate-700', 'text-white');
+                btn1.classList.replace('bg-amber-500', 'bg-slate-100');
+                btn1.classList.replace('text-white', 'text-slate-700');
+
+                box.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-2xl border flex flex-col md:flex-row items-center gap-4">
+                            <div class="text-center md:text-left flex-grow">
+                                <span class="bg-indigo-100 text-indigo-900 font-bold text-xs px-2 py-1 rounded-md">Ruta de Navegación 🚢</span>
+                                <h3 class="font-bold text-slate-800 text-base mt-1">Un barco sale del puerto de Lisboa (Europa) cruzando el Océano Atlántico.</h3>
+                                <p class="text-xs text-slate-600 mt-1">¿A qué continente llegará el barco?</p>
+                            </div>
+                            <div class="text-5xl">🚢 ➡️ ⛵</div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="checkAnswer(2, 'wrong')" class="bg-white hover:bg-amber-100 border-2 border-amber-300 p-3 rounded-2xl font-bold text-slate-800 text-sm transition">
+                                A) Asia
+                            </button>
+                            <button onclick="checkAnswer(2, 'america')" class="bg-white hover:bg-amber-100 border-2 border-amber-300 p-3 rounded-2xl font-bold text-slate-800 text-sm transition">
+                                B) América (Río de Janeiro / Chile)
+                            </button>
+                            <button onclick="checkAnswer(2, 'wrong')" class="bg-white hover:bg-amber-100 border-2 border-amber-300 p-3 rounded-2xl font-bold text-slate-800 text-sm transition">
+                                C) Oceanía
+                            </button>
+                        </div>
+
+                        <div id="challenge-feedback-2" class="hidden p-3 rounded-2xl text-center text-sm font-bold"></div>
+                    </div>
+                `;
+            }
+        }
+
+        function checkAnswer(challengeNum, selected) {
+            const feedback = document.getElementById(`challenge-feedback-${challengeNum}`);
+            feedback.classList.remove('hidden');
+
+            if (selected === 'tokyo' || selected === 'america') {
+                playSound('success');
+                feedback.className = 'p-4 rounded-2xl text-center text-sm font-bold bg-emerald-100 text-emerald-900 border-2 border-emerald-300';
+                feedback.innerHTML = `🎉 ¡CORRECTO! Leíste muy bien la ruta del mapa. ¡Ganaste una estrella de explorador! ⭐`;
+            } else {
+                playSound('pop');
+                feedback.className = 'p-4 rounded-2xl text-center text-sm font-bold bg-rose-100 text-rose-900 border-2 border-rose-300';
+                feedback.innerHTML = `❌ ¡Casi! Observa bien la línea trazada en el mapa e inténtalo de nuevo.`;
+            }
+        }
+
+        // ================= TAB 7: DIPLOMA LOGIC =================
+        function generateDiploma() {
+            playSound('success');
+            const nameInput = document.getElementById('student-name').value.trim();
+            const displayName = document.getElementById('diploma-name-display');
+
+            if (nameInput.length > 0) {
+                displayName.textContent = nameInput;
+            } else {
+                displayName.textContent = 'Estudiante de 1° Básico';
+            }
+
+            document.getElementById('diploma-card').classList.add('pulse-glow');
+            setTimeout(() => {
+                document.getElementById('diploma-card').classList.remove('pulse-glow');
+            }, 2000);
+        }
+
+        window.onload = function() {
+            renderLegend('dormitorio');
+            loadChallenge(1);
+        };
     </script>
 </body>
 </html>
