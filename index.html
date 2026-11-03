@@ -1,1877 +1,267 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎨 Figuras y Cuerpos Geométricos - 1° Básico</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/fredoka-one@latest/latin/index.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/nunito@latest/latin-700.css">
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-:root {
-  --rojo: #FF5252; --azul: #2196F3; --verde: #4CAF50; --amarillo: #FFC107;
-  --morado: #9C27B0; --naranja: #FF9800; --rosa: #E91E63; --celeste: #00BCD4;
-}
-body {
-  font-family: 'Nunito', sans-serif;
-  background: linear-gradient(135deg, #FFE0B2 0%, #FFCCBC 50%, #B3E5FC 100%);
-  min-height: 100vh; overflow-x: hidden; color: #333;
-}
-h1, h2, h3, .titulo { font-family: 'Fredoka One', cursive; }
-
-/* Fondo animado con burbujas */
-.burbujas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-.burbuja {
-  position: absolute; bottom: -100px; border-radius: 50%;
-  animation: subir linear infinite; opacity: 0.6;
-}
-@keyframes subir {
-  0% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
-  100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
-}
-
-/* Contenedor principal */
-.app { position: relative; z-index: 1; }
-
-/* Header */
-.header {
-  background: linear-gradient(90deg, var(--rojo), var(--naranja), var(--amarillo), var(--verde), var(--azul), var(--morado));
-  background-size: 400% 400%;
-  animation: gradiente 8s ease infinite;
-  padding: 15px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  display: flex; justify-content: space-between; align-items: center;
-  flex-wrap: wrap; gap: 10px;
-}
-@keyframes gradiente { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
-.header h1 { color: white; font-size: 1.8em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
-.puntaje {
-  background: white; padding: 8px 20px; border-radius: 30px;
-  font-weight: bold; color: var(--morado); font-size: 1.2em;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-}
-.estrellas { color: var(--amarillo); }
-
-/* Navegación */
-.nav {
-  background: white; padding: 10px; display: flex; justify-content: center;
-  gap: 8px; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  position: sticky; top: 0; z-index: 100;
-}
-.btn-nav {
-  background: linear-gradient(135deg, var(--azul), var(--celeste));
-  color: white; border: none; padding: 10px 18px; border-radius: 25px;
-  font-family: 'Fredoka One', cursive; font-size: 0.95em; cursor: pointer;
-  transition: all 0.3s; box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-}
-.btn-nav:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
-.btn-nav.activo { background: linear-gradient(135deg, var(--naranja), var(--rojo)); }
-
-/* Secciones */
-.seccion { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; animation: aparecer 0.5s ease; }
-.seccion.activa { display: block; }
-@keyframes aparecer { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-/* Tarjetas */
-.tarjeta {
-  background: white; border-radius: 25px; padding: 25px; margin: 20px 0;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 4px solid transparent;
-  transition: all 0.3s;
-}
-.tarjeta:hover { transform: translateY(-5px); }
-.tarjeta.titulo-seccion {
-  background: linear-gradient(135deg, var(--azul), var(--morado));
-  color: white; text-align: center;
-}
-
-/* Grid de figuras */
-.grid-figuras {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px; margin: 20px 0;
-}
-.figura-card {
-  background: white; border-radius: 20px; padding: 20px; text-align: center;
-  cursor: pointer; transition: all 0.3s; border: 4px solid var(--azul);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-.figura-card:hover { transform: scale(1.05) rotate(3deg); border-color: var(--naranja); }
-.figura-card svg { width: 120px; height: 120px; margin: 10px 0; }
-.figura-card h3 { color: var(--morado); margin: 10px 0; font-size: 1.5em; }
-.figura-card .info { color: #666; font-size: 0.95em; }
-
-/* Cuerpos 3D con CSS */
-.escena-3d {
-  perspective: 600px; width: 150px; height: 150px; margin: 20px auto;
-  position: relative;
-}
-.cubo-3d {
-  width: 100px; height: 100px; position: relative;
-  transform-style: preserve-3d; animation: rotar 8s linear infinite;
-  margin: 25px auto;
-}
-@keyframes rotar { from { transform: rotateX(0) rotateY(0); } to { transform: rotateX(360deg) rotateY(360deg); } }
-.cara {
-  position: absolute; width: 100px; height: 100px; border: 2px solid rgba(0,0,0,0.3);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: bold; color: white; font-size: 0.8em;
-}
-.cubo-3d .cara:nth-child(1) { background: rgba(255,82,82,0.85); transform: translateZ(50px); }
-.cubo-3d .cara:nth-child(2) { background: rgba(33,150,243,0.85); transform: rotateY(180deg) translateZ(50px); }
-.cubo-3d .cara:nth-child(3) { background: rgba(76,175,80,0.85); transform: rotateY(90deg) translateZ(50px); }
-.cubo-3d .cara:nth-child(4) { background: rgba(255,193,7,0.85); transform: rotateY(-90deg) translateZ(50px); }
-.cubo-3d .cara:nth-child(5) { background: rgba(156,39,176,0.85); transform: rotateX(90deg) translateZ(50px); }
-.cubo-3d .cara:nth-child(6) { background: rgba(255,152,0,0.85); transform: rotateX(-90deg) translateZ(50px); }
-
-/* Esfera */
-.esfera-3d {
-  width: 120px; height: 120px; border-radius: 50%; margin: 15px auto;
-  background: radial-gradient(circle at 30% 30%, #FFD54F, #FF9800, #E65100);
-  box-shadow: inset -10px -10px 30px rgba(0,0,0,0.3), 0 5px 20px rgba(0,0,0,0.3);
-  animation: rebotar 3s ease-in-out infinite;
-}
-@keyframes rebotar { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-15px)} }
-
-/* Cono */
-.cono-3d {
-  width: 0; height: 0; margin: 30px auto;
-  border-left: 60px solid transparent; border-right: 60px solid transparent;
-  border-bottom: 120px solid var(--rojo);
-  position: relative; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
-  animation: balancear 4s ease-in-out infinite;
-}
-@keyframes balancear { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
-
-/* Cilindro */
-.cilindro-3d {
-  width: 100px; height: 120px; margin: 15px auto; position: relative;
-  background: linear-gradient(90deg, var(--verde), #81C784, var(--verde));
-  border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  animation: girar 5s ease-in-out infinite;
-}
-.cilindro-3d::before, .cilindro-3d::after {
-  content: ''; position: absolute; width: 100px; height: 30px;
-  background: var(--verde); border-radius: 50%; left: 0;
-}
-.cilindro-3d::before { top: -15px; background: #81C784; }
-.cilindro-3d::after { bottom: -15px; }
-@keyframes girar { 0%,100%{transform:rotateY(0)} 50%{transform:rotateY(20deg)} }
-
-/* Pirámide */
-.piramide-3d {
-  width: 0; height: 0; margin: 20px auto;
-  border-left: 70px solid transparent; border-right: 70px solid transparent;
-  border-bottom: 130px solid var(--amarillo);
-  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
-  animation: balancear 4s ease-in-out infinite;
-}
-
-/* Botones interactivos */
-.btn {
-  background: linear-gradient(135deg, var(--naranja), var(--rojo));
-  color: white; border: none; padding: 12px 25px; border-radius: 30px;
-  font-family: 'Fredoka One', cursive; font-size: 1.1em; cursor: pointer;
-  transition: all 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  margin: 5px;
-}
-.btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 18px rgba(0,0,0,0.3); }
-.btn.verde { background: linear-gradient(135deg, var(--verde), #81C784); }
-.btn.azul { background: linear-gradient(135deg, var(--azul), var(--celeste)); }
-.btn.morado { background: linear-gradient(135deg, var(--morado), #BA68C8); }
-
-/* Juegos */
-.zona-juego {
-  background: linear-gradient(135deg, #FFF9C4, #FFECB3);
-  border-radius: 25px; padding: 25px; margin: 20px 0;
-  border: 4px dashed var(--naranja);
-}
-.opciones {
-  display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 20px 0;
-}
-.opcion {
-  background: white; padding: 15px 25px; border-radius: 20px;
-  cursor: pointer; transition: all 0.3s; border: 3px solid var(--azul);
-  font-size: 1.1em; font-weight: bold; min-width: 120px; text-align: center;
-}
-.opcion:hover { transform: scale(1.1); border-color: var(--naranja); }
-.opcion.correcta { background: var(--verde); color: white; border-color: var(--verde); animation: correcto 0.6s; }
-.opcion.incorrecta { background: var(--rojo); color: white; border-color: var(--rojo); animation: incorrecto 0.6s; }
-@keyframes correcto { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
-@keyframes incorrecto { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-10px)} 75%{transform:translateX(10px)} }
-
-.pregunta {
-  font-size: 1.4em; text-align: center; margin: 20px 0;
-  color: var(--morado); font-family: 'Fredoka One', cursive;
-}
-.figura-grande { text-align: center; margin: 20px 0; }
-.figura-grande svg { width: 200px; height: 200px; }
-
-/* Mensaje de feedback */
-.feedback {
-  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  background: white; padding: 30px 50px; border-radius: 30px;
-  font-size: 2em; font-family: 'Fredoka One', cursive; z-index: 1000;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3); display: none;
-  animation: pop 0.5s ease;
-}
-@keyframes pop { from { transform: translate(-50%, -50%) scale(0); } to { transform: translate(-50%, -50%) scale(1); } }
-.feedback.show { display: block; }
-
-/* Drag and drop */
-.dropzone {
-  min-height: 100px; border: 4px dashed var(--morado); border-radius: 20px;
-  padding: 20px; margin: 10px; display: flex; align-items: center;
-  justify-content: center; background: rgba(255,255,255,0.5);
-  transition: all 0.3s;
-}
-.dropzone.over { background: rgba(76,175,80,0.2); border-color: var(--verde); }
-.draggable {
-  display: inline-block; padding: 15px; background: white; border-radius: 15px;
-  cursor: grab; margin: 5px; box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-  transition: all 0.3s; user-select: none;
-}
-.draggable:active { cursor: grabbing; transform: scale(1.1); }
-
-/* Tabla */
-.tabla {
-  width: 100%; border-collapse: collapse; margin: 20px 0;
-  background: white; border-radius: 15px; overflow: hidden;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-.tabla th {
-  background: linear-gradient(135deg, var(--morado), var(--rosa));
-  color: white; padding: 15px; font-family: 'Fredoka One', cursive;
-}
-.tabla td { padding: 12px; text-align: center; border-bottom: 1px solid #eee; }
-.tabla tr:hover { background: #FFF9C4; }
-
-/* Confeti */
-.confeti {
-  position: fixed; width: 10px; height: 10px; top: -10px;
-  animation: caer 3s linear forwards; z-index: 999;
-}
-@keyframes caer {
-  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
-}
-
-/* Modal */
-.modal {
-  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.7); display: none; align-items: center;
-  justify-content: center; z-index: 1000;
-}
-.modal.show { display: flex; }
-.modal-contenido {
-  background: white; border-radius: 30px; padding: 40px; max-width: 500px;
-  text-align: center; animation: pop 0.5s;
-}
-
-/* Inicio */
-.inicio {
-  text-align: center; padding: 40px 20px;
-}
-.inicio h1 {
-  font-size: 3em; background: linear-gradient(90deg, var(--rojo), var(--naranja), var(--amarillo), var(--verde), var(--azul), var(--morado));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text; margin-bottom: 20px;
-  animation: titulo 3s ease infinite;
-}
-@keyframes titulo { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
-.inicio .subtitulo { font-size: 1.5em; color: var(--morado); margin: 20px 0; }
-.mascota {
-  font-size: 8em; animation: saltar 2s ease-in-out infinite;
-  display: inline-block;
-}
-@keyframes saltar { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-30px) rotate(5deg)} }
-
-/* Menú de inicio */
-.menu-inicio {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px; margin: 30px 0;
-}
-.menu-item {
-  background: white; padding: 30px 20px; border-radius: 25px;
-  cursor: pointer; transition: all 0.3s; border: 4px solid;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-.menu-item:hover { transform: translateY(-10px) scale(1.05); }
-.menu-item .icono { font-size: 4em; margin-bottom: 10px; }
-.menu-item h3 { font-size: 1.3em; margin: 10px 0; }
-
-/* Progreso */
-.barra-progreso {
-  background: #eee; border-radius: 20px; height: 20px; margin: 15px 0;
-  overflow: hidden;
-}
-.barra-relleno {
-  background: linear-gradient(90deg, var(--verde), var(--amarillo));
-  height: 100%; border-radius: 20px; transition: width 0.5s;
-  display: flex; align-items: center; justify-content: center;
-  color: white; font-weight: bold; font-size: 0.8em;
-}
-
-/* Animación de figura */
-.animar { animation: aparecer 0.5s ease; }
-.girar { animation: girar-figura 2s ease infinite; }
-@keyframes girar-figura { from { transform: rotate(0); } to { transform: rotate(360deg); } }
-
-/* Contador */
-.contador {
-  display: inline-block; background: var(--amarillo); padding: 5px 15px;
-  border-radius: 20px; font-weight: bold; margin: 5px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .header h1 { font-size: 1.3em; }
-  .inicio h1 { font-size: 2em; }
-  .mascota { font-size: 5em; }
-  .btn-nav { font-size: 0.8em; padding: 8px 12px; }
-  .figura-grande svg { width: 150px; height: 150px; }
-}
-
-/* Juego memoria */
-.memoria-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 10px; max-width: 500px; margin: 20px auto;
-}
-.carta-memoria {
-  aspect-ratio: 1; background: linear-gradient(135deg, var(--morado), var(--rosa));
-  border-radius: 15px; cursor: pointer; display: flex;
-  align-items: center; justify-content: center; font-size: 2em;
-  transition: all 0.3s; color: white;
-}
-.carta-memoria.volteada { background: white; color: #333; }
-.carta-memoria.encontrada { background: var(--verde); color: white; }
-
-/* Sopa de letras visual */
-.sopa-grid {
-  display: grid; grid-template-columns: repeat(8, 1fr);
-  gap: 5px; max-width: 400px; margin: 20px auto;
-}
-.celda-sopa {
-  aspect-ratio: 1; background: white; border: 2px solid var(--azul);
-  border-radius: 8px; display: flex; align-items: center; justify-content: center;
-  font-weight: bold; font-size: 1.2em; cursor: pointer; transition: all 0.2s;
-}
-.celda-sopa:hover { background: var(--amarillo); }
-.celda-sopa.seleccionada { background: var(--naranja); color: white; }
-.celda-sopa.encontrada { background: var(--verde); color: white; }
-
-/* Pintar figura */
-.canvas-pintar {
-  border: 4px solid var(--morado); border-radius: 20px;
-  background: white; cursor: crosshair; max-width: 100%;
-  touch-action: none;
-}
-
-.colores-paleta {
-  display: flex; gap: 10px; justify-content: center; margin: 15px 0; flex-wrap: wrap;
-}
-.color-btn {
-  width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
-  border: 3px solid white; box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-  transition: all 0.2s;
-}
-.color-btn:hover, .color-btn.activo { transform: scale(1.2); border-color: #333; }
-
-/* Evaluación */
-.evaluacion-pregunta {
-  background: white; border-radius: 20px; padding: 25px; margin: 15px 0;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-.numero-pregunta {
-  background: var(--morado); color: white; width: 40px; height: 40px;
-  border-radius: 50%; display: inline-flex; align-items: center;
-  justify-content: center; font-weight: bold; margin-right: 10px;
-}
-
-/* Resultado */
-.resultado {
-  text-align: center; padding: 40px;
-  background: linear-gradient(135deg, var(--amarillo), var(--naranja));
-  border-radius: 30px; color: white; margin: 20px 0;
-}
-.resultado h2 { font-size: 2.5em; margin-bottom: 20px; }
-.resultado .puntos { font-size: 4em; margin: 20px 0; }
-
-/* Animación de entrada de figuras */
-.figura-animada {
-  display: inline-block; animation: flotar 3s ease-in-out infinite;
-}
-@keyframes flotar { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-
-/* Tooltip educativo */
-.tooltip-edu {
-  background: var(--celeste); color: white; padding: 10px 15px;
-  border-radius: 15px; margin: 10px 0; font-style: italic;
-  border-left: 5px solid var(--azul);
-}
-
-/* Objeto real */
-.objeto-real {
-  display: inline-block; font-size: 3em; margin: 10px;
-  cursor: pointer; transition: all 0.3s;
-}
-.objeto-real:hover { transform: scale(1.3) rotate(10deg); }
-
-/* Sonido botón */
-.sonido-btn {
-  position: fixed; bottom: 20px; right: 20px; background: var(--morado);
-  color: white; border: none; width: 60px; height: 60px; border-radius: 50%;
-  font-size: 1.5em; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  z-index: 100; transition: all 0.3s;
-}
-.sonido-btn:hover { transform: scale(1.1); }
-</style>
-</head>
-<body>
-
-<div class="burbujas" id="burbujas"></div>
-
-<div class="app">
-  <!-- HEADER -->
-  <div class="header">
-    <h1>🎨 Figuras y Cuerpos Geométricos</h1>
-    <div class="puntaje">
-      <span class="estrellas">⭐</span> <span id="puntaje">0</span> puntos
-    </div>
-  </div>
-
-  <!-- NAVEGACIÓN -->
-  <div class="nav" id="nav">
-    <button class="btn-nav activo" onclick="mostrarSeccion('inicio', this)">🏠 Inicio</button>
-    <button class="btn-nav" onclick="mostrarSeccion('figuras2d', this)">🔷 Figuras 2D</button>
-    <button class="btn-nav" onclick="mostrarSeccion('cuerpos3d', this)">📦 Cuerpos 3D</button>
-    <button class="btn-nav" onclick="mostrarSeccion('relacion', this)">🔗 Relación</button>
-    <button class="btn-nav" onclick="mostrarSeccion('juegos', this)">🎮 Juegos</button>
-    <button class="btn-nav" onclick="mostrarSeccion('ejercicios', this)">✏️ Ejercicios</button>
-    <button class="btn-nav" onclick="mostrarSeccion('evaluacion', this)">🏆 Evaluación</button>
-  </div>
-
-  <!-- INICIO -->
-  <div class="seccion activa" id="inicio">
-    <div class="inicio">
-      <div class="mascota">🦊</div>
-      <h1>¡Bienvenidos a la Aventura Geométrica!</h1>
-      <p class="subtitulo">Aprende, juega y diviértete con las figuras y cuerpos geométricos</p>
-      
-      <div class="tooltip-edu">
-        💡 En esta unidad aprenderás a reconocer figuras geométricas planas (2D) y cuerpos geométricos (3D), ¡y a relacionarlos entre sí!
-      </div>
-
-      <div class="menu-inicio">
-        <div class="menu-item" style="border-color: var(--azul);" onclick="mostrarSeccion('figuras2d', document.querySelectorAll('.btn-nav')[1])">
-          <div class="icono">🔷</div>
-          <h3>Figuras 2D</h3>
-          <p>Aprende las figuras planas</p>
-        </div>
-        <div class="menu-item" style="border-color: var(--verde);" onclick="mostrarSeccion('cuerpos3d', document.querySelectorAll('.btn-nav')[2])">
-          <div class="icono">📦</div>
-          <h3>Cuerpos 3D</h3>
-          <p>Descubre los cuerpos geométricos</p>
-        </div>
-        <div class="menu-item" style="border-color: var(--morado);" onclick="mostrarSeccion('relacion', document.querySelectorAll('.btn-nav')[3])">
-          <div class="icono">🔗</div>
-          <h3>Relación</h3>
-          <p>Conecta figuras y cuerpos</p>
-        </div>
-        <div class="menu-item" style="border-color: var(--naranja);" onclick="mostrarSeccion('juegos', document.querySelectorAll('.btn-nav')[4])">
-          <div class="icono">🎮</div>
-          <h3>Juegos</h3>
-          <p>¡A jugar y aprender!</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FIGURAS 2D -->
-  <div class="seccion" id="figuras2d">
-    <div class="tarjeta titulo-seccion">
-      <h2>🔷 Figuras Geométricas (2D)</h2>
-      <p>Las figuras geométricas son planas. ¡Haz clic en cada una para conocerla!</p>
-    </div>
-
-    <div class="tooltip-edu">
-      📚 Las figuras geométricas (figuras 2D) son planas. Tienen lados y vértices. ¡Vamos a conocerlas!
-    </div>
-
-    <div class="grid-figuras">
-      <div class="figura-card" onclick="mostrarInfoFigura('triangulo')">
-        <svg viewBox="0 0 120 120"><polygon points="60,15 105,100 15,100" fill="#FF5252" stroke="#B71C1C" stroke-width="3"/></svg>
-        <h3>Triángulo</h3>
-        <p class="info">3 lados • 3 vértices</p>
-      </div>
-      <div class="figura-card" onclick="mostrarInfoFigura('cuadrado')">
-        <svg viewBox="0 0 120 120"><rect x="15" y="15" width="90" height="90" fill="#2196F3" stroke="#0D47A1" stroke-width="3"/></svg>
-        <h3>Cuadrado</h3>
-        <p class="info">4 lados iguales • 4 vértices</p>
-      </div>
-      <div class="figura-card" onclick="mostrarInfoFigura('rectangulo')">
-        <svg viewBox="0 0 120 120"><rect x="10" y="30" width="100" height="60" fill="#4CAF50" stroke="#1B5E20" stroke-width="3"/></svg>
-        <h3>Rectángulo</h3>
-        <p class="info">4 lados • 4 vértices</p>
-      </div>
-      <div class="figura-card" onclick="mostrarInfoFigura('circulo')">
-        <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="#FFC107" stroke="#F57F17" stroke-width="3"/></svg>
-        <h3>Círculo</h3>
-        <p class="info">0 lados • 0 vértices</p>
-      </div>
-    </div>
-
-    <div class="tarjeta" id="info-figura" style="display:none;">
-      <h2 id="info-titulo" style="color: var(--morado); text-align: center;"></h2>
-      <div class="figura-grande" id="info-svg"></div>
-      <div id="info-detalle" style="font-size: 1.2em; text-align: center;"></div>
-      <div style="text-align: center; margin-top: 20px;">
-        <button class="btn verde" onclick="reproducirSonido('correcto'); sumarPuntos(5);">🎵 ¡Me gusta!</button>
-        <button class="btn azul" onclick="document.getElementById('info-figura').style.display='none'">✖ Cerrar</button>
-      </div>
-    </div>
-
-    <div class="tarjeta">
-      <h3 style="color: var(--morado); text-align: center; margin-bottom: 15px;">📊 Tabla de Figuras</h3>
-      <table class="tabla">
-        <tr>
-          <th>Figura</th>
-          <th>Cantidad de Lados</th>
-          <th>Cantidad de Vértices</th>
-        </tr>
-        <tr><td>🔺 Triángulo</td><td>3</td><td>3</td></tr>
-        <tr><td>🟦 Cuadrado</td><td>4</td><td>4</td></tr>
-        <tr><td>🟩 Rectángulo</td><td>4</td><td>4</td></tr>
-        <tr><td>🟡 Círculo</td><td>0</td><td>0</td></tr>
-      </table>
-    </div>
-
-    <div class="zona-juego">
-      <h3 style="color: var(--naranja); text-align: center;">🎯 Mini Juego: ¿Qué figura es?</h3>
-      <div id="mini-juego-figuras"></div>
-      <div style="text-align: center;">
-        <button class="btn" onclick="iniciarMiniJuegoFiguras()">🔄 Nuevo juego</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CUERPOS 3D -->
-  <div class="seccion" id="cuerpos3d">
-    <div class="tarjeta titulo-seccion" style="background: linear-gradient(135deg, var(--verde), var(--celeste));">
-      <h2>📦 Cuerpos Geométricos (3D)</h2>
-      <p>Los cuerpos geométricos ocupan un lugar en el espacio</p>
-    </div>
-
-    <div class="tooltip-edu">
-      📚 Los cuerpos geométricos (figuras 3D) ocupan un lugar en el espacio. Tienen caras, aristas y vértices.
-    </div>
-
-    <div class="grid-figuras">
-      <div class="figura-card" style="border-color: var(--rojo);" onclick="mostrarInfoCuerpo('cubo')">
-        <div class="escena-3d">
-          <div class="cubo-3d">
-            <div class="cara"></div><div class="cara"></div><div class="cara"></div>
-            <div class="cara"></div><div class="cara"></div><div class="cara"></div>
-          </div>
-        </div>
-        <h3>Cubo</h3>
-        <p class="info">6 caras cuadradas</p>
-      </div>
-      <div class="figura-card" style="border-color: var(--naranja);" onclick="mostrarInfoCuerpo('esfera')">
-        <div class="esfera-3d"></div>
-        <h3>Esfera</h3>
-        <p class="info">Como una pelota</p>
-      </div>
-      <div class="figura-card" style="border-color: var(--verde);" onclick="mostrarInfoCuerpo('cono')">
-        <div class="cono-3d"></div>
-        <h3>Cono</h3>
-        <p class="info">Como un helado</p>
-      </div>
-      <div class="figura-card" style="border-color: var(--azul);" onclick="mostrarInfoCuerpo('cilindro')">
-        <div class="cilindro-3d"></div>
-        <h3>Cilindro</h3>
-        <p class="info">Como una lata</p>
-      </div>
-      <div class="figura-card" style="border-color: var(--amarillo);" onclick="mostrarInfoCuerpo('piramide')">
-        <div class="piramide-3d"></div>
-        <h3>Pirámide</h3>
-        <p class="info">Base cuadrada</p>
-      </div>
-      <div class="figura-card" style="border-color: var(--morado);" onclick="mostrarInfoCuerpo('paralelepipedo')">
-        <div style="width:130px; height:80px; margin:30px auto; background: linear-gradient(135deg, #9C27B0, #BA68C8); border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); animation: balancear 4s ease-in-out infinite;"></div>
-        <h3>Paralelepípedo</h3>
-        <p class="info">Como una caja</p>
-      </div>
-    </div>
-
-    <div class="tarjeta" id="info-cuerpo" style="display:none;">
-      <h2 id="info-cuerpo-titulo" style="color: var(--morado); text-align: center;"></h2>
-      <div id="info-cuerpo-detalle" style="font-size: 1.2em; text-align: center;"></div>
-      <div id="info-cuerpo-ejemplos" style="text-align: center; margin-top: 20px;"></div>
-      <div style="text-align: center; margin-top: 20px;">
-        <button class="btn azul" onclick="document.getElementById('info-cuerpo').style.display='none'">✖ Cerrar</button>
-      </div>
-    </div>
-
-    <div class="tarjeta">
-      <h3 style="color: var(--morado); text-align: center; margin-bottom: 15px;">🎪 Objetos del mundo real</h3>
-      <p style="text-align: center;">¿A qué cuerpo geométrico se asemejan estos objetos? ¡Haz clic!</p>
-      <div style="text-align: center; margin-top: 20px;">
-        <div class="objeto-real" onclick="adivinarCuerpo('🍎', 'esfera')" title="Manzana">🍎</div>
-        <div class="objeto-real" onclick="adivinarCuerpo('🎁', 'cubo')" title="Regalo">🎁</div>
-        <div class="objeto-real" onclick="adivinarCuerpo('🥫', 'cilindro')" title="Lata">🥫</div>
-        <div class="objeto-real" onclick="adivinarCuerpo('🍦', 'cono')" title="Helado">🍦</div>
-        <div class="objeto-real" onclick="adivinarCuerpo('📦', 'paralelepipedo')" title="Caja">📦</div>
-        <div class="objeto-real" onclick="adivinarCuerpo('⚽', 'esfera')" title="Pelota">⚽</div>
-        <div class="objeto-real" onclick="adivinarCuerpo('🎲', 'cubo')" title="Dado">🎲</div>
-        <div class="objeto-real" onclick="adivinarCuerpo('🔋', 'cilindro')" title="Pila">🔋</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- RELACIÓN -->
-  <div class="seccion" id="relacion">
-    <div class="tarjeta titulo-seccion" style="background: linear-gradient(135deg, var(--morado), var(--rosa));">
-      <h2>🔗 Relación entre Figuras y Cuerpos</h2>
-      <p>Las caras de los cuerpos geométricos tienen forma de figuras geométricas</p>
-    </div>
-
-    <div class="tooltip-edu">
-      💡 Puedes relacionar los cuerpos geométricos (3D) con las figuras geométricas (2D) al observar la forma de sus caras.
-    </div>
-
-    <div class="tarjeta">
-      <h3 style="color: var(--morado); text-align: center;">🎯 Arrastra cada cuerpo a la figura de sus caras</h3>
-      <p style="text-align: center; margin-bottom: 20px;">¡Une el cuerpo con la figura que tiene en sus caras!</p>
-      
-      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px 0;">
-        <div class="draggable" draggable="true" data-cuerpo="cubo" id="drag-cubo">🎲 Cubo</div>
-        <div class="draggable" draggable="true" data-cuerpo="piramide" id="drag-piramide">🔺 Pirámide</div>
-        <div class="draggable" draggable="true" data-cuerpo="cilindro" id="drag-cilindro">🥫 Cilindro</div>
-        <div class="draggable" draggable="true" data-cuerpo="conoa" id="drag-cono">🍦 Cono</div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-        <div>
-          <p style="text-align: center; font-weight: bold;">🟦 Cuadrado</p>
-          <div class="dropzone" data-figura="cuadrado"></div>
-        </div>
-        <div>
-          <p style="text-align: center; font-weight: bold;">🔺 Triángulo</p>
-          <div class="dropzone" data-figura="triangulo"></div>
-        </div>
-        <div>
-          <p style="text-align: center; font-weight: bold;">🟡 Círculo</p>
-          <div class="dropzone" data-figura="circulo"></div>
-        </div>
-      </div>
-
-      <div style="text-align: center; margin-top: 20px;">
-        <button class="btn" onclick="verificarRelacion()">✅ Verificar</button>
-        <button class="btn azul" onclick="resetRelacion()">🔄 Reiniciar</button>
-      </div>
-    </div>
-
-    <div class="tarjeta">
-      <h3 style="color: var(--morado); text-align: center;">📋 ¿Qué figura dibuja cada cuerpo?</h3>
-      <table class="tabla">
-        <tr>
-          <th>Cuerpo Geométrico</th>
-          <th>Forma de sus Caras</th>
-          <th>Ejemplo</th>
-        </tr>
-        <tr><td>🎲 Cubo</td><td>Cuadrado</td><td>📦 Caja de regalo</td></tr>
-        <tr><td>📦 Paralelepípedo</td><td>Rectángulo</td><td>📚 Libro</td></tr>
-        <tr><td>🔺 Pirámide base cuadrada</td><td>Triángulo y Cuadrado</td><td>🏛️ Pirámide de Egipto</td></tr>
-        <tr><td>🥫 Cilindro</td><td>Círculo</td><td>🥫 Lata de comida</td></tr>
-        <tr><td>🍦 Cono</td><td>Círculo</td><td>🍦 Cono de helado</td></tr>
-        <tr><td>⚽ Esfera</td><td>Ninguna (es curva)</td><td>⚽ Pelota</td></tr>
-      </table>
-    </div>
-  </div>
-
-  <!-- JUEGOS -->
-  <div class="seccion" id="juegos">
-    <div class="tarjeta titulo-seccion" style="background: linear-gradient(135deg, var(--naranja), var(--rojo));">
-      <h2>🎮 ¡Zona de Juegos!</h2>
-      <p>Aprende jugando con estos divertidos juegos</p>
-    </div>
-
-    <div class="menu-inicio">
-      <div class="menu-item" style="border-color: var(--rojo);" onclick="mostrarJuego('adivina')">
-        <div class="icono">🎯</div>
-        <h3>Adivina la Figura</h3>
-        <p>¿Qué figura es?</p>
-      </div>
-      <div class="menu-item" style="border-color: var(--azul);" onclick="mostrarJuego('memoria')">
-        <div class="icono">🧠</div>
-        <h3>Memoria</h3>
-        <p>Encuentra las parejas</p>
-      </div>
-      <div class="menu-item" style="border-color: var(--verde);" onclick="mostrarJuego('conteo')">
-        <div class="icono">🔢</div>
-        <h3>Cuenta Lados</h3>
-        <p>¿Cuántos lados tiene?</p>
-      </div>
-      <div class="menu-item" style="border-color: var(--morado);" onclick="mostrarJuego('objetos')">
-        <div class="icono">🎁</div>
-        <h3>Objetos Reales</h3>
-        <p>¿Qué cuerpo es?</p>
-      </div>
-      <div class="menu-item" style="border-color: var(--naranja);" onclick="mostrarJuego('pintar')">
-        <div class="icono">🎨</div>
-        <h3>Pinta Figuras</h3>
-        <p>Dibuja y colorea</p>
-      </div>
-      <div class="menu-item" style="border-color: var(--rosa);" onclick="mostrarJuego('clasificar')">
-        <div class="icono">📊</div>
-        <h3>Clasifica</h3>
-        <p>2D o 3D</p>
-      </div>
-    </div>
-
-    <!-- Juego Adivina -->
-    <div class="zona-juego" id="juego-adivina" style="display:none;">
-      <h3 style="color: var(--rojo); text-align: center;">🎯 Adivina la Figura</h3>
-      <div id="adivina-contenido"></div>
-      <div style="text-align: center; margin-top: 15px;">
-        <button class="btn" onclick="iniciarAdivina()">🔄 Siguiente</button>
-      </div>
-    </div>
-
-    <!-- Juego Memoria -->
-    <div class="zona-juego" id="juego-memoria" style="display:none;">
-      <h3 style="color: var(--azul); text-align: center;">🧠 Juego de Memoria</h3>
-      <p style="text-align: center;">Encuentra las parejas de figuras iguales</p>
-      <div class="memoria-grid" id="memoria-grid"></div>
-      <div style="text-align: center; margin-top: 15px;">
-        <span class="contador">Intentos: <span id="memoria-intentos">0</span></span>
-        <span class="contador">Parejas: <span id="memoria-parejas">0</span>/6</span>
-        <br><br>
-        <button class="btn" onclick="iniciarMemoria()">🔄 Nuevo juego</button>
-      </div>
-    </div>
-
-    <!-- Juego Conteo -->
-    <div class="zona-juego" id="juego-conteo" style="display:none;">
-      <h3 style="color: var(--verde); text-align: center;">🔢 Cuenta los Lados</h3>
-      <div id="conteo-contenido"></div>
-    </div>
-
-    <!-- Juego Objetos -->
-    <div class="zona-juego" id="juego-objetos" style="display:none;">
-      <h3 style="color: var(--morado); text-align: center;">🎁 ¿A qué cuerpo se parece?</h3>
-      <div id="objetos-contenido"></div>
-    </div>
-
-    <!-- Juego Pintar -->
-    <div class="zona-juego" id="juego-pintar" style="display:none;">
-      <h3 style="color: var(--naranja); text-align: center;">🎨 Pinta las Figuras</h3>
-      <p style="text-align: center;">Dibuja figuras geométricas y píntalas con colores</p>
-      <div class="colores-paleta" id="paleta"></div>
-      <div style="text-align: center;">
-        <canvas id="canvas-pintar" class="canvas-pintar" width="500" height="400"></canvas>
-      </div>
-      <div style="text-align: center; margin-top: 15px;">
-        <button class="btn" onclick="limpiarCanvas()">🗑️ Limpiar</button>
-        <button class="btn verde" onclick="dibujarFiguraGuia()">✨ Figura Guía</button>
-      </div>
-    </div>
-
-    <!-- Juego Clasificar -->
-    <div class="zona-juego" id="juego-clasificar" style="display:none;">
-      <h3 style="color: var(--rosa); text-align: center;">📊 Clasifica: ¿2D o 3D?</h3>
-      <div id="clasificar-contenido"></div>
-    </div>
-  </div>
-
-  <!-- EJERCICIOS -->
-  <div class="seccion" id="ejercicios">
-    <div class="tarjeta titulo-seccion" style="background: linear-gradient(135deg, var(--celeste), var(--azul));">
-      <h2>✏️ Ejercicios Prácticos</h2>
-      <p>Pon a prueba lo que has aprendido</p>
-    </div>
-
-    <div class="tarjeta">
-      <h3 style="color: var(--morado);">1️⃣ Cuenta las figuras</h3>
-      <p>¿Cuántas figuras de cada tipo hay en el dibujo?</p>
-      <div id="ejercicio-contar" style="text-align: center; margin: 20px 0;"></div>
-      <div id="ejercicio-contar-respuesta"></div>
-      <div style="text-align: center;">
-        <button class="btn" onclick="nuevoEjercicioContar()">🔄 Nuevo ejercicio</button>
-      </div>
-    </div>
-
-    <div class="tarjeta">
-      <h3 style="color: var(--morado);">2️⃣ Completa la tabla</h3>
-      <p>¿Cuántos lados y vértices tiene cada figura?</p>
-      <table class="tabla" id="tabla-ejercicio">
-        <tr>
-          <th>Figura</th>
-          <th>Lados</th>
-          <th>Vértices</th>
-        </tr>
-        <tr>
-          <td>🔺 Triángulo</td>
-          <td><input type="number" min="0" max="10" style="width:60px; padding:5px; text-align:center;" data-resp="3"></td>
-          <td><input type="number" min="0" max="10" style="width:60px; padding:5px; text-align:center;" data-resp="3"></td>
-        </tr>
-        <tr>
-          <td>🟦 Cuadrado</td>
-          <td><input type="number" min="0" max="10" style="width:60px; padding:5px; text-align:center;" data-resp="4"></td>
-          <td><input type="number" min="0" max="10" style="width:60px; padding:5px; text-align:center;" data-resp="4"></td>
-        </tr>
-        <tr>
-          <td>🟩 Rectángulo</td>
-          <td><input type="number" min="0" max="10" style="width:60px; padding:5px; text-align:center;" data-resp="4"></td>
-          <td><input type="number" min="0" max="10" style="width:60px; padding:5px; text-align:center;" data-resp="4"></td>
-        </tr>
-        <tr>
-          <td>🟡 Círculo</td>
-          <td><input type="number" min="0" max="10" style="width:60px; padding:5px; text-align:center;" data-resp="0"></td>
-          <td><input type="number" min="0" max="10" style="width:60px; padding:5px; text-align:center;" data-resp="0"></td>
-        </tr>
-      </table>
-      <div style="text-align: center;">
-        <button class="btn verde" onclick="verificarTabla()">✅ Verificar</button>
-      </div>
-    </div>
-
-    <div class="tarjeta">
-      <h3 style="color: var(--morado);">3️⃣ Verdadero o Falso</h3>
-      <div id="vf-contenido"></div>
-    </div>
-
-    <div class="tarjeta">
-      <h3 style="color: var(--morado);">4️⃣ Cuerpos geométricos: cuenta las caras</h3>
-      <div id="ejercicio-caras"></div>
-      <div style="text-align: center;">
-        <button class="btn verde" onclick="verificarCaras()">✅ Verificar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- EVALUACIÓN -->
-  <div class="seccion" id="evaluacion">
-    <div class="tarjeta titulo-seccion" style="background: linear-gradient(135deg, var(--amarillo), var(--naranja));">
-      <h2>🏆 Evaluación Final</h2>
-      <p>¡Demuestra todo lo que has aprendido!</p>
-    </div>
-
-    <div class="tarjeta" id="eval-inicio">
-      <h3 style="text-align: center; color: var(--morado);">📝 ¿Listo para la evaluación?</h3>
-      <p style="text-align: center; margin: 20px 0;">Son 10 preguntas sobre figuras y cuerpos geométricos</p>
-      <div style="text-align: center;">
-        <button class="btn verde" onclick="iniciarEvaluacion()" style="font-size: 1.3em; padding: 15px 30px;">🚀 ¡Comenzar!</button>
-      </div>
-    </div>
-
-    <div id="eval-contenido" style="display:none;">
-      <div class="barra-progreso">
-        <div class="barra-relleno" id="eval-barra" style="width: 0%;">0%</div>
-      </div>
-      <div id="eval-pregunta"></div>
-    </div>
-
-    <div id="eval-resultado" style="display:none;"></div>
-  </div>
-
-</div>
-
-<!-- Feedback -->
-<div class="feedback" id="feedback"></div>
-
-<!-- Botón de sonido -->
-<button class="sonido-btn" id="sonido-btn" onclick="toggleSonido()">🔊</button>
-
-<!-- Modal -->
-<div class="modal" id="modal">
-  <div class="modal-contenido">
-    <div id="modal-contenido"></div>
-    <button class="btn" onclick="cerrarModal()">Aceptar</button>
-  </div>
-</div>
-
-<script>
-// ===== ESTADO GLOBAL =====
-let puntaje = 0;
-let sonidoActivo = true;
-let audioCtx = null;
-
-// ===== AUDIO =====
-function initAudio() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-}
-
-function tocarNota(frecuencia, duracion, tipo = 'sine') {
-  if (!sonidoActivo) return;
-  try {
-    initAudio();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = tipo;
-    osc.frequency.value = frecuencia;
-    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duracion);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + duracion);
-  } catch(e) {}
-}
-
-function reproducirSonido(tipo) {
-  if (!sonidoActivo) return;
-  switch(tipo) {
-    case 'correcto':
-      tocarNota(523, 0.15);
-      setTimeout(() => tocarNota(659, 0.15), 100);
-      setTimeout(() => tocarNota(784, 0.3), 200);
-      break;
-    case 'incorrecto':
-      tocarNota(200, 0.3, 'sawtooth');
-      break;
-    case 'click':
-      tocarNota(800, 0.05);
-      break;
-    case 'victoria':
-      tocarNota(523, 0.15);
-      setTimeout(() => tocarNota(659, 0.15), 150);
-      setTimeout(() => tocarNota(784, 0.15), 300);
-      setTimeout(() => tocarNota(1047, 0.4), 450);
-      break;
-    case 'punto':
-      tocarNota(1000, 0.1);
-      break;
-  }
-}
-
-function toggleSonido() {
-  sonidoActivo = !sonidoActivo;
-  document.getElementById('sonido-btn').textContent = sonidoActivo ? '🔊' : '🔇';
-}
-
-// ===== PUNTAJE =====
-function sumarPuntos(p) {
-  puntaje += p;
-  document.getElementById('puntaje').textContent = puntaje;
-  reproducirSonido('punto');
-  if (p >= 10) lanzarConfeti();
-}
-
-// ===== NAVEGACIÓN =====
-function mostrarSeccion(id, btn) {
-  document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
-  document.getElementById(id).classList.add('activa');
-  document.querySelectorAll('.btn-nav').forEach(b => b.classList.remove('activo'));
-  if (btn) btn.classList.add('activo');
-  reproducirSonido('click');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ===== BURBUJAS DE FONDO =====
-function crearBurbujas() {
-  const cont = document.getElementById('burbujas');
-  const colores = ['#FF5252', '#2196F3', '#4CAF50', '#FFC107', '#9C27B0', '#FF9800'];
-  const figuras = ['▲', '■', '●', '◆', '⬟'];
-  for (let i = 0; i < 15; i++) {
-    const b = document.createElement('div');
-    b.className = 'burbuja';
-    b.style.left = Math.random() * 100 + '%';
-    b.style.width = b.style.height = (20 + Math.random() * 40) + 'px';
-    b.style.background = colores[Math.floor(Math.random() * colores.length)];
-    b.style.animationDuration = (8 + Math.random() * 10) + 's';
-    b.style.animationDelay = Math.random() * 5 + 's';
-    b.style.display = 'flex';
-    b.style.alignItems = 'center';
-    b.style.justifyContent = 'center';
-    b.style.color = 'white';
-    b.style.fontSize = '1.5em';
-    b.textContent = figuras[Math.floor(Math.random() * figuras.length)];
-    cont.appendChild(b);
-  }
-}
-
-// ===== CONFETI =====
-function lanzarConfeti() {
-  const colores = ['#FF5252', '#2196F3', '#4CAF50', '#FFC107', '#9C27B0', '#FF9800'];
-  for (let i = 0; i < 50; i++) {
-    const c = document.createElement('div');
-    c.className = 'confeti';
-    c.style.left = Math.random() * 100 + '%';
-    c.style.background = colores[Math.floor(Math.random() * colores.length)];
-    c.style.animationDuration = (2 + Math.random() * 2) + 's';
-    c.style.animationDelay = Math.random() * 0.5 + 's';
-    if (Math.random() > 0.5) c.style.borderRadius = '50%';
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 4000);
-  }
-}
-
-// ===== FEEDBACK =====
-function mostrarFeedback(texto, color = 'verde') {
-  const fb = document.getElementById('feedback');
-  fb.textContent = texto;
-  fb.style.color = color === 'verde' ? '#4CAF50' : '#FF5252';
-  fb.classList.add('show');
-  setTimeout(() => fb.classList.remove('show'), 1500);
-}
-
-// ===== MODAL =====
-function mostrarModal(html) {
-  document.getElementById('modal-contenido').innerHTML = html;
-  document.getElementById('modal').classList.add('show');
-}
-function cerrarModal() {
-  document.getElementById('modal').classList.remove('show');
-}
-
-// ===== FIGURAS 2D =====
-const figurasData = {
-  triangulo: {
-    nombre: 'Triángulo',
-    color: '#FF5252',
-    svg: '<svg viewBox="0 0 200 200"><polygon points="100,20 180,170 20,170" fill="#FF5252" stroke="#B71C1C" stroke-width="4"/><circle cx="100" cy="20" r="6" fill="#FFC107"/><circle cx="180" cy="170" r="6" fill="#FFC107"/><circle cx="20" cy="170" r="6" fill="#FFC107"/></svg>',
-    lados: 3, vertices: 3,
-    descripcion: 'Tiene 3 lados y 3 vértices. ¡Es como una montaña!',
-    ejemplos: '🔺 Señal de tránsito, 🍕 Porción de pizza, ⛺ Carpa'
-  },
-  cuadrado: {
-    nombre: 'Cuadrado',
-    color: '#2196F3',
-    svg: '<svg viewBox="0 0 200 200"><rect x="30" y="30" width="140" height="140" fill="#2196F3" stroke="#0D47A1" stroke-width="4"/><circle cx="30" cy="30" r="6" fill="#FFC107"/><circle cx="170" cy="30" r="6" fill="#FFC107"/><circle cx="30" cy="170" r="6" fill="#FFC107"/><circle cx="170" cy="170" r="6" fill="#FFC107"/></svg>',
-    lados: 4, vertices: 4,
-    descripcion: 'Tiene 4 lados iguales y 4 vértices. ¡Todos sus lados miden lo mismo!',
-    ejemplos: '🟦 Ventana, 🎁 Caja de regalo, 🧱 Baldosa'
-  },
-  rectangulo: {
-    nombre: 'Rectángulo',
-    color: '#4CAF50',
-    svg: '<svg viewBox="0 0 200 200"><rect x="20" y="60" width="160" height="80" fill="#4CAF50" stroke="#1B5E20" stroke-width="4"/><circle cx="20" cy="60" r="6" fill="#FFC107"/><circle cx="180" cy="60" r="6" fill="#FFC107"/><circle cx="20" cy="140" r="6" fill="#FFC107"/><circle cx="180" cy="140" r="6" fill="#FFC107"/></svg>',
-    lados: 4, vertices: 4,
-    descripcion: 'Tiene 4 lados y 4 vértices. Dos lados son largos y dos son cortos.',
-    ejemplos: '📚 Libro, 📱 Celular, 🚪 Puerta'
-  },
-  circulo: {
-    nombre: 'Círculo',
-    color: '#FFC107',
-    svg: '<svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="80" fill="#FFC107" stroke="#F57F17" stroke-width="4"/></svg>',
-    lados: 0, vertices: 0,
-    descripcion: 'No tiene lados ni vértices. ¡Es redondo como una pelota!',
-    ejemplos: '⚽ Pelota, 🕐 Reloj, 🍪 Galleta'
-  }
-};
-
-function mostrarInfoFigura(tipo) {
-  const f = figurasData[tipo];
-  document.getElementById('info-titulo').textContent = f.nombre;
-  document.getElementById('info-svg').innerHTML = f.svg;
-  document.getElementById('info-detalle').innerHTML = `
-    <p><strong>${f.descripcion}</strong></p>
-    <p style="margin-top: 15px;">📏 Lados: <strong>${f.lados}</strong></p>
-    <p>🔺 Vértices: <strong>${f.vertices}</strong></p>
-    <p style="margin-top: 15px;">🌟 Ejemplos: ${f.ejemplos}</p>
-  `;
-  document.getElementById('info-figura').style.display = 'block';
-  document.getElementById('info-figura').scrollIntoView({ behavior: 'smooth' });
-  reproducirSonido('correcto');
-}
-
-// ===== CUERPOS 3D =====
-const cuerposData = {
-  cubo: { nombre: 'Cubo', caras: 6, aristas: 12, vertices: 8, forma: 'Cuadrado', ejemplos: '🎁 Caja de regalo, 🎲 Dado, 🧊 Cubo de hielo' },
-  esfera: { nombre: 'Esfera', caras: 1, aristas: 0, vertices: 0, forma: 'Ninguna (curva)', ejemplos: '⚽ Pelota, 🍎 Manzana, 🌍 Planeta' },
-  cono: { nombre: 'Cono', caras: 2, aristas: 1, vertices: 1, forma: 'Círculo', ejemplos: '🍦 Cono de helado, 🎩 Gorro de fiesta, 🥕 Zanahoria' },
-  cilindro: { nombre: 'Cilindro', caras: 3, aristas: 2, vertices: 0, forma: 'Círculo', ejemplos: '🥫 Lata, 🔋 Pila, 🧪 Tubo de ensayo' },
-  piramide: { nombre: 'Pirámide base cuadrada', caras: 5, aristas: 8, vertices: 5, forma: 'Triángulo y Cuadrado', ejemplos: '🏛️ Pirámide de Egipto, ⛺ Carpa' },
-  paralelepipedo: { nombre: 'Paralelepípedo', caras: 6, aristas: 12, vertices: 8, forma: 'Rectángulo', ejemplos: '📦 Caja de zapatos, 📚 Libro, 🧱 Ladrillo' }
-};
-
-function mostrarInfoCuerpo(tipo) {
-  const c = cuerposData[tipo];
-  document.getElementById('info-cuerpo-titulo').textContent = c.nombre;
-  document.getElementById('info-cuerpo-detalle').innerHTML = `
-    <p style="margin-top: 15px;"><strong>🔷 Caras:</strong> ${c.caras}</p>
-    <p><strong>📏 Aristas:</strong> ${c.aristas}</p>
-    <p><strong>🔺 Vértices:</strong> ${c.vertices}</p>
-    <p><strong>🎨 Forma de sus caras:</strong> ${c.forma}</p>
-  `;
-  document.getElementById('info-cuerpo-ejemplos').innerHTML = `<p><strong>🌟 Ejemplos:</strong> ${c.ejemplos}</p>`;
-  document.getElementById('info-cuerpo').style.display = 'block';
-  document.getElementById('info-cuerpo').scrollIntoView({ behavior: 'smooth' });
-  reproducirSonido('correcto');
-}
-
-function adivinarCuerpo(emoji, cuerpoCorrecto) {
-  const c = cuerposData[cuerpoCorrecto];
-  mostrarModal(`
-    <h2 style="color: var(--morado);">${emoji} se parece a un...</h2>
-    <h1 style="color: var(--naranja); margin: 20px 0;">¡${c.nombre}!</h1>
-    <p style="font-size: 1.2em;">${c.ejemplos}</p>
-  `);
-  sumarPuntos(5);
-  reproducirSonido('victoria');
-}
-
-// ===== RELACIÓN DRAG & DROP =====
-const respuestasRelacion = {
-  'cubo': 'cuadrado',
-  'piramide': 'triangulo',
-  'cilindro': 'circulo',
-  'conoa': 'circulo'
-};
-
-let dragData = {};
-
-function initDragDrop() {
-  document.querySelectorAll('.draggable').forEach(d => {
-    d.addEventListener('dragstart', e => {
-      dragData.elemento = d.id;
-      dragData.cuerpo = d.dataset.cuerpo;
-      d.style.opacity = '0.5';
-    });
-    d.addEventListener('dragend', e => {
-      d.style.opacity = '1';
-    });
-    // Touch support
-    d.addEventListener('click', e => {
-      document.querySelectorAll('.draggable').forEach(x => x.style.border = 'none');
-      d.style.border = '4px solid var(--naranja)';
-      dragData.elemento = d.id;
-      dragData.cuerpo = d.dataset.cuerpo;
-    });
-  });
-  document.querySelectorAll('.dropzone').forEach(z => {
-    z.addEventListener('dragover', e => { e.preventDefault(); z.classList.add('over'); });
-    z.addEventListener('dragleave', e => z.classList.remove('over'));
-    z.addEventListener('drop', e => {
-      e.preventDefault();
-      z.classList.remove('over');
-      if (dragData.elemento) {
-        const el = document.getElementById(dragData.elemento);
-        z.innerHTML = '';
-        z.appendChild(el);
-        el.dataset.zona = z.dataset.figura;
-      }
-    });
-    z.addEventListener('click', e => {
-      if (dragData.elemento) {
-        const el = document.getElementById(dragData.elemento);
-        z.innerHTML = '';
-        z.appendChild(el);
-        el.dataset.zona = z.dataset.figura;
-        el.style.border = 'none';
-        dragData = {};
-      }
-    });
-  });
-}
-
-function verificarRelacion() {
-  let correctas = 0;
-  document.querySelectorAll('.draggable').forEach(d => {
-    if (d.dataset.zona === respuestasRelacion[d.dataset.cuerpo]) {
-      d.style.background = '#4CAF50';
-      d.style.color = 'white';
-      correctas++;
-    } else if (d.dataset.zona) {
-      d.style.background = '#FF5252';
-      d.style.color = 'white';
-    }
-  });
-  if (correctas === 4) {
-    mostrarFeedback('¡Excelente! 🎉', 'verde');
-    sumarPuntos(20);
-    reproducirSonido('victoria');
-    lanzarConfeti();
-  } else if (correctas > 0) {
-    mostrarFeedback(`${correctas}/4 correctas`, 'verde');
-    sumarPuntos(correctas * 5);
-  } else {
-    mostrarFeedback('¡Intenta de nuevo!', 'rojo');
-  }
-}
-
-function resetRelacion() {
-  const cont = document.querySelector('#relacion .tarjeta');
-  const dragContainer = cont.querySelector('div[style*="flex-wrap"]');
-  document.querySelectorAll('.dropzone').forEach(z => z.innerHTML = '');
-  document.querySelectorAll('.draggable').forEach(d => {
-    d.style.background = 'white';
-    d.style.color = '#333';
-    d.style.border = 'none';
-    delete d.dataset.zona;
-    dragContainer.appendChild(d);
-  });
-}
-
-// ===== MINI JUEGO FIGURAS =====
-function iniciarMiniJuegoFiguras() {
-  const tipos = Object.keys(figurasData);
-  const tipo = tipos[Math.floor(Math.random() * tipos.length)];
-  const f = figurasData[tipo];
-  const cont = document.getElementById('mini-juego-figuras');
-  cont.innerHTML = `
-    <div class="figura-grande">${f.svg}</div>
-    <p class="pregunta">¿Qué figura es esta?</p>
-    <div class="opciones">
-      ${tipos.map(t => `<div class="opcion" onclick="responderMiniJuego(this, '${t}', '${tipo}')">${figurasData[t].nombre}</div>`).join('')}
-    </div>
-  `;
-}
-
-function responderMiniJuego(el, resp, correcta) {
-  document.querySelectorAll('#mini-juego-figuras .opcion').forEach(o => o.style.pointerEvents = 'none');
-  if (resp === correcta) {
-    el.classList.add('correcta');
-    mostrarFeedback('¡Correcto! 🎉', 'verde');
-    sumarPuntos(10);
-    reproducirSonido('correcto');
-  } else {
-    el.classList.add('incorrecta');
-    document.querySelectorAll('#mini-juego-figuras .opcion').forEach(o => {
-      if (o.textContent === figurasData[correcta].nombre) o.classList.add('correcta');
-    });
-    mostrarFeedback('¡Inténtalo de nuevo!', 'rojo');
-    reproducirSonido('incorrecto');
-  }
-}
-
-// ===== JUEGOS =====
-function mostrarJuego(tipo) {
-  ['adivina', 'memoria', 'conteo', 'objetos', 'pintar', 'clasificar'].forEach(j => {
-    document.getElementById('juego-' + j).style.display = 'none';
-  });
-  document.getElementById('juego-' + tipo).style.display = 'block';
-  if (tipo === 'adivina') iniciarAdivina();
-  if (tipo === 'memoria') iniciarMemoria();
-  if (tipo === 'conteo') iniciarConteo();
-  if (tipo === 'objetos') iniciarObjetos();
-  if (tipo === 'pintar') iniciarPintar();
-  if (tipo === 'clasificar') iniciarClasificar();
-}
-
-// Juego Adivina
-function iniciarAdivina() {
-  const pistas = [
-    { texto: 'Tengo 3 lados y 3 vértices', resp: 'triangulo' },
-    { texto: 'Tengo 4 lados iguales y 4 vértices', resp: 'cuadrado' },
-    { texto: 'Tengo 4 lados pero no todos son iguales', resp: 'rectangulo' },
-    { texto: 'Soy redondo, no tengo lados ni vértices', resp: 'circulo' },
-    { texto: 'Me parezco a una porción de pizza', resp: 'triangulo' },
-    { texto: 'Me parezco a una pelota', resp: 'circulo' },
-    { texto: 'Me parezco a una ventana', resp: 'cuadrado' },
-    { texto: 'Me parezco a un libro', resp: 'rectangulo' }
-  ];
-  const p = pistas[Math.floor(Math.random() * pistas.length)];
-  const cont = document.getElementById('adivina-contenido');
-  cont.innerHTML = `
-    <p class="pregunta">"${p.texto}"</p>
-    <p style="text-align: center; font-size: 1.2em;">¿Qué figura soy?</p>
-    <div class="opciones">
-      ${Object.keys(figurasData).map(t => `<div class="opcion" onclick="responderAdivina(this, '${t}', '${p.resp}')">${figurasData[t].nombre}</div>`).join('')}
-    </div>
-  `;
-}
-
-function responderAdivina(el, resp, correcta) {
-  document.querySelectorAll('#adivina-contenido .opcion').forEach(o => o.style.pointerEvents = 'none');
-  if (resp === correcta) {
-    el.classList.add('correcta');
-    mostrarFeedback('¡Muy bien! 🌟', 'verde');
-    sumarPuntos(10);
-    reproducirSonido('correcto');
-  } else {
-    el.classList.add('incorrecta');
-    document.querySelectorAll('#adivina-contenido .opcion').forEach(o => {
-      if (o.textContent === figurasData[correcta].nombre) o.classList.add('correcta');
-    });
-    mostrarFeedback('¡Casi! Era ' + figurasData[correcta].nombre, 'rojo');
-    reproducirSonido('incorrecto');
-  }
-}
-
-// Juego Memoria
-let memoriaEstado = { cartas: [], volteadas: [], parejas: 0, intentos: 0, bloqueado: false };
-
-function iniciarMemoria() {
-  const figuras = ['🔺', '🟦', '🟩', '🟡', '🔷', '⭐'];
-  let cartas = [...figuras, ...figuras];
-  cartas.sort(() => Math.random() - 0.5);
-  memoriaEstado = { cartas, volteadas: [], parejas: 0, intentos: 0, bloqueado: false };
-  const grid = document.getElementById('memoria-grid');
-  grid.innerHTML = cartas.map((c, i) => `<div class="carta-memoria" data-idx="${i}" data-fig="${c}" onclick="voltearCarta(${i})">?</div>`).join('');
-  document.getElementById('memoria-intentos').textContent = '0';
-  document.getElementById('memoria-parejas').textContent = '0';
-}
-
-function voltearCarta(idx) {
-  if (memoriaEstado.bloqueado) return;
-  const carta = document.querySelector(`.carta-memoria[data-idx="${idx}"]`);
-  if (carta.classList.contains('volteada') || carta.classList.contains('encontrada')) return;
-  carta.classList.add('volteada');
-  carta.textContent = memoriaEstado.cartas[idx];
-  reproducirSonido('click');
-  memoriaEstado.volteadas.push(idx);
-  
-  if (memoriaEstado.volteadas.length === 2) {
-    memoriaEstado.bloqueado = true;
-    memoriaEstado.intentos++;
-    document.getElementById('memoria-intentos').textContent = memoriaEstado.intentos;
-    const [a, b] = memoriaEstado.volteadas;
-    if (memoriaEstado.cartas[a] === memoriaEstado.cartas[b]) {
-      setTimeout(() => {
-        document.querySelector(`.carta-memoria[data-idx="${a}"]`).classList.add('encontrada');
-        document.querySelector(`.carta-memoria[data-idx="${b}"]`).classList.add('encontrada');
-        memoriaEstado.parejas++;
-        document.getElementById('memoria-parejas').textContent = memoriaEstado.parejas;
-        reproducirSonido('correcto');
-        memoriaEstado.volteadas = [];
-        memoriaEstado.bloqueado = false;
-        if (memoriaEstado.parejas === 6) {
-          mostrarFeedback('¡Ganaste! 🏆', 'verde');
-          sumarPuntos(30);
-          reproducirSonido('victoria');
-          lanzarConfeti();
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aventuras del Lenguaje</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; background-color: #f0f9ff; }
+        .btn-bounce:hover { transform: scale(1.05); transition: transform 0.2s; }
+        .badge-locked { filter: grayscale(100%); opacity: 0.5; }
+        .pulse { animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
-      }, 600);
-    } else {
-      setTimeout(() => {
-        const ca = document.querySelector(`.carta-memoria[data-idx="${a}"]`);
-        const cb = document.querySelector(`.carta-memoria[data-idx="${b}"]`);
-        ca.classList.remove('volteada');
-        cb.classList.remove('volteada');
-        ca.textContent = '?';
-        cb.textContent = '?';
-        memoriaEstado.volteadas = [];
-        memoriaEstado.bloqueado = false;
-      }, 1000);
-    }
-  }
-}
+    </style>
+</head>
+<body class="text-gray-800">
 
-// Juego Conteo
-function iniciarConteo() {
-  const figuras = ['triangulo', 'cuadrado', 'rectangulo', 'circulo'];
-  const tipo = figuras[Math.floor(Math.random() * figuras.length)];
-  const f = figurasData[tipo];
-  const cont = document.getElementById('conteo-contenido');
-  cont.innerHTML = `
-    <div class="figura-grande">${f.svg}</div>
-    <p class="pregunta">¿Cuántos lados tiene esta figura?</p>
-    <div class="opciones">
-      ${[0,1,2,3,4,5].map(n => `<div class="opcion" onclick="responderConteo(this, ${n}, ${f.lados})">${n}</div>`).join('')}
+    <!-- Header Stats -->
+    <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto flex justify-between items-center text-lg font-bold">
+            <div class="flex items-center gap-4">
+                <span id="ui-lives" class="flex items-center gap-1 text-red-300"></span>
+                <span class="flex items-center gap-1 text-yellow-300">⚡ XP: <span id="ui-xp">0</span></span>
+                <span class="flex items-center gap-1 text-yellow-400">🪙 <span id="ui-coins">0</span></span>
+            </div>
+            <button onclick="resetGame()" class="text-sm bg-blue-800 px-3 py-1 rounded-full hover:bg-red-500">Reiniciar Progreso</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main id="app-container" class="max-w-4xl mx-auto p-4 mt-6"></main>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md text-center transform transition-all scale-95" id="feedback-content">
+            <h2 id="feedback-title" class="text-3xl font-black mb-4"></h2>
+            <p id="feedback-message" class="text-lg mb-6 text-gray-600"></p>
+            <button onclick="nextQuestion()" class="bg-blue-500 text-white font-bold py-3 px-8 rounded-full btn-bounce w-full text-xl shadow-lg">
+                Continuar 🚀
+            </button>
+        </div>
     </div>
-  `;
-}
 
-function responderConteo(el, resp, correcta) {
-  document.querySelectorAll('#conteo-contenido .opcion').forEach(o => o.style.pointerEvents = 'none');
-  if (resp === correcta) {
-    el.classList.add('correcta');
-    mostrarFeedback('¡Correcto! 🎉', 'verde');
-    sumarPuntos(10);
-    reproducirSonido('correcto');
-    setTimeout(iniciarConteo, 1500);
-  } else {
-    el.classList.add('incorrecta');
-    mostrarFeedback('¡Era ' + correcta + '!', 'rojo');
-    reproducirSonido('incorrecto');
-  }
-}
+    <script>
+        // --- 1. BASE DE DATOS DE PREGUNTAS (Extraídas 100% del PDF) ---
+        const gameData = {
+            t1: [
+                { q: "¿Por dónde respiran las ballenas azules?", options: ["Por branquias", "Por pulmones", "Por la piel"], ans: 1, exp: "¡Las ballenas son mamíferos marinos! Aunque viven en el agua, respiran por pulmones." },
+                { q: "¿Qué comen los ajolotes?", options: ["Algas y flores", "Frutas y verduras", "Pequeños peces y gusanos"], ans: 2, exp: "Los ajolotes son carnívoros. Se alimentan de pequeños peces y otros animales como gusanos." },
+                { q: "¿A qué animal se parece la cola del caballito de mar?", options: ["Al canguro", "Al mono", "Al camaleón"], ans: 1, exp: "¡Tienen cola similar a la de los monos, cabeza de caballo y bolsa como los canguros!" },
+                { q: "¿En qué estación del año las hojas de la planta Dionaea NO actúan como trampas?", options: ["En verano", "En invierno", "En primavera"], ans: 1, exp: "La Venus atrapamoscas usa sus trampas todo el año, ¡excepto en invierno!" }
+            ],
+            t2: [
+                { q: "Completa la oración: A ___ara le gusta cantar con su mi___ófono.", options: ["Cl / cr", "Cr / cl", "Gl / gr"], ans: 0, exp: "La combinación correcta es Clara (Cl) y micrófono (cr)." },
+                { q: "El esquimal está en el i___.", options: ["grú", "glú", "clú"], ans: 1, exp: "La palabra correcta es iglú, usando las letras 'gl'." }
+            ],
+            t3: [
+                { q: "Si quieres expresar un gran susto y decir 'Ay, una araña', ¿qué signos usas?", options: ["Signos de interrogación (¿?)", "Signos de exclamación (¡!)"], ans: 1, exp: "¡Excelente! Los signos de exclamación (¡!) sirven para expresar sorpresa, alegría, susto o dolor." },
+                { q: "¿Qué signos usarías para 'Cómo se llama esa flor'?", options: ["Signos de interrogación (¿?)", "Signos de exclamación (¡!)"], ans: 0, exp: "Como estás haciendo una pregunta, debes usar los signos de interrogación (¿?)." }
+            ],
+            t4: [
+                { q: "En una carta, 'Santiago, 14 de marzo' corresponde a:", options: ["El Saludo", "Lugar y fecha", "La Despedida"], ans: 1, exp: "Es el lugar y la fecha desde donde se escribe la carta." },
+                { q: "'Te quiero mucho, Isidora' es un ejemplo de:", options: ["Despedida y Firma", "Cuerpo de la carta", "Saludo"], ans: 0, exp: "Es la despedida afectuosa seguida del nombre (firma) de quien escribe." }
+            ],
+            t5: [
+                { q: "En 'El Gato con Botas', ¿De qué trata principalmente la historia?", options: ["Un rey que cazaba perdices", "Un gato que ayuda a un pobre muchacho", "Un molinero muy rico"], ans: 1, exp: "Trata sobre un gato astuto que decide ayudar a Gabriel, el hijo del pobre molinero." },
+                { q: "En 'Pinocho', ¿De qué se trata el relato?", options: ["Un carpintero que advirtió a su muñeco", "Un muñeco que fabricaba madera", "Un carpintero que deseaba que su muñeco tuviera vida"], ans: 2, exp: "Gepeto se sentía muy solo y pensó: 'Ojalá fuese un niño para que me hiciese compañía'." }
+            ]
+        };
 
-// Juego Objetos
-function iniciarObjetos() {
-  const objetos = [
-    { emoji: '⚽', nombre: 'Pelota', resp: 'esfera' },
-    { emoji: '🎁', nombre: 'Regalo', resp: 'cubo' },
-    { emoji: '🥫', nombre: 'Lata', resp: 'cilindro' },
-    { emoji: '🍦', nombre: 'Helado', resp: 'cono' },
-    { emoji: '📚', nombre: 'Libro', resp: 'paralelepipedo' },
-    { emoji: '🎲', nombre: 'Dado', resp: 'cubo' },
-    { emoji: '🍊', nombre: 'Naranja', resp: 'esfera' },
-    { emoji: '🔋', nombre: 'Pila', resp: 'cilindro' }
-  ];
-  const o = objetos[Math.floor(Math.random() * objetos.length)];
-  const cont = document.getElementById('objetos-contenido');
-  cont.innerHTML = `
-    <div style="text-align: center; font-size: 6em; margin: 20px 0;">${o.emoji}</div>
-    <p class="pregunta">Este ${o.nombre} se parece a un...</p>
-    <div class="opciones">
-      <div class="opcion" onclick="responderObjeto(this, 'cubo', '${o.resp}')">🎲 Cubo</div>
-      <div class="opcion" onclick="responderObjeto(this, 'esfera', '${o.resp}')">⚽ Esfera</div>
-      <div class="opcion" onclick="responderObjeto(this, 'cono', '${o.resp}')">🍦 Cono</div>
-      <div class="opcion" onclick="responderObjeto(this, 'cilindro', '${o.resp}')">🥫 Cilindro</div>
-      <div class="opcion" onclick="responderObjeto(this, 'piramide', '${o.resp}')">🔺 Pirámide</div>
-    </div>
-  `;
-}
+        // --- 2. ESTADO DEL JUEGO (Persistencia con localStorage) ---
+        let player = {
+            lives: 5,
+            xp: 0,
+            coins: 0,
+            completed: { t1: false, t2: false, t3: false, t4: false, t5: false }
+        };
 
-function responderObjeto(el, resp, correcta) {
-  document.querySelectorAll('#objetos-contenido .opcion').forEach(o => o.style.pointerEvents = 'none');
-  if (resp === correcta) {
-    el.classList.add('correcta');
-    mostrarFeedback('¡Excelente! 🌟', 'verde');
-    sumarPuntos(10);
-    reproducirSonido('correcto');
-    setTimeout(iniciarObjetos, 1500);
-  } else {
-    el.classList.add('incorrecta');
-    mostrarFeedback('¡Intenta de nuevo!', 'rojo');
-    reproducirSonido('incorrecto');
-  }
-}
+        let currentTopic = "";
+        let currentQuestionIndex = 0;
 
-// Juego Pintar
-let colorActual = '#FF5252';
-let dibujando = false;
-let ctx = null;
+        function loadState() {
+            const saved = localStorage.getItem('aventurasLenguaje');
+            if (saved) player = JSON.parse(saved);
+            updateUI();
+        }
 
-function iniciarPintar() {
-  const canvas = document.getElementById('canvas-pintar');
-  ctx = canvas.getContext('2d');
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.lineWidth = 5;
-  ctx.lineCap = 'round';
-  
-  const colores = ['#FF5252', '#2196F3', '#4CAF50', '#FFC107', '#9C27B0', '#FF9800', '#E91E63', '#000000'];
-  const paleta = document.getElementById('paleta');
-  paleta.innerHTML = colores.map((c, i) => 
-    `<div class="color-btn ${i === 0 ? 'activo' : ''}" style="background: ${c};" onclick="seleccionarColor('${c}', this)"></div>`
-  ).join('');
-  
-  canvas.onmousedown = e => { dibujando = true; dibujar(e, canvas); };
-  canvas.onmousemove = e => { if (dibujando) dibujar(e, canvas); };
-  canvas.onmouseup = () => dibujando = false;
-  canvas.onmouseleave = () => dibujando = false;
-  
-  canvas.ontouchstart = e => { e.preventDefault(); dibujando = true; dibujarTouch(e, canvas); };
-  canvas.ontouchmove = e => { e.preventDefault(); if (dibujando) dibujarTouch(e, canvas); };
-  canvas.ontouchend = () => dibujando = false;
-}
+        function saveState() {
+            localStorage.setItem('aventurasLenguaje', JSON.stringify(player));
+            updateUI();
+        }
 
-function seleccionarColor(c, el) {
-  colorActual = c;
-  document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('activo'));
-  el.classList.add('activo');
-}
+        function resetGame() {
+            if(confirm("¿Estás seguro de reiniciar todo tu progreso y medallas?")) {
+                localStorage.removeItem('aventurasLenguaje');
+                player = { lives: 5, xp: 0, coins: 0, completed: { t1: false, t2: false, t3: false, t4: false, t5: false }};
+                saveState();
+                renderHome();
+            }
+        }
 
-function dibujar(e, canvas) {
-  const rect = canvas.getBoundingClientRect();
-  const x = (e.clientX - rect.left) * (canvas.width / rect.width);
-  const y = (e.clientY - rect.top) * (canvas.height / rect.height);
-  ctx.strokeStyle = colorActual;
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-  ctx.lineTo(x, y);
-  ctx.stroke();
-}
+        function updateUI() {
+            document.getElementById('ui-xp').innerText = player.xp;
+            document.getElementById('ui-coins').innerText = player.coins;
+            
+            let hearts = "";
+            for(let i = 0; i < 5; i++) {
+                hearts += i < player.lives ? "❤️" : "🤍";
+            }
+            document.getElementById('ui-lives').innerHTML = `Vidas: ${hearts}`;
+        }
 
-function dibujarTouch(e, canvas) {
-  const touch = e.touches[0];
-  const rect = canvas.getBoundingClientRect();
-  const x = (touch.clientX - rect.left) * (canvas.width / rect.width);
-  const y = (touch.clientY - rect.top) * (canvas.height / rect.height);
-  ctx.strokeStyle = colorActual;
-  ctx.beginPath();
-  ctx.moveTo(x, y);
-  ctx.lineTo(x, y);
-  ctx.stroke();
-}
+        // --- 3. VISTAS E INTERFAZ ---
+        const app = document.getElementById('app-container');
 
-function limpiarCanvas() {
-  const canvas = document.getElementById('canvas-pintar');
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
+        function renderHome() {
+            if(player.lives <= 0) player.lives = 5; // Recuperar vidas al volver al inicio
+            saveState();
 
-function dibujarFiguraGuia() {
-  const canvas = document.getElementById('canvas-pintar');
-  limpiarCanvas();
-  ctx.strokeStyle = '#9C27B0';
-  ctx.lineWidth = 3;
-  ctx.setLineDash([10, 5]);
-  // Triángulo
-  ctx.beginPath();
-  ctx.moveTo(100, 80); ctx.lineTo(180, 200); ctx.lineTo(20, 200); ctx.closePath();
-  ctx.stroke();
-  // Cuadrado
-  ctx.strokeRect(220, 80, 120, 120);
-  // Círculo
-  ctx.beginPath();
-  ctx.arc(420, 140, 60, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.setLineDash([]);
-}
+            const badges = [
+                { id: 't1', title: "Explorador de la Naturaleza", icon: "🌱", req: player.completed.t1 },
+                { id: 't2', title: "Maestro de las Letras", icon: "✍️", req: (player.completed.t2 && player.completed.t3 && player.completed.t4) },
+                { id: 't5', title: "Detective de Cuentos", icon: "🕵️‍♂️", req: player.completed.t5 }
+            ];
 
-// Juego Clasificar
-function iniciarClasificar() {
-  const items = [
-    { nombre: '🔺 Triángulo', tipo: '2d' },
-    { nombre: '🎲 Cubo', tipo: '3d' },
-    { nombre: '🟦 Cuadrado', tipo: '2d' },
-    { nombre: '⚽ Esfera', tipo: '3d' },
-    { nombre: '🟡 Círculo', tipo: '2d' },
-    { nombre: '🥫 Cilindro', tipo: '3d' },
-    { nombre: '🟩 Rectángulo', tipo: '2d' },
-    { nombre: '🍦 Cono', tipo: '3d' }
-  ];
-  const item = items[Math.floor(Math.random() * items.length)];
-  const cont = document.getElementById('clasificar-contenido');
-  cont.innerHTML = `
-    <p class="pregunta" style="font-size: 2em;">${item.nombre}</p>
-    <p style="text-align: center; font-size: 1.2em;">¿Es una figura 2D o un cuerpo 3D?</p>
-    <div class="opciones">
-      <div class="opcion" style="background: #E3F2FD;" onclick="responderClasificar(this, '2d', '${item.tipo}')">🔷 Figura 2D (Plana)</div>
-      <div class="opcion" style="background: #F3E5F5;" onclick="responderClasificar(this, '3d', '${item.tipo}')">📦 Cuerpo 3D (Espacio)</div>
-    </div>
-  `;
-}
+            let badgesHTML = badges.map(b => `
+                <div class="flex flex-col items-center p-3 bg-white rounded-xl shadow ${b.req ? '' : 'badge-locked'}">
+                    <span class="text-4xl">${b.icon}</span>
+                    <span class="text-xs font-bold text-center mt-2">${b.title}</span>
+                </div>
+            `).join('');
 
-function responderClasificar(el, resp, correcta) {
-  document.querySelectorAll('#clasificar-contenido .opcion').forEach(o => o.style.pointerEvents = 'none');
-  if (resp === correcta) {
-    el.classList.add('correcta');
-    mostrarFeedback('¡Correcto! 🎉', 'verde');
-    sumarPuntos(10);
-    reproducirSonido('correcto');
-    setTimeout(iniciarClasificar, 1500);
-  } else {
-    el.classList.add('incorrecta');
-    mostrarFeedback('¡Intenta de nuevo!', 'rojo');
-    reproducirSonido('incorrecto');
-  }
-}
+            app.innerHTML = `
+                <div class="text-center">
+                    <h1 class="text-5xl font-black text-blue-700 mb-6 drop-shadow-md">¡Aventuras del Lenguaje!</h1>
+                    <p class="text-xl mb-8 text-gray-700 font-semibold">Elige una misión para comenzar a jugar y ganar medallas.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <button onclick="startTopic('t1')" class="btn-bounce bg-green-500 text-white p-6 rounded-3xl shadow-lg border-b-4 border-green-700 flex flex-col items-center">
+                            <span class="text-4xl mb-2">🐋</span><span class="text-2xl font-bold">Textos Informativos</span>
+                        </button>
+                        <button onclick="startTopic('t2')" class="btn-bounce bg-purple-500 text-white p-6 rounded-3xl shadow-lg border-b-4 border-purple-700 flex flex-col items-center">
+                            <span class="text-4xl mb-2">🔤</span><span class="text-2xl font-bold">Fonética (cr/cl - gr/gl)</span>
+                        </button>
+                        <button onclick="startTopic('t3')" class="btn-bounce bg-pink-500 text-white p-6 rounded-3xl shadow-lg border-b-4 border-pink-700 flex flex-col items-center">
+                            <span class="text-4xl mb-2">¡¿?!</span><span class="text-2xl font-bold">Signos de Puntuación</span>
+                        </button>
+                        <button onclick="startTopic('t4')" class="btn-bounce bg-yellow-500 text-white p-6 rounded-3xl shadow-lg border-b-4 border-yellow-700 flex flex-col items-center">
+                            <span class="text-4xl mb-2">✉️</span><span class="text-2xl font-bold">Partes de la Carta</span>
+                        </button>
+                        <button onclick="startTopic('t5')" class="btn-bounce bg-red-500 text-white p-6 rounded-3xl shadow-lg border-b-4 border-red-700 flex flex-col items-center md:col-span-2">
+                            <span class="text-4xl mb-2">📖</span><span class="text-2xl font-bold">Inferir Narraciones</span>
+                        </button>
+                    </div>
 
-// ===== EJERCICIOS =====
-function nuevoEjercicioContar() {
-  const figuras = ['triangulo', 'cuadrado', 'rectangulo', 'circulo'];
-  const svgMap = {
-    triangulo: '<svg viewBox="0 0 60 60" width="50"><polygon points="30,5 55,50 5,50" fill="#FF5252"/></svg>',
-    cuadrado: '<svg viewBox="0 0 60 60" width="50"><rect x="5" y="5" width="50" height="50" fill="#2196F3"/></svg>',
-    circulo: '<svg viewBox="0 0 60 60" width="50"><circle cx="30" cy="30" r="25" fill="#FFC107"/></svg>',
-    rectangulo: '<svg viewBox="0 0 60 60" width="50"><rect x="5" y="15" width="50" height="30" fill="#4CAF50"/></svg>'
-  };
-  
-  let dibujo = '';
-  const counts = {};
-  figuras.forEach(f => counts[f] = 0);
-  
-  for (let i = 0; i < 12; i++) {
-    const f = figuras[Math.floor(Math.random() * figuras.length)];
-    counts[f]++;
-    dibujo += svgMap[f];
-  }
-  
-  document.getElementById('ejercicio-contar').innerHTML = dibujo;
-  document.getElementById('ejercicio-contar-respuesta').innerHTML = `
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 15px;">
-      <div>🔺 Triángulos: <input type="number" id="cnt-triangulo" style="width:60px; padding:5px;" data-resp="${counts.triangulo}"></div>
-      <div>🟦 Cuadrados: <input type="number" id="cnt-cuadrado" style="width:60px; padding:5px;" data-resp="${counts.cuadrado}"></div>
-      <div>🟩 Rectángulos: <input type="number" id="cnt-rectangulo" style="width:60px; padding:5px;" data-resp="${counts.rectangulo}"></div>
-      <div>🟡 Círculos: <input type="number" id="cnt-circulo" style="width:60px; padding:5px;" data-resp="${counts.circulo}"></div>
-    </div>
-    <div style="text-align: center; margin-top: 15px;">
-      <button class="btn verde" onclick="verificarContar()">✅ Verificar</button>
-    </div>
-  `;
-}
+                    <div class="bg-blue-200 p-6 rounded-3xl shadow-inner">
+                        <h3 class="text-2xl font-black text-blue-800 mb-4">Tus Medallas</h3>
+                        <div class="grid grid-cols-3 gap-4 justify-center">
+                            ${badgesHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
-function verificarContar() {
-  let correctas = 0;
-  document.querySelectorAll('#ejercicio-contar-respuesta input').forEach(inp => {
-    if (parseInt(inp.value) === parseInt(inp.dataset.resp)) {
-      inp.style.background = '#C8E6C9';
-      correctas++;
-    } else {
-      inp.style.background = '#FFCDD2';
-    }
-  });
-  if (correctas === 4) {
-    mostrarFeedback('¡Perfecto! 🏆', 'verde');
-    sumarPuntos(20);
-    reproducirSonido('victoria');
-    lanzarConfeti();
-  } else {
-    mostrarFeedback(`${correctas}/4 correctas`, 'verde');
-    sumarPuntos(correctas * 3);
-  }
-}
+        // --- 4. LÓGICA DEL JUEGO ---
+        function startTopic(topicId) {
+            currentTopic = topicId;
+            currentQuestionIndex = 0;
+            renderQuestion();
+        }
 
-function verificarTabla() {
-  let correctas = 0;
-  document.querySelectorAll('#tabla-ejercicio input').forEach(inp => {
-    if (inp.value === '') return;
-    if (parseInt(inp.value) === parseInt(inp.dataset.resp)) {
-      inp.style.background = '#C8E6C9';
-      correctas++;
-    } else {
-      inp.style.background = '#FFCDD2';
-    }
-  });
-  const total = document.querySelectorAll('#tabla-ejercicio input').length;
-  if (correctas === total) {
-    mostrarFeedback('¡Excelente! 🌟', 'verde');
-    sumarPuntos(25);
-    reproducirSonido('victoria');
-    lanzarConfeti();
-  } else {
-    mostrarFeedback(`${correctas}/${total} correctas`, 'verde');
-    sumarPuntos(correctas * 2);
-  }
-}
+        function renderQuestion() {
+            if (currentQuestionIndex >= gameData[currentTopic].length) {
+                // Topic Completed
+                player.completed[currentTopic] = true;
+                player.xp += 100;
+                saveState();
+                app.innerHTML = `
+                    <div class="text-center mt-20 pulse">
+                        <span class="text-8xl">🏆</span>
+                        <h2 class="text-4xl font-black text-green-600 mt-6">¡Misión Completada!</h2>
+                        <p class="text-xl text-gray-700 mt-4">+100 XP Ganados</p>
+                        <button onclick="renderHome()" class="mt-8 bg-blue-500 text-white font-bold py-4 px-10 rounded-full btn-bounce text-2xl shadow-lg">Volver al Menú</button>
+                    </div>
+                `;
+                return;
+            }
 
-// V-F
-const preguntasVF = [
-  { p: 'El triángulo tiene 3 lados.', v: true },
-  { p: 'El círculo tiene 4 vértices.', v: false },
-  { p: 'El cuadrado tiene 4 lados iguales.', v: true },
-  { p: 'Una pelota se parece a un cubo.', v: false },
-  { p: 'Una lata se parece a un cilindro.', v: true },
-  { p: 'El rectángulo tiene 4 vértices.', v: true },
-  { p: 'El cubo tiene 6 caras.', v: true },
-  { p: 'La esfera tiene muchos vértices.', v: false }
-];
+            const qData = gameData[currentTopic][currentQuestionIndex];
+            
+            let optionsHTML = qData.options.map((opt, idx) => `
+                <button onclick="checkAnswer(${idx})" class="w-full text-left bg-white border-4 border-blue-200 hover:border-blue-500 hover:bg-blue-50 text-gray-700 font-bold py-4 px-6 rounded-2xl mb-4 transition-all text-xl shadow-sm btn-bounce">
+                    ${opt}
+                </button>
+            `).join('');
 
-function cargarVF() {
-  const cont = document.getElementById('vf-contenido');
-  const preguntas = preguntasVF.sort(() => Math.random() - 0.5).slice(0, 5);
-  cont.innerHTML = preguntas.map((p, i) => `
-    <div class="evaluacion-pregunta">
-      <span class="numero-pregunta">${i+1}</span>
-      <strong>${p.p}</strong>
-      <div style="margin-top: 10px;">
-        <button class="btn verde" onclick="responderVF(this, true, ${p.v})">✅ Verdadero</button>
-        <button class="btn" style="background: linear-gradient(135deg, #FF5252, #E91E63);" onclick="responderVF(this, false, ${p.v})">❌ Falso</button>
-      </div>
-    </div>
-  `).join('');
-}
+            app.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl shadow-xl max-w-2xl mx-auto mt-10 border-t-8 border-blue-500">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-sm font-bold text-gray-400 uppercase tracking-wide">Pregunta ${currentQuestionIndex + 1} de ${gameData[currentTopic].length}</span>
+                    </div>
+                    <h2 class="text-3xl font-black text-gray-800 mb-8">${qData.q}</h2>
+                    <div>${optionsHTML}</div>
+                </div>
+            `;
+        }
 
-function responderVF(el, resp, correcta) {
-  const padre = el.parentElement;
-  padre.querySelectorAll('button').forEach(b => b.disabled = true);
-  if (resp === correcta) {
-    el.style.opacity = '1';
-    mostrarFeedback('¡Correcto! 🎉', 'verde');
-    sumarPuntos(5);
-    reproducirSonido('correcto');
-  } else {
-    el.style.opacity = '0.5';
-    mostrarFeedback('¡Era diferente!', 'rojo');
-    reproducirSonido('incorrecto');
-  }
-}
+        function checkAnswer(selectedIndex) {
+            const qData = gameData[currentTopic][currentQuestionIndex];
+            const modal = document.getElementById('feedback-modal');
+            const title = document.getElementById('feedback-title');
+            const message = document.getElementById('feedback-message');
+            
+            if (selectedIndex === qData.ans) {
+                // Correct
+                player.xp += 20;
+                player.coins += 10;
+                title.innerHTML = "¡Excelente! 🌟";
+                title.className = "text-3xl font-black mb-4 text-green-500";
+                message.innerHTML = qData.exp;
+                saveState();
+            } else {
+                // Incorrect
+                player.lives -= 1;
+                title.innerHTML = "¡Casi! No te rindas 💪";
+                title.className = "text-3xl font-black mb-4 text-red-500";
+                message.innerHTML = `La respuesta correcta era: <strong>${qData.options[qData.ans]}</strong>.<br><br><em>${qData.exp}</em>`;
+                saveState();
 
-// Caras
-function cargarCaras() {
-  const cuerpos = [
-    { nombre: '🎲 Cubo', resp: 6 },
-    { nombre: '🔺 Pirámide', resp: 5 },
-    { nombre: '🥫 Cilindro', resp: 3 },
-    { nombre: '🍦 Cono', resp: 2 }
-  ];
-  const cont = document.getElementById('ejercicio-caras');
-  cont.innerHTML = cuerpos.map(c => `
-    <div style="margin: 15px 0; display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-      <strong style="font-size: 1.2em;">${c.nombre}:</strong>
-      <span>Tiene</span>
-      <input type="number" style="width:60px; padding:5px; text-align:center;" data-resp="${c.resp}">
-      <span>caras</span>
-    </div>
-  `).join('');
-}
+                if(player.lives <= 0) {
+                    gameOver();
+                    return;
+                }
+            }
+            modal.classList.remove('hidden');
+        }
 
-function verificarCaras() {
-  let correctas = 0;
-  document.querySelectorAll('#ejercicio-caras input').forEach(inp => {
-    if (parseInt(inp.value) === parseInt(inp.dataset.resp)) {
-      inp.style.background = '#C8E6C9';
-      correctas++;
-    } else {
-      inp.style.background = '#FFCDD2';
-    }
-  });
-  const total = document.querySelectorAll('#ejercicio-caras input').length;
-  if (correctas === total) {
-    mostrarFeedback('¡Perfecto! 🏆', 'verde');
-    sumarPuntos(20);
-    reproducirSonido('victoria');
-    lanzarConfeti();
-  } else {
-    mostrarFeedback(`${correctas}/${total} correctas`, 'verde');
-    sumarPuntos(correctas * 3);
-  }
-}
+        function nextQuestion() {
+            document.getElementById('feedback-modal').classList.add('hidden');
+            currentQuestionIndex++;
+            renderQuestion();
+        }
 
-// ===== EVALUACIÓN FINAL =====
-let evalEstado = { preguntas: [], actual: 0, correctas: 0 };
+        function gameOver() {
+            document.getElementById('feedback-modal').classList.add('hidden');
+            app.innerHTML = `
+                <div class="text-center mt-20">
+                    <span class="text-8xl">💔</span>
+                    <h2 class="text-4xl font-black text-red-600 mt-6">¡Te has quedado sin vidas!</h2>
+                    <p class="text-xl text-gray-700 mt-4 mb-8">El aprendizaje toma tiempo. Descansa un momento y vuelve a intentarlo.</p>
+                    <button onclick="renderHome()" class="bg-blue-500 text-white font-bold py-4 px-10 rounded-full btn-bounce text-2xl shadow-lg">Recuperar Vidas y Volver</button>
+                </div>
+            `;
+        }
 
-function generarPreguntasEval() {
-  const preguntas = [
-    {
-      p: '¿Cuántos lados tiene un triángulo?',
-      opciones: ['2', '3', '4', '5'],
-      resp: 1
-    },
-    {
-      p: '¿Qué figura NO tiene lados ni vértices?',
-      opciones: ['Triángulo', 'Cuadrado', 'Círculo', 'Rectángulo'],
-      resp: 2
-    },
-    {
-      p: '¿A qué cuerpo geométrico se parece una pelota?',
-      opciones: ['Cubo', 'Cono', 'Esfera', 'Cilindro'],
-      resp: 2
-    },
-    {
-      p: '¿Cuántos vértices tiene un cuadrado?',
-      opciones: ['3', '4', '5', '6'],
-      resp: 1
-    },
-    {
-      p: '¿Qué figura tiene 4 lados pero no todos iguales?',
-      opciones: ['Triángulo', 'Cuadrado', 'Rectángulo', 'Círculo'],
-      resp: 2
-    },
-    {
-      p: '¿A qué cuerpo se parece una lata de comida?',
-      opciones: ['Esfera', 'Cubo', 'Cono', 'Cilindro'],
-      resp: 3
-    },
-    {
-      p: '¿Cuántas caras tiene un cubo?',
-      opciones: ['4', '5', '6', '8'],
-      resp: 2
-    },
-    {
-      p: '¿Qué figura geométrica tiene la forma de una señal de PARADA?',
-      opciones: ['Círculo', 'Triángulo', 'Cuadrado', 'Rectángulo'],
-      resp: 1
-    },
-    {
-      p: '¿Cuál de estos es un cuerpo geométrico (3D)?',
-      opciones: ['Triángulo', 'Círculo', 'Pirámide', 'Cuadrado'],
-      resp: 2
-    },
-    {
-      p: 'Si marco una cara de un cubo en un papel, ¿qué figura dibujo?',
-      opciones: ['Triángulo', 'Círculo', 'Cuadrado', 'Rectángulo'],
-      resp: 2
-    }
-  ];
-  return preguntas.sort(() => Math.random() - 0.5);
-}
-
-function iniciarEvaluacion() {
-  evalEstado = { preguntas: generarPreguntasEval(), actual: 0, correctas: 0 };
-  document.getElementById('eval-inicio').style.display = 'none';
-  document.getElementById('eval-contenido').style.display = 'block';
-  document.getElementById('eval-resultado').style.display = 'none';
-  mostrarPreguntaEval();
-}
-
-function mostrarPreguntaEval() {
-  const p = evalEstado.preguntas[evalEstado.actual];
-  const progreso = ((evalEstado.actual) / evalEstado.preguntas.length) * 100;
-  document.getElementById('eval-barra').style.width = progreso + '%';
-  document.getElementById('eval-barra').textContent = Math.round(progreso) + '%';
-  
-  document.getElementById('eval-pregunta').innerHTML = `
-    <div class="evaluacion-pregunta">
-      <p style="font-size: 0.9em; color: #666;">Pregunta ${evalEstado.actual + 1} de ${evalEstado.preguntas.length}</p>
-      <p class="pregunta" style="text-align: left;">${p.p}</p>
-      <div class="opciones" style="justify-content: flex-start;">
-        ${p.opciones.map((o, i) => `<div class="opcion" onclick="responderEval(this, ${i})">${o}</div>`).join('')}
-      </div>
-    </div>
-  `;
-}
-
-function responderEval(el, idx) {
-  const p = evalEstado.preguntas[evalEstado.actual];
-  document.querySelectorAll('#eval-pregunta .opcion').forEach(o => o.style.pointerEvents = 'none');
-  
-  if (idx === p.resp) {
-    el.classList.add('correcta');
-    evalEstado.correctas++;
-    reproducirSonido('correcto');
-  } else {
-    el.classList.add('incorrecta');
-    document.querySelectorAll('#eval-pregunta .opcion')[p.resp].classList.add('correcta');
-    reproducirSonido('incorrecto');
-  }
-  
-  setTimeout(() => {
-    evalEstado.actual++;
-    if (evalEstado.actual < evalEstado.preguntas.length) {
-      mostrarPreguntaEval();
-    } else {
-      mostrarResultadoEval();
-    }
-  }, 1500);
-}
-
-function mostrarResultadoEval() {
-  document.getElementById('eval-contenido').style.display = 'none';
-  const res = document.getElementById('eval-resultado');
-  res.style.display = 'block';
-  
-  const porcentaje = (evalEstado.correctas / evalEstado.preguntas.length) * 100;
-  let mensaje, emoji, color;
-  
-  if (porcentaje >= 90) {
-    mensaje = '¡EXCELENTE! ¡Eres un experto en geometría!';
-    emoji = '🏆';
-    color = 'linear-gradient(135deg, #FFD700, #FFA500)';
-    lanzarConfeti();
-    reproducirSonido('victoria');
-  } else if (porcentaje >= 70) {
-    mensaje = '¡MUY BIEN! ¡Lo has logrado!';
-    emoji = '🌟';
-    color = 'linear-gradient(135deg, #4CAF50, #81C784)';
-    reproducirSonido('victoria');
-  } else if (porcentaje >= 50) {
-    mensaje = '¡BUEN INTENTO! Sigue practicando';
-    emoji = '💪';
-    color = 'linear-gradient(135deg, #2196F3, #64B5F6)';
-  } else {
-    mensaje = '¡No te rindas! Practica un poco más';
-    emoji = '📚';
-    color = 'linear-gradient(135deg, #FF9800, #FFB74D)';
-  }
-  
-  const puntosGanados = evalEstado.correctas * 10;
-  sumarPuntos(puntosGanados);
-  
-  res.innerHTML = `
-    <div class="resultado" style="background: ${color};">
-      <div style="font-size: 5em;">${emoji}</div>
-      <h2>${mensaje}</h2>
-      <div class="puntos">${evalEstado.correctas} / ${evalEstado.preguntas.length}</div>
-      <p style="font-size: 1.3em;">+${puntosGanados} puntos ganados</p>
-      <div style="margin-top: 20px;">
-        <button class="btn" onclick="iniciarEvaluacion()" style="background: white; color: #333;">🔄 Intentar de nuevo</button>
-        <button class="btn verde" onclick="mostrarSeccion('inicio', document.querySelectorAll('.btn-nav')[0])">🏠 Volver al inicio</button>
-      </div>
-    </div>
-  `;
-}
-
-// ===== INICIALIZACIÓN =====
-window.onload = () => {
-  crearBurbujas();
-  initDragDrop();
-  iniciarMiniJuegoFiguras();
-  nuevoEjercicioContar();
-  cargarVF();
-  cargarCaras();
-  
-  // Activar audio al primer clic
-  document.addEventListener('click', () => initAudio(), { once: true });
-};
-</script>
-
+        // Initialize App
+        loadState();
+        renderHome();
+    </script>
 </body>
 </html>
-```
