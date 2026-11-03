@@ -16,61 +16,156 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+        .reading-container {
+            background-image: repeating-linear-gradient(transparent, transparent 31px, #e5e7eb 31px, #e5e7eb 32px);
+            line-height: 32px;
+            padding-top: 8px;
+        }
     </style>
 </head>
 <body class="text-gray-800">
 
     <!-- Header Stats -->
     <header class="bg-blue-600 text-white p-4 shadow-md sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto flex justify-between items-center text-lg font-bold">
-            <div class="flex items-center gap-4">
+        <div class="max-w-4xl mx-auto flex justify-between items-center text-lg md:text-xl font-bold">
+            <div class="flex items-center gap-2 md:gap-4">
                 <span id="ui-lives" class="flex items-center gap-1 text-red-300"></span>
                 <span class="flex items-center gap-1 text-yellow-300">⚡ XP: <span id="ui-xp">0</span></span>
-                <span class="flex items-center gap-1 text-yellow-400">🪙 <span id="ui-coins">0</span></span>
+                <span class="flex items-center gap-1 text-yellow-400 hidden md:flex">🪙 <span id="ui-coins">0</span></span>
             </div>
-            <button onclick="resetGame()" class="text-sm bg-blue-800 px-3 py-1 rounded-full hover:bg-red-500">Reiniciar Progreso</button>
+            <button onclick="resetGame()" class="text-xs md:text-sm bg-blue-800 px-3 py-2 rounded-full hover:bg-red-500 transition-colors">Reiniciar</button>
         </div>
     </header>
 
     <!-- Main Container -->
-    <main id="app-container" class="max-w-4xl mx-auto p-4 mt-6"></main>
+    <main id="app-container" class="max-w-4xl mx-auto p-4 mt-6 pb-20"></main>
 
     <!-- Feedback Modal -->
-    <div id="feedback-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md text-center transform transition-all scale-95" id="feedback-content">
+    <div id="feedback-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 md:p-8 rounded-3xl shadow-2xl max-w-md w-full text-center transform transition-all scale-95" id="feedback-content">
             <h2 id="feedback-title" class="text-3xl font-black mb-4"></h2>
-            <p id="feedback-message" class="text-lg mb-6 text-gray-600"></p>
-            <button onclick="nextQuestion()" class="bg-blue-500 text-white font-bold py-3 px-8 rounded-full btn-bounce w-full text-xl shadow-lg">
+            <p id="feedback-message" class="text-lg md:text-xl mb-6 text-gray-700"></p>
+            <button onclick="nextQuestion()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-8 rounded-full btn-bounce w-full text-xl shadow-lg">
                 Continuar 🚀
             </button>
         </div>
     </div>
 
     <script>
-        // --- 1. BASE DE DATOS DE PREGUNTAS (Extraídas 100% del PDF) ---
+        // --- 1. BASE DE DATOS DE LECTURAS Y PREGUNTAS (100% del PDF) ---
         const gameData = {
-            t1: [
-                { q: "¿Por dónde respiran las ballenas azules?", options: ["Por branquias", "Por pulmones", "Por la piel"], ans: 1, exp: "¡Las ballenas son mamíferos marinos! Aunque viven en el agua, respiran por pulmones." },
-                { q: "¿Qué comen los ajolotes?", options: ["Algas y flores", "Frutas y verduras", "Pequeños peces y gusanos"], ans: 2, exp: "Los ajolotes son carnívoros. Se alimentan de pequeños peces y otros animales como gusanos." },
-                { q: "¿A qué animal se parece la cola del caballito de mar?", options: ["Al canguro", "Al mono", "Al camaleón"], ans: 1, exp: "¡Tienen cola similar a la de los monos, cabeza de caballo y bolsa como los canguros!" },
-                { q: "¿En qué estación del año las hojas de la planta Dionaea NO actúan como trampas?", options: ["En verano", "En invierno", "En primavera"], ans: 1, exp: "La Venus atrapamoscas usa sus trampas todo el año, ¡excepto en invierno!" }
-            ],
-            t2: [
-                { q: "Completa la oración: A ___ara le gusta cantar con su mi___ófono.", options: ["Cl / cr", "Cr / cl", "Gl / gr"], ans: 0, exp: "La combinación correcta es Clara (Cl) y micrófono (cr)." },
-                { q: "El esquimal está en el i___.", options: ["grú", "glú", "clú"], ans: 1, exp: "La palabra correcta es iglú, usando las letras 'gl'." }
-            ],
-            t3: [
-                { q: "Si quieres expresar un gran susto y decir 'Ay, una araña', ¿qué signos usas?", options: ["Signos de interrogación (¿?)", "Signos de exclamación (¡!)"], ans: 1, exp: "¡Excelente! Los signos de exclamación (¡!) sirven para expresar sorpresa, alegría, susto o dolor." },
-                { q: "¿Qué signos usarías para 'Cómo se llama esa flor'?", options: ["Signos de interrogación (¿?)", "Signos de exclamación (¡!)"], ans: 0, exp: "Como estás haciendo una pregunta, debes usar los signos de interrogación (¿?)." }
-            ],
-            t4: [
-                { q: "En una carta, 'Santiago, 14 de marzo' corresponde a:", options: ["El Saludo", "Lugar y fecha", "La Despedida"], ans: 1, exp: "Es el lugar y la fecha desde donde se escribe la carta." },
-                { q: "'Te quiero mucho, Isidora' es un ejemplo de:", options: ["Despedida y Firma", "Cuerpo de la carta", "Saludo"], ans: 0, exp: "Es la despedida afectuosa seguida del nombre (firma) de quien escribe." }
-            ],
-            t5: [
-                { q: "En 'El Gato con Botas', ¿De qué trata principalmente la historia?", options: ["Un rey que cazaba perdices", "Un gato que ayuda a un pobre muchacho", "Un molinero muy rico"], ans: 1, exp: "Trata sobre un gato astuto que decide ayudar a Gabriel, el hijo del pobre molinero." },
-                { q: "En 'Pinocho', ¿De qué se trata el relato?", options: ["Un carpintero que advirtió a su muñeco", "Un muñeco que fabricaba madera", "Un carpintero que deseaba que su muñeco tuviera vida"], ans: 2, exp: "Gepeto se sentía muy solo y pensó: 'Ojalá fuese un niño para que me hiciese compañía'." }
-            ]
+            t1: {
+                title: "Curiosidades de la Naturaleza",
+                reading: `
+                    <div class="space-y-8">
+                        <div class="bg-blue-50 p-6 rounded-2xl border-2 border-blue-200">
+                            <h3 class="text-2xl font-black text-blue-800 mb-2">🐋 ¿Cuál es el animal más grande?</h3>
+                            <p class="text-xl text-gray-700">La ballena azul hembra es el mayor de los animales vivientes. Algunas llegan a medir más de 33 metros de largo. Las ballenas son mamíferos marinos que, aunque pasan toda su vida en el agua, respiran por pulmones y tienen sus crías dentro de sus cuerpos para luego amamantarlas.</p>
+                            <p class="text-xl text-gray-700 mt-2 font-bold text-blue-600">¡Su lengua puede pesar tanto como un elefante y su corazón, tanto como un automóvil!</p>
+                        </div>
+                        <div class="bg-pink-50 p-6 rounded-2xl border-2 border-pink-200">
+                            <h3 class="text-2xl font-black text-pink-800 mb-2">🦎 ¿Qué son los ajolotes?</h3>
+                            <p class="text-xl text-gray-700">Los ajolotes son anfibios que viven en aguas claras y tranquilas. Su único hábitat natural son los lagos cercanos a la ciudad de México. Poseen ojos pequeños, piel lisa, cuerpo alargado, cuatro extremidades con las cuales se desplazan y tres pares de branquias que sobresalen de su cabeza. Son carnívoros: se alimentan de pequeños peces y otros animales (como gusanos).</p>
+                        </div>
+                        <div class="bg-teal-50 p-6 rounded-2xl border-2 border-teal-200">
+                            <h3 class="text-2xl font-black text-teal-800 mb-2">🌊 ¿Cómo son los caballitos de mar?</h3>
+                            <p class="text-xl text-gray-700">Por su aspecto, los caballitos de mar o hipocampos tienen características que los asemejan a muchos animales; físicamente, su cabeza parece la de un caballo, tiene la capacidad de refugiarse como un camaleón, y posee una bolsa como la de los canguros y una cola similar a la de los monos.</p>
+                        </div>
+                        <div class="bg-green-50 p-6 rounded-2xl border-2 border-green-200">
+                            <h3 class="text-2xl font-black text-green-800 mb-2">🪴 Plantas Carnívoras</h3>
+                            <p class="text-xl text-gray-700">Las plantas carnívoras pueden atrapar seres vivos. Lo hacen solo cuando necesitan ciertos nutrientes. La <strong>Dionaea</strong> es conocida también como Venus atrapamoscas. Tiene hojas verdes que actúan como trampas todo el año, <em>excepto en invierno</em>.</p>
+                        </div>
+                    </div>
+                `,
+                questions: [
+                    { q: "¿Por dónde respiran las ballenas azules?", options: ["Por branquias", "Por pulmones", "Por la piel"], ans: 1, exp: "¡Las ballenas son mamíferos marinos! Aunque viven en el agua, respiran por pulmones." },
+                    { q: "¿Qué comen los ajolotes?", options: ["Algas y flores", "Frutas y verduras", "Pequeños peces y gusanos"], ans: 2, exp: "Los ajolotes son carnívoros. Se alimentan de pequeños peces y otros animales como gusanos." },
+                    { q: "¿A qué animal se parece la cola del caballito de mar?", options: ["Al canguro", "Al mono", "Al camaleón"], ans: 1, exp: "¡Tienen cola similar a la de los monos, cabeza de caballo y bolsa como los canguros!" },
+                    { q: "¿En qué estación del año las hojas de la planta Dionaea NO actúan como trampas?", options: ["En verano", "En invierno", "En primavera"], ans: 1, exp: "La Venus atrapamoscas usa sus trampas todo el año, ¡excepto en invierno!" }
+                ]
+            },
+            t2: {
+                title: "Grupos Consonánticos (cr/cl - gr/gl)",
+                reading: `
+                    <div class="space-y-6 text-xl text-gray-700 reading-container px-4">
+                        <p>🎵 A <strong>Clara</strong> le gusta cantar con <strong>micrófono</strong> canciones sobre la increíble Cleopatra.</p>
+                        <p>🚲 Lucrecia tiene una tienda de bi<strong>ci</strong>cletas llamada Cristal. Su amiga Sofía es su mejor <strong>clienta</strong>.</p>
+                        <hr class="border-gray-300">
+                        <p>👩‍🌾 <strong>Glenda</strong> quiere ser <strong>granjera</strong> para cuidar la <strong>granja</strong> de su abuela <strong>Gloria</strong> que queda en Graneros.</p>
+                        <p>🎈 Miguel y Gloria, unos aventureros, arre<strong>glaron</strong> su <strong>gran</strong> <strong>globo</strong> <strong>gris</strong> con verde y se fueron a In<strong>glaterra</strong>.</p>
+                    </div>
+                `,
+                questions: [
+                    { q: "Completa la oración: A ___ara le gusta cantar con su mi___ófono.", options: ["Cl / cr", "Cr / cl", "Gl / gr"], ans: 0, exp: "La combinación correcta es Clara (Cl) y micrófono (cr)." },
+                    { q: "El esquimal está en el i___.", options: ["grú", "glú", "clú"], ans: 1, exp: "La palabra correcta es iglú, usando las letras 'gl'." }
+                ]
+            },
+            t3: {
+                title: "Signos de Interrogación y Exclamación",
+                reading: `
+                    <div class="bg-yellow-50 p-6 rounded-3xl border-4 border-yellow-300">
+                        <h3 class="text-3xl font-black text-yellow-600 mb-4 text-center">¡Aprende los Signos!</h3>
+                        <p class="text-2xl text-gray-700 mb-4">Los signos de exclamación <strong>(¡ !)</strong> se usan para expresar alegría, sorpresa, susto o dolor.</p>
+                        <p class="text-2xl text-gray-700 mb-6">Los signos de interrogación <strong>(¿ ?)</strong> se usan para preguntar.</p>
+                        
+                        <div class="bg-white p-4 rounded-xl shadow">
+                            <p class="text-xl font-bold text-gray-800">Por ejemplo:</p>
+                            <p class="text-xl text-blue-600 mt-2"><strong>¡</strong>Mira la flor más grande del mundo<strong>!</strong></p>
+                            <p class="text-xl text-red-600 mt-2"><strong>¿</strong>Cómo se llama<strong>?</strong></p>
+                        </div>
+                    </div>
+                `,
+                questions: [
+                    { q: "Si quieres expresar un gran susto y decir 'Ay, una araña', ¿qué signos usas?", options: ["Signos de interrogación (¿?)", "Signos de exclamación (¡!)"], ans: 1, exp: "¡Excelente! Los signos de exclamación (¡!) sirven para expresar sorpresa, alegría, susto o dolor." },
+                    { q: "¿Qué signos usarías para 'Cómo se llama esa flor'?", options: ["Signos de interrogación (¿?)", "Signos de exclamación (¡!)"], ans: 0, exp: "Como estás haciendo una pregunta, debes usar los signos de interrogación (¿?)." }
+                ]
+            },
+            t4: {
+                title: "Estructura de la Carta",
+                reading: `
+                    <div class="bg-orange-50 p-6 md:p-10 rounded-lg shadow-md font-serif text-lg text-gray-800 border border-orange-200 relative">
+                        <div class="absolute top-4 right-6 text-sm text-gray-500 font-sans font-bold">Lugar y fecha ➡️</div>
+                        <p class="text-right mb-6">Santiago, 14 de marzo de 2019</p>
+                        
+                        <div class="absolute left-2 top-20 text-sm text-gray-500 font-sans font-bold">⬅️ Saludo</div>
+                        <p class="mb-4">Querida abuelita:</p>
+                        
+                        <div class="absolute left-2 top-32 text-sm text-gray-500 font-sans font-bold">⬅️ Cuerpo</div>
+                        <p class="mb-4 pl-4">Te cuento que visité el museo de Historia Natural. Allí nos contaron varios datos curiosos sobre los animales. ¿Sabías que los pingüinos usan su cola para mantener el equilibrio cuando caminan? ¡Me pareció increíble!</p>
+                        <p class="mb-6 pl-4">Bueno, como puedes ver, ya aprendí mucho...</p>
+                        
+                        <div class="absolute left-2 bottom-16 text-sm text-gray-500 font-sans font-bold">⬅️ Despedida</div>
+                        <p class="mb-2">Te quiero mucho,</p>
+                        
+                        <div class="absolute left-2 bottom-6 text-sm text-gray-500 font-sans font-bold">⬅️ Firma</div>
+                        <p class="font-bold text-xl text-blue-800">Isidora</p>
+                    </div>
+                `,
+                questions: [
+                    { q: "En la carta de Isidora, 'Santiago, 14 de marzo de 2019' corresponde a:", options: ["El Saludo", "Lugar y fecha", "La Despedida"], ans: 1, exp: "Es el lugar y la fecha desde donde se escribe la carta." },
+                    { q: "'Te quiero mucho,' es un ejemplo de:", options: ["Despedida", "Cuerpo de la carta", "Firma"], ans: 0, exp: "Es la despedida afectuosa antes de colocar el nombre (firma) de quien escribe." }
+                ]
+            },
+            t5: {
+                title: "Aventuras Increíbles (Inferir)",
+                reading: `
+                    <div class="space-y-8">
+                        <div class="bg-yellow-100 p-6 rounded-2xl border-4 border-yellow-400">
+                            <h3 class="text-2xl font-black text-yellow-800 mb-4">🐱 El Gato con Botas (Fragmento)</h3>
+                            <p class="text-xl text-gray-800 italic">"Gabriel, el hijo de un pobre molinero, recibió un gato como única herencia. Apenado, el muchacho pensaba que su futuro sería pasar hambre. Pero, entonces, el gato le dijo:<br><br>—¡Préstame tus botas! Obedéceme y solucionaré tu problema.<br><br>Lo primero que hizo el astuto animal fue llevarle unas perdices al rey..."</p>
+                        </div>
+
+                        <div class="bg-blue-100 p-6 rounded-2xl border-4 border-blue-400">
+                            <h3 class="text-2xl font-black text-blue-800 mb-4">🤥 Pinocho (Fragmento)</h3>
+                            <p class="text-xl text-gray-800 italic">"Un día, el viejo carpintero llamado Gepeto hizo un muñeco de madera al que llamó Pinocho. El anciano se sentía muy solo y, antes de irse a dormir, pensó: Ojalá fuese un niño para que me hiciese compañía. Esa misma noche, el Hada Azul apareció en el taller, tocó al muñeco con la varita y le dio vida..."</p>
+                        </div>
+                    </div>
+                `,
+                questions: [
+                    { q: "A partir de lo leído, ¿De qué trata principalmente la historia de 'El Gato con Botas'?", options: ["De un rey que cazaba perdices", "De un gato que ayuda a un pobre muchacho", "De un molinero muy rico"], ans: 1, exp: "Trata sobre un gato astuto que decide ayudar a Gabriel, el hijo del pobre molinero para solucionar sus problemas." },
+                    { q: "A partir del fragmento de 'Pinocho', ¿De qué se trata el relato?", options: ["De un carpintero que advirtió a su muñeco", "De un muñeco que fabricaba madera", "De un carpintero que deseaba que su muñeco tuviera vida"], ans: 2, exp: "Gepeto se sentía muy solo y pensó: 'Ojalá fuese un niño para que me hiciese compañía'." }
+                ]
+            }
         };
 
         // --- 2. ESTADO DEL JUEGO (Persistencia con localStorage) ---
@@ -96,12 +191,24 @@
         }
 
         function resetGame() {
-            if(confirm("¿Estás seguro de reiniciar todo tu progreso y medallas?")) {
-                localStorage.removeItem('aventurasLenguaje');
-                player = { lives: 5, xp: 0, coins: 0, completed: { t1: false, t2: false, t3: false, t4: false, t5: false }};
-                saveState();
-                renderHome();
-            }
+            // Reemplazo de un alert/confirm nativo por un modal propio
+            app.innerHTML = `
+                <div class="bg-white p-8 rounded-3xl shadow-xl max-w-lg mx-auto mt-10 text-center border-4 border-red-500">
+                    <h2 class="text-3xl font-black text-red-600 mb-4">¿Borrar todo el progreso?</h2>
+                    <p class="text-xl text-gray-700 mb-8">Perderás todas tus medallas, XP y monedas.</p>
+                    <div class="flex gap-4 justify-center">
+                        <button onclick="confirmReset()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-transform hover:scale-105">Sí, borrar</button>
+                        <button onclick="renderHome()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-transform hover:scale-105">Cancelar</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function confirmReset() {
+            localStorage.removeItem('aventurasLenguaje');
+            player = { lives: 5, xp: 0, coins: 0, completed: { t1: false, t2: false, t3: false, t4: false, t5: false }};
+            saveState();
+            renderHome();
         }
 
         function updateUI() {
@@ -112,7 +219,7 @@
             for(let i = 0; i < 5; i++) {
                 hearts += i < player.lives ? "❤️" : "🤍";
             }
-            document.getElementById('ui-lives').innerHTML = `Vidas: ${hearts}`;
+            document.getElementById('ui-lives').innerHTML = `Vidas: <span class="tracking-widest">${hearts}</span>`;
         }
 
         // --- 3. VISTAS E INTERFAZ ---
@@ -129,38 +236,38 @@
             ];
 
             let badgesHTML = badges.map(b => `
-                <div class="flex flex-col items-center p-3 bg-white rounded-xl shadow ${b.req ? '' : 'badge-locked'}">
-                    <span class="text-4xl">${b.icon}</span>
-                    <span class="text-xs font-bold text-center mt-2">${b.title}</span>
+                <div class="flex flex-col items-center p-3 md:p-4 bg-white rounded-2xl shadow-md ${b.req ? '' : 'badge-locked'}">
+                    <span class="text-5xl md:text-6xl mb-2">${b.icon}</span>
+                    <span class="text-sm md:text-base font-bold text-center text-gray-700 leading-tight">${b.title}</span>
                 </div>
             `).join('');
 
             app.innerHTML = `
                 <div class="text-center">
-                    <h1 class="text-5xl font-black text-blue-700 mb-6 drop-shadow-md">¡Aventuras del Lenguaje!</h1>
-                    <p class="text-xl mb-8 text-gray-700 font-semibold">Elige una misión para comenzar a jugar y ganar medallas.</p>
+                    <h1 class="text-4xl md:text-6xl font-black text-blue-700 mb-4 drop-shadow-sm">¡Aventuras del Lenguaje!</h1>
+                    <p class="text-lg md:text-2xl mb-8 text-gray-700 font-semibold bg-white inline-block px-6 py-2 rounded-full shadow-sm">Elige una misión para leer, jugar y ganar medallas.</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                        <button onclick="startTopic('t1')" class="btn-bounce bg-green-500 text-white p-6 rounded-3xl shadow-lg border-b-4 border-green-700 flex flex-col items-center">
-                            <span class="text-4xl mb-2">🐋</span><span class="text-2xl font-bold">Textos Informativos</span>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+                        <button onclick="startTopic('t1')" class="btn-bounce bg-green-500 hover:bg-green-400 text-white p-6 rounded-3xl shadow-lg border-b-4 border-green-700 flex flex-col items-center">
+                            <span class="text-5xl mb-3">🐋</span><span class="text-2xl font-black">Textos Informativos</span>
                         </button>
-                        <button onclick="startTopic('t2')" class="btn-bounce bg-purple-500 text-white p-6 rounded-3xl shadow-lg border-b-4 border-purple-700 flex flex-col items-center">
-                            <span class="text-4xl mb-2">🔤</span><span class="text-2xl font-bold">Fonética (cr/cl - gr/gl)</span>
+                        <button onclick="startTopic('t2')" class="btn-bounce bg-purple-500 hover:bg-purple-400 text-white p-6 rounded-3xl shadow-lg border-b-4 border-purple-700 flex flex-col items-center">
+                            <span class="text-5xl mb-3">🔤</span><span class="text-2xl font-black">Fonética (cr/cl - gr/gl)</span>
                         </button>
-                        <button onclick="startTopic('t3')" class="btn-bounce bg-pink-500 text-white p-6 rounded-3xl shadow-lg border-b-4 border-pink-700 flex flex-col items-center">
-                            <span class="text-4xl mb-2">¡¿?!</span><span class="text-2xl font-bold">Signos de Puntuación</span>
+                        <button onclick="startTopic('t3')" class="btn-bounce bg-pink-500 hover:bg-pink-400 text-white p-6 rounded-3xl shadow-lg border-b-4 border-pink-700 flex flex-col items-center">
+                            <span class="text-5xl mb-3">¡¿?!</span><span class="text-2xl font-black">Signos de Puntuación</span>
                         </button>
-                        <button onclick="startTopic('t4')" class="btn-bounce bg-yellow-500 text-white p-6 rounded-3xl shadow-lg border-b-4 border-yellow-700 flex flex-col items-center">
-                            <span class="text-4xl mb-2">✉️</span><span class="text-2xl font-bold">Partes de la Carta</span>
+                        <button onclick="startTopic('t4')" class="btn-bounce bg-yellow-500 hover:bg-yellow-400 text-white p-6 rounded-3xl shadow-lg border-b-4 border-yellow-700 flex flex-col items-center">
+                            <span class="text-5xl mb-3">✉️</span><span class="text-2xl font-black">Partes de la Carta</span>
                         </button>
-                        <button onclick="startTopic('t5')" class="btn-bounce bg-red-500 text-white p-6 rounded-3xl shadow-lg border-b-4 border-red-700 flex flex-col items-center md:col-span-2">
-                            <span class="text-4xl mb-2">📖</span><span class="text-2xl font-bold">Inferir Narraciones</span>
+                        <button onclick="startTopic('t5')" class="btn-bounce bg-red-500 hover:bg-red-400 text-white p-6 rounded-3xl shadow-lg border-b-4 border-red-700 flex flex-col items-center md:col-span-2">
+                            <span class="text-5xl mb-3">📖</span><span class="text-2xl font-black">Inferir Narraciones</span>
                         </button>
                     </div>
 
-                    <div class="bg-blue-200 p-6 rounded-3xl shadow-inner">
-                        <h3 class="text-2xl font-black text-blue-800 mb-4">Tus Medallas</h3>
-                        <div class="grid grid-cols-3 gap-4 justify-center">
+                    <div class="bg-blue-100 p-6 md:p-8 rounded-3xl shadow-inner border-2 border-blue-200">
+                        <h3 class="text-3xl font-black text-blue-800 mb-6 uppercase tracking-wider">Tus Medallas</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 justify-center">
                             ${badgesHTML}
                         </div>
                     </div>
@@ -168,51 +275,95 @@
             `;
         }
 
-        // --- 4. LÓGICA DEL JUEGO ---
+        // --- 4. LÓGICA DEL JUEGO Y LECTURAS ---
         function startTopic(topicId) {
             currentTopic = topicId;
             currentQuestionIndex = 0;
-            renderQuestion();
+            renderReading();
+        }
+
+        function renderReading() {
+            const topic = gameData[currentTopic];
+            
+            app.innerHTML = `
+                <div class="bg-white p-6 md:p-10 rounded-3xl shadow-xl max-w-3xl mx-auto border-t-8 border-blue-500 animate-[pulse_0.5s_ease-out_1]">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl md:text-4xl font-black text-gray-800">📖 Lectura: ${topic.title}</h2>
+                    </div>
+                    
+                    <div class="mb-8">
+                        ${topic.reading}
+                    </div>
+
+                    <div class="text-center mt-10">
+                        <button onclick="renderQuestion()" class="bg-green-500 hover:bg-green-600 text-white font-black py-4 px-10 rounded-full btn-bounce text-2xl shadow-[0_5px_0_rgb(21,128,61)] transition-all active:shadow-[0_0px_0_rgb(21,128,61)] active:translate-y-1 w-full md:w-auto">
+                            ¡Ya lo leí! A jugar 🚀
+                        </button>
+                        <button onclick="renderHome()" class="mt-4 text-gray-500 font-bold hover:text-gray-700 underline block mx-auto">
+                            Volver al menú
+                        </button>
+                    </div>
+                </div>
+            `;
+            window.scrollTo(0, 0);
         }
 
         function renderQuestion() {
-            if (currentQuestionIndex >= gameData[currentTopic].length) {
+            if (currentQuestionIndex >= gameData[currentTopic].questions.length) {
                 // Topic Completed
                 player.completed[currentTopic] = true;
                 player.xp += 100;
                 saveState();
                 app.innerHTML = `
-                    <div class="text-center mt-20 pulse">
-                        <span class="text-8xl">🏆</span>
-                        <h2 class="text-4xl font-black text-green-600 mt-6">¡Misión Completada!</h2>
-                        <p class="text-xl text-gray-700 mt-4">+100 XP Ganados</p>
-                        <button onclick="renderHome()" class="mt-8 bg-blue-500 text-white font-bold py-4 px-10 rounded-full btn-bounce text-2xl shadow-lg">Volver al Menú</button>
+                    <div class="bg-white p-10 rounded-3xl shadow-2xl text-center mt-10 max-w-xl mx-auto border-4 border-green-400 pulse">
+                        <span class="text-8xl block mb-6">🏆</span>
+                        <h2 class="text-4xl font-black text-green-600 mb-2">¡Misión Completada!</h2>
+                        <p class="text-2xl text-gray-700 font-bold mb-8 text-yellow-500">⚡ +100 XP Ganados</p>
+                        <button onclick="renderHome()" class="bg-blue-500 hover:bg-blue-600 text-white font-black py-4 px-10 rounded-full btn-bounce text-2xl shadow-lg w-full">Volver al Menú</button>
                     </div>
                 `;
+                window.scrollTo(0, 0);
                 return;
             }
 
-            const qData = gameData[currentTopic][currentQuestionIndex];
+            const qData = gameData[currentTopic].questions[currentQuestionIndex];
+            const totalQuestions = gameData[currentTopic].questions.length;
             
             let optionsHTML = qData.options.map((opt, idx) => `
-                <button onclick="checkAnswer(${idx})" class="w-full text-left bg-white border-4 border-blue-200 hover:border-blue-500 hover:bg-blue-50 text-gray-700 font-bold py-4 px-6 rounded-2xl mb-4 transition-all text-xl shadow-sm btn-bounce">
+                <button onclick="checkAnswer(${idx})" class="w-full text-left bg-gray-50 border-4 border-blue-200 hover:border-blue-500 hover:bg-blue-100 text-gray-800 font-bold py-5 px-6 rounded-2xl mb-4 transition-all text-xl shadow-sm btn-bounce">
                     ${opt}
                 </button>
             `).join('');
 
+            // Barra de progreso
+            const progressPct = (currentQuestionIndex / totalQuestions) * 100;
+
             app.innerHTML = `
-                <div class="bg-white p-8 rounded-3xl shadow-xl max-w-2xl mx-auto mt-10 border-t-8 border-blue-500">
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-sm font-bold text-gray-400 uppercase tracking-wide">Pregunta ${currentQuestionIndex + 1} de ${gameData[currentTopic].length}</span>
+                <div class="bg-white p-6 md:p-10 rounded-3xl shadow-xl max-w-3xl mx-auto border-t-8 border-indigo-500 relative">
+                    <!-- Botón para volver a leer -->
+                    <button onclick="renderReading()" class="absolute top-4 right-6 text-indigo-500 font-bold hover:text-indigo-700 text-sm md:text-base bg-indigo-50 px-3 py-1 rounded-full">
+                        👁️ Volver a ver texto
+                    </button>
+
+                    <div class="mb-8 mt-6 md:mt-0">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-bold text-gray-500 uppercase tracking-wider">Pregunta ${currentQuestionIndex + 1} de ${totalQuestions}</span>
+                        </div>
+                        <!-- Progress bar -->
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-indigo-500 h-3 rounded-full transition-all duration-500" style="width: ${progressPct}%"></div>
+                        </div>
                     </div>
-                    <h2 class="text-3xl font-black text-gray-800 mb-8">${qData.q}</h2>
+                    
+                    <h2 class="text-2xl md:text-4xl font-black text-gray-800 mb-8 leading-tight">${qData.q}</h2>
                     <div>${optionsHTML}</div>
                 </div>
             `;
+            window.scrollTo(0, 0);
         }
 
         function checkAnswer(selectedIndex) {
-            const qData = gameData[currentTopic][currentQuestionIndex];
+            const qData = gameData[currentTopic].questions[currentQuestionIndex];
             const modal = document.getElementById('feedback-modal');
             const title = document.getElementById('feedback-title');
             const message = document.getElementById('feedback-message');
@@ -222,15 +373,15 @@
                 player.xp += 20;
                 player.coins += 10;
                 title.innerHTML = "¡Excelente! 🌟";
-                title.className = "text-3xl font-black mb-4 text-green-500";
+                title.className = "text-3xl md:text-4xl font-black mb-4 text-green-500";
                 message.innerHTML = qData.exp;
                 saveState();
             } else {
                 // Incorrect
                 player.lives -= 1;
                 title.innerHTML = "¡Casi! No te rindas 💪";
-                title.className = "text-3xl font-black mb-4 text-red-500";
-                message.innerHTML = `La respuesta correcta era: <strong>${qData.options[qData.ans]}</strong>.<br><br><em>${qData.exp}</em>`;
+                title.className = "text-3xl md:text-4xl font-black mb-4 text-red-500";
+                message.innerHTML = `La respuesta correcta era: <strong class="text-gray-900">${qData.options[qData.ans]}</strong>.<br><br><span class="italic text-gray-600">${qData.exp}</span>`;
                 saveState();
 
                 if(player.lives <= 0) {
@@ -250,11 +401,11 @@
         function gameOver() {
             document.getElementById('feedback-modal').classList.add('hidden');
             app.innerHTML = `
-                <div class="text-center mt-20">
-                    <span class="text-8xl">💔</span>
-                    <h2 class="text-4xl font-black text-red-600 mt-6">¡Te has quedado sin vidas!</h2>
-                    <p class="text-xl text-gray-700 mt-4 mb-8">El aprendizaje toma tiempo. Descansa un momento y vuelve a intentarlo.</p>
-                    <button onclick="renderHome()" class="bg-blue-500 text-white font-bold py-4 px-10 rounded-full btn-bounce text-2xl shadow-lg">Recuperar Vidas y Volver</button>
+                <div class="bg-white p-10 rounded-3xl shadow-2xl text-center mt-10 max-w-xl mx-auto border-4 border-red-300">
+                    <span class="text-8xl block mb-6 animate-bounce">💔</span>
+                    <h2 class="text-4xl font-black text-red-600 mb-4">¡Te quedaste sin vidas!</h2>
+                    <p class="text-xl text-gray-700 mb-8">El aprendizaje toma tiempo. Descansa un momento, recupera tus energías y vuelve a intentarlo.</p>
+                    <button onclick="renderHome()" class="bg-blue-500 hover:bg-blue-600 text-white font-black py-4 px-10 rounded-full btn-bounce text-2xl shadow-lg w-full">Recuperar ❤️ y Volver</button>
                 </div>
             `;
         }
